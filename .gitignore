@@ -8,6 +8,9 @@ xcuserdata/
 ## Obj-C/Swift specific
 *.hmap
 
+## Environment variables
+.env
+
 ## App packaging
 *.ipa
 *.dSYM.zip
