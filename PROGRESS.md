@@ -11,6 +11,13 @@ Running log for agents and teammates. **Read this and `CLAUDE.md` before startin
 - **GitHub:** https://github.com/claireking10/eklendi. Planning docs are committed on branch `docs/planning` (not merged to `main`, not pushed).
 - **Repo:** only `CLAUDE.md`, `PROGRESS.md`, `README.md`, `LICENSE`, `.gitignore`. 
 
+## Hackathon setup (2026-10-04)
+
+- **Deadline: noon CDT, Sunday Oct 4.** Scope is being cut to the demo path (sign up → hangout → swipe times → survey → Gemini/Places cards → confirmed into Apple Calendar); everything else is stretch. Not started yet; waiting for Zach's go-ahead.
+- **Firebase:** project `eklendi-633e3`, iOS bundle ID `devplaceholder.B1Q5FZOR.MyApp`. Phone sign-in with fictional test numbers; Firestore in test mode. Hackathon simplifications under discussion: no Cloud Functions (app calls Gemini/Places directly), no push.
+- **Secrets:** `GoogleService-Info.plist` and `.env` (GEMINI_API_KEY, GOOGLE_PLACES_API_KEY) are in Zach's repo folder, gitignored. The repo is **public**, so they must never be committed. Teammate with the Mac needs both files sent privately.
+- Keys couldn't be tested from the agent environment (no network to Google); first real test is on the Mac.
+
 ## Next steps
 
 1. Create branch `milestone-1-foundations` and start **Milestone 1 · Foundations** (KAL-5 to KAL-12), in roughly this order:

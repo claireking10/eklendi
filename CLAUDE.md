@@ -195,6 +195,7 @@ Many users can't or won't decide. Treat this as a first-class case, not an edge 
 ## Engineering workflow
 
 - One git branch **per Linear milestone**, merged by pull request after review.
+- **Secrets (the repo is public):** never commit `GoogleService-Info.plist`, `.env` or `Secrets.xcconfig` (all gitignored). The app reads the Gemini and Places keys at build time from `Secrets.xcconfig`, generated from `.env`. Teammates get these files privately; CI gets them from GitHub Actions secrets.
 - **Pushing:** agents can commit but **cannot push** (GitHub is blocked from the agent environment). Whenever a push is needed, give Zach the exact command to paste into his terminal, e.g. `git push -u origin <branch>`, and note it in PROGRESS.md.
 - Tests: **XCTest unit tests** for core logic (free windows, buffers, winner rules and ties, "I don't care", horizon extension, centroid) **and XCUITest UI tests** for the main flows.
 - Work through the Linear tickets in milestone order (Foundations first).
