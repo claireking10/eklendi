@@ -135,3 +135,8 @@ Running log for agents and teammates. **Read this and `CLAUDE.md` before startin
 - **Contract change (additive):** `TimeSlot.offerOnly: Bool?` in `Core/Models.swift` (mirrors the server-written 08b offers). Swipe screens use `votableSlots` (offerOnly != true); 08b uses offerOnly slots, falling back to `source == .fallback` for the mock.
 - **Tickets:** KAL-17, 18, 19, 20, 21, 26, 27, 28, 29, 30, 31 (UI), 37, 38, 39, 41, 42 (UI + calendar write), 43, 44, 45, 46, 47.
 - **Gaps/TODO:** Swift unverified until CI/Mac. Starting point has Home + Somewhere else only ("Where I am now" needs CoreLocation, not added). Which slots I already swiped is remembered per device (UserDefaults), because the repository has no read for my own time votes; on a new device a re-swipe shows all slots again (votes merge, so harmless). Waiting screen shows "Nudged" but no push is sent (push deferred). 11a ranks from `cardVotes` on the client (server `topCardIds` isn't in the Swift model). Calendar invite status per other member isn't knowable client-side, so 12 shows Going / Not going instead of Sending… → Sent.
+
+### 2026-10-04 — Director: Cloud Functions deployed
+- Zach deployed functions + Firestore rules/indexes to eklendi-633e3 (us-central1; Firestore in nam5). Secrets GEMINI_API_KEY and GOOGLE_PLACES_API_KEY set in Secret Manager.
+- Windows deploy tips: set FUNCTIONS_DISCOVERY_TIMEOUT=60 before `firebase deploy`; first 2nd-gen deploy needs a retry after Eventarc permissions propagate; use `--force` for the artifact cleanup policy.
+- Redeploy after functions changes: `firebase deploy --only functions --project eklendi-633e3 --force`.
