@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Eklendi — It's a plan</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+*{box-sizing:border-box}
+a{color:#00C3D0}a:hover{color:#5BE3EC}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;height:56px;border-radius:16px;font:inherit;font-size:17px;font-weight:700;text-decoration:none;border:0;cursor:pointer;width:100%}
+.btn-p{background:#00C3D0;color:#00282B}.btn-p:hover{background:#2BD3DE;color:#00282B}
+.btn-g{background:transparent;color:#FFFFFF;border:1px solid #3A4A4C}.btn-g:hover{border-color:#00C3D0;color:#FFFFFF}
+.sec{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#00C3D0;margin:0}
+.back{width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;color:#FFFFFF;text-decoration:none;border-radius:12px;margin-left:-10px}
+.back:hover{color:#00C3D0}
+.pill{display:inline-flex;align-items:center;height:28px;padding:0 12px;border-radius:999px;font-size:13px;font-weight:700;background:#24484B;color:#CFF6F8}
+.av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#0B0B0B;flex:none}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; background: #000000; color: #FFFFFF; font-family: Figtree, -apple-system, system-ui, sans-serif; display: flex; flex-direction: column; padding: 52px 24px 32px">
+  <div style="display: flex; align-items: center; justify-content: space-between">
+    <a class="back" href="Home.dc.html" aria-label="Back to home">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+    </a>
+    <div style="font-size: 30px; font-weight: 800; letter-spacing: -0.045em">eklendi</div>
+    <span style="width: 34px"></span>
+  </div>
+  <p class="sec" style="margin-top: 24px">Thursday crew · Step 3 of 3</p>
+  <h1 style="margin: 6px 0 0; font-size: 30px; font-weight: 700; letter-spacing: -0.02em">It’s a plan.</h1>
+  <p style="margin: 6px 0 0; font-size: 15px; color: #A3AFB1">Everyone agreed, so it’s confirmed. Invites are on their way.</p>
+
+  <div style="margin-top: 20px; background: #162022; border: 1px solid #2A3739; border-radius: 26px; overflow: hidden">
+    <div style="height: 96px; background: repeating-linear-gradient(135deg, #1D3437 0 10px, #183033 10px 20px); display: flex; align-items: flex-end; padding: 12px 16px">
+      <span style="font-size: 12px; font-weight: 600; color: #8FB5B8">[Venue photo · Google Places]</span>
+    </div>
+    <div style="padding: 18px; display: flex; flex-direction: column; gap: 6px">
+      <div style="display: flex; align-items: center; justify-content: space-between">
+        <span style="font-size: 17px; font-weight: 700; color: #00C3D0">Thursday, October 8</span>
+        <div style="display: flex; gap: 6px"><span class="pill">1 hr</span></div>
+      </div>
+      <span style="font-size: 26px; font-weight: 900; letter-spacing: -0.01em">Coffee + pastries</span>
+      <span style="font-size: 15px; color: #C9D2D3">3:00 – 4:00 PM · Juniper Café · 0.6 mi</span>
+    </div>
+  </div>
+
+  <div style="margin-top: 18px; display: flex; align-items: baseline; justify-content: space-between">
+    <p class="sec">Calendar invites</p>
+    <span style="font-size: 13px; color: #A3AFB1">{{ sentLabel }}</span>
+  </div>
+  <div style="margin-top: 8px; background: #162022; border: 1px solid #243133; border-radius: 18px; padding: 2px 14px">
+    <sc-for list="{{ invites }}" as="v" hint-placeholder-count="4">
+      <div style="display: flex; align-items: center; gap: 12px; min-height: 48px; border-bottom: {{ v.border }}">
+        <span class="av" style="background: {{ v.color }}">{{ v.initials }}</span>
+        <span style="flex: 1; display: flex; flex-direction: column; gap: 1px">
+          <span style="font-size: 15px; font-weight: 700">{{ v.name }}</span>
+          <span style="font-size: 12px; color: #A3AFB1">{{ v.cal }}</span>
+        </span>
+        <span style="display: inline-flex; align-items: center; gap: 5px; font-size: 13px; font-weight: 700; color: {{ v.statusColor }}">{{ v.status }}</span>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="flex: 1"></div>
+  <sc-if value="{{ out }}" hint-placeholder-val="{{ false }}">
+    <div role="status" style="margin-bottom: 12px; display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px; background: #2A2113; border: 1px solid #5A4520; border-radius: 16px">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFCC00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; margin-top: 1px"><path d="M4 12l4 4L20 6"></path></svg>
+      <span style="font-size: 14px; line-height: 1.45; color: #FFE58A">We let Seth, Matt and Mark know you can’t make it. The plan stays the same for them.</span>
+    </div>
+  </sc-if>
+  <button class="btn btn-g" type="button" onClick="{{ toggleOut }}" style="height: 52px; font-size: 16px">{{ outLabel }}</button>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { sent: 0, out: false };
+  }
+  componentDidMount() {
+    this.timer = setInterval(() => {
+      if (this.state.sent >= 4) { clearInterval(this.timer); return; }
+      this.setState({ sent: this.state.sent + 1 });
+    }, 550);
+  }
+  componentWillUnmount() { clearInterval(this.timer); }
+  renderVals() {
+    const s = this.state;
+    const ppl = [
+      { name: 'You', initials: 'ZW', color: '#E8ECEC', cal: 'Apple Calendar' },
+      { name: 'Seth Fogarty', initials: 'SF', color: '#FFCC00', cal: 'Apple + Google Calendar' },
+      { name: 'Matt Hibbs', initials: 'MH', color: '#CB30E0', cal: 'Apple Calendar' },
+      { name: 'Mark Lewis', initials: 'ML', color: '#6E8BFF', cal: 'Google Calendar' }
+    ];
+    return {
+      invites: ppl.map((p, i) => ({ ...p,
+        border: i < ppl.length - 1 ? '1px solid #243133' : '0px solid transparent',
+        status: (i === 0 && s.out) ? 'Not going' : (i < s.sent ? 'Sent ✓' : 'Sending…'),
+        statusColor: (i === 0 && s.out) ? '#FFCC00' : (i < s.sent ? '#00C3D0' : '#8A9799') })),
+      out: s.out,
+      outLabel: s.out ? 'Actually, I can make it' : 'I’m no longer available',
+      toggleOut: () => this.setState({ out: !s.out }),
+      sentLabel: s.sent >= 4 ? 'All sent' : s.sent + ' of 4 sent'
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Eklendi — No mutual time</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+*{box-sizing:border-box}
+a{color:#00C3D0}a:hover{color:#5BE3EC}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;height:56px;border-radius:16px;font:inherit;font-size:17px;font-weight:700;text-decoration:none;border:0;cursor:pointer;width:100%}
+.btn-p{background:#00C3D0;color:#00282B}.btn-p:hover{background:#2BD3DE;color:#00282B}
+.btn-g{background:transparent;color:#FFFFFF;border:1px solid #3A4A4C}.btn-g:hover{border-color:#00C3D0;color:#FFFFFF}
+.back{display:inline-flex;align-items:center;gap:6px;color:#FFFFFF;text-decoration:none;font-size:17px;min-height:44px;padding-right:12px}
+.back:hover{color:#00C3D0}
+.sec{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#00C3D0;margin:0}
+.opt{display:flex;align-items:center;gap:12px;width:100%;min-height:72px;padding:12px 16px;border-radius:18px;font:inherit;color:#FFFFFF;text-align:left;cursor:pointer}
+.av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#0B0B0B;border:2px solid #162022;margin-left:-8px}
+.box{width:24px;height:24px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex:none}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; background: #000000; color: #FFFFFF; font-family: Figtree, -apple-system, system-ui, sans-serif; display: flex; flex-direction: column; padding: 56px 24px 32px">
+  <a class="back" href="SwipeTimes.dc.html">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+    Back
+  </a>
+  <h1 style="margin: 14px 0 0; font-size: 28px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.15">No time works for all four of you in the next 2 weeks.</h1>
+  <p style="margin: 8px 0 0; font-size: 15px; color: #A3AFB1; line-height: 1.45">So we looked out a full month. Pick any that could work and the group will swipe on them.</p>
+
+  <p class="sec" style="margin-top: 24px">Later this month · everyone free</p>
+  <div style="margin-top: 10px; display: flex; flex-direction: column; gap: 10px">
+    <sc-for list="{{ nextWeek }}" as="o" hint-placeholder-count="2">
+      <button class="opt" type="button" aria-pressed="{{ o.pressed }}" onClick="{{ o.toggle }}" style="background: {{ o.bg }}; border: 1px solid {{ o.bd }}">
+        <span style="flex: 1; display: flex; flex-direction: column; gap: 3px">
+          <span style="font-size: 16px; font-weight: 700">{{ o.day }}</span>
+          <span style="font-size: 14px; color: #A3AFB1">{{ o.time }}</span>
+        </span>
+        <span class="box" style="background: {{ o.boxBg }}; border: 2px solid {{ o.boxBd }}">
+          <sc-if value="{{ o.on }}" hint-placeholder-val="{{ false }}">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00282B" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
+          </sc-if>
+        </span>
+      </button>
+    </sc-for>
+  </div>
+
+  <p class="sec" style="margin-top: 22px; color: #FFCC00">Next 2 weeks · all but one</p>
+  <div style="margin-top: 10px; display: flex; flex-direction: column; gap: 10px">
+    <sc-for list="{{ allButOne }}" as="o" hint-placeholder-count="2">
+      <button class="opt" type="button" aria-pressed="{{ o.pressed }}" onClick="{{ o.toggle }}" style="background: {{ o.bg }}; border: 1px solid {{ o.bd }}">
+        <span style="flex: 1; display: flex; flex-direction: column; gap: 3px">
+          <span style="font-size: 16px; font-weight: 700">{{ o.day }}</span>
+          <span style="font-size: 14px; color: #A3AFB1">{{ o.time }}</span>
+          <span style="display: inline-flex; align-items: center; gap: 8px; margin-top: 4px; font-size: 13px; font-weight: 700; color: #FFCC00">
+            <span style="width: 22px; height: 22px; border-radius: 50%; background: #2A3436; color: #A3AFB1; display: inline-flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 800; text-decoration: line-through">{{ o.missingInitials }}</span>
+            {{ o.missing }} can’t make it
+          </span>
+        </span>
+        <span class="box" style="background: {{ o.boxBg }}; border: 2px solid {{ o.boxBd }}">
+          <sc-if value="{{ o.on }}" hint-placeholder-val="{{ false }}">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00282B" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
+          </sc-if>
+        </span>
+      </button>
+    </sc-for>
+  </div>
+
+  <div style="flex: 1"></div>
+  <a class="btn btn-p" href="SwipeTimes.dc.html">{{ cta }}</a>
+  <a class="btn btn-g" href="Constraints.dc.html" style="margin-top: 10px; height: 50px; font-size: 16px">Change duration or travel</a>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { picked: { n1: true } };
+  }
+  renderVals() {
+    const s = this.state;
+    const style = (id) => {
+      const on = !!s.picked[id];
+      return { on, pressed: on ? 'true' : 'false', bg: on ? '#13292B' : '#162022', bd: on ? '#00C3D0' : '#243133',
+        boxBg: on ? '#00C3D0' : 'transparent', boxBd: on ? '#00C3D0' : '#4A5B5D',
+        toggle: () => this.setState({ picked: { ...s.picked, [id]: !on } }) };
+    };
+    const nextWeek = [
+      { id: 'n1', day: 'Tuesday, Oct 20', time: '5:30 – 7:00 PM' },
+      { id: 'n2', day: 'Saturday, Oct 24', time: '1:00 – 4:00 PM' }
+    ];
+    const allButOne = [
+      { id: 'a1', day: 'Thursday, Oct 8', time: '3:00 – 5:00 PM', missing: 'Mark', missingInitials: 'ML' },
+      { id: 'a2', day: 'Sunday, Oct 11', time: '1:00 – 3:00 PM', missing: 'Matt', missingInitials: 'MH' }
+    ];
+    const n = Object.keys(s.picked).filter((k) => s.picked[k]).length;
+    return {
+      nextWeek: nextWeek.map((o) => ({ ...o, ...style(o.id) })),
+      allButOne: allButOne.map((o) => ({ ...o, ...style(o.id) })),
+      cta: n === 0 ? 'Pick at least one' : 'Send ' + n + (n === 1 ? ' option' : ' options') + ' to the group'
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Eklendi — Welcome</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+*{box-sizing:border-box}
+a{color:#00C3D0}a:hover{color:#5BE3EC}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;height:56px;border-radius:16px;font:inherit;font-size:17px;font-weight:700;text-decoration:none;border:0;cursor:pointer;width:100%}
+.btn-p{background:#00C3D0;color:#00282B}.btn-p:hover{background:#2BD3DE;color:#00282B}
+.field{display:flex;align-items:center;gap:12px;height:56px;padding:0 18px;background:#162022;border:1px solid #243133;border-radius:16px;color:#7E8B8D}
+.field input{flex:1;min-width:0;background:transparent;border:0;color:#FFFFFF;font:inherit;font-size:16px;outline:none}
+.field input::placeholder{color:#8A9799}
+.field:focus-within{border-color:#00C3D0}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; background: #000000; color: #FFFFFF; font-family: Figtree, -apple-system, system-ui, sans-serif; display: flex; flex-direction: column; padding: 72px 24px 40px; gap: 0px">
+  <div style="font-size: 34px; font-weight: 800; letter-spacing: -0.045em; text-align: center">eklendi</div>
+  <div style="margin-top: 64px; display: flex; flex-direction: column; gap: 8px">
+    <h1 style="margin: 0; font-size: 32px; font-weight: 700; letter-spacing: -0.02em">Glad to see you again.</h1>
+    <p style="margin: 0; font-size: 16px; color: #A3AFB1">Log in to your account.</p>
+  </div>
+  <form style="margin-top: 32px; display: flex; flex-direction: column; gap: 12px" onSubmit="{{ noop }}">
+    <label class="field">
+      <span style="font-size: 16px; font-weight: 700; color: #FFFFFF">+1</span>
+      <span style="width: 1px; height: 26px; background: #2C3A3C"></span>
+      <span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Phone number</span>
+      <input type="tel" inputmode="tel" placeholder="Phone number" autocomplete="username tel-national">
+    </label>
+    <label class="field">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2.5"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg>
+      <span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Password</span>
+      <input type="password" placeholder="Password" autocomplete="current-password">
+    </label>
+    <a class="btn btn-p" href="Home.dc.html" style="margin-top: 8px">Log in</a>
+  </form>
+  <div style="flex: 1"></div>
+  <p style="margin: 0; text-align: center; font-size: 15px; color: #A3AFB1">Don’t have an account? <a href="Phone.dc.html" style="font-weight: 700">Sign up</a></p>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { noop: (e) => { if (e && e.preventDefault) e.preventDefault(); } };
+  }
+}
+</script>
+</body>
+</html>

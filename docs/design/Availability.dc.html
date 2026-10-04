@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Eklendi — Group availability</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+*{box-sizing:border-box}
+a{color:#00C3D0}a:hover{color:#5BE3EC}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;height:56px;border-radius:16px;font:inherit;font-size:17px;font-weight:700;text-decoration:none;border:0;cursor:pointer;width:100%}
+.btn-p{background:#00C3D0;color:#00282B}.btn-p:hover{background:#2BD3DE;color:#00282B}
+.back{display:inline-flex;align-items:center;gap:6px;color:#FFFFFF;text-decoration:none;font-size:17px;min-height:44px;padding-right:12px}
+.back:hover{color:#00C3D0}
+.sec{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#00C3D0;margin:0}
+.win{position:absolute;left:3%;width:94%;border-radius:8px;cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center;font:inherit;font-size:11px;font-weight:700;color:#CFF6F8}
+.win:hover{background:rgba(0,195,208,.38)}
+.buf{position:absolute;left:3%;width:94%;background:repeating-linear-gradient(135deg,rgba(0,195,208,.7) 0 2px,transparent 2px 5px);border-radius:3px;pointer-events:none}
+.tog{width:52px;height:32px;border-radius:999px;border:0;padding:3px;cursor:pointer;display:flex;align-items:center}
+.knob{width:26px;height:26px;border-radius:50%;background:#FFFFFF;transition:transform .2s}
+.pg{width:44px;height:44px;border-radius:12px;border:1px solid #2C3A3C;background:#162022;color:#FFFFFF;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
+.pg:hover{border-color:#00C3D0}
+.pg:disabled{opacity:.35;cursor:default;border-color:#2C3A3C}
+.track{touch-action:pan-y;user-select:none}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; background: #000000; color: #FFFFFF; font-family: Figtree, -apple-system, system-ui, sans-serif; display: flex; flex-direction: column; padding: 56px 24px 28px">
+  <a class="back" href="Constraints.dc.html">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+    Back
+  </a>
+  <p class="sec" style="margin-top: 8px">Friends’ calendars · next 7 days</p>
+  <div style="margin-top: 6px; display: flex; align-items: center; gap: 8px">
+    <h1 style="margin: 0; flex: 1; font-size: 26px; font-weight: 700; letter-spacing: -0.02em">{{ rangeLabel }}</h1>
+    <button class="pg" type="button" aria-label="Earlier days" onClick="{{ prev }}" disabled="{{ atStart }}">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+    </button>
+    <button class="pg" type="button" aria-label="Later days" onClick="{{ next }}" disabled="{{ atEnd }}">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg>
+    </button>
+  </div>
+  <p style="margin: 6px 0 0; font-size: 14px; color: #A3AFB1; min-height: 20px">{{ detail }}</p>
+
+  <div style="margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px 14px">
+    <sc-for list="{{ people }}" as="p" hint-placeholder-count="4">
+      <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: #C9D2D3">
+        <span style="width: 10px; height: 10px; border-radius: 3px; background: {{ p.color }}"></span>{{ p.name }}
+      </span>
+    </sc-for>
+    <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: #C9D2D3">
+      <span style="width: 12px; height: 10px; border-radius: 3px; border: 1.5px solid #00C3D0; background: rgba(0,195,208,.2)"></span>Everyone free
+    </span>
+  </div>
+
+  <div class="track" onPointerDown="{{ down }}" onPointerUp="{{ up }}" onPointerCancel="{{ up }}" style="margin-top: 12px; background: #0E1617; border: 1px solid #1E2A2C; border-radius: 18px; padding: 10px 10px 10px 0">
+    <div style="display: grid; grid-template-columns: 34px repeat(3, minmax(0, 1fr)); align-items: end">
+      <span></span>
+      <sc-for list="{{ visible }}" as="d" hint-placeholder-count="3">
+        <span style="display: flex; align-items: baseline; justify-content: center; gap: 5px; height: 30px">
+          <span style="font-size: 13px; font-weight: 700; color: #8A9799">{{ d.short }}</span>
+          <span style="font-size: 17px; font-weight: 800">{{ d.num }}</span>
+        </span>
+      </sc-for>
+    </div>
+    <div style="display: grid; grid-template-columns: 34px repeat(3, minmax(0, 1fr)); margin-top: 4px">
+      <div style="position: relative; height: 338px">
+        <sc-for list="{{ hours }}" as="h" hint-placeholder-count="5">
+          <span style="position: absolute; right: 6px; top: {{ h.top }}; font-size: 11px; color: #8A9799; transform: translateY(-50%)">{{ h.label }}</span>
+        </sc-for>
+      </div>
+      <sc-for list="{{ visible }}" as="d" hint-placeholder-count="3">
+        <div style="position: relative; height: 338px; border-left: 1px solid #1E2A2C">
+          <sc-for list="{{ hours }}" as="h" hint-placeholder-count="5">
+            <span style="position: absolute; left: 0; right: 0; top: {{ h.top }}; height: 1px; background: #1A2527"></span>
+          </sc-for>
+          <sc-for list="{{ d.busy }}" as="b" hint-placeholder-count="3">
+            <span style="position: absolute; top: {{ b.top }}; height: {{ b.h }}; left: {{ b.left }}; width: 16%; border-radius: 5px; background: {{ b.color }}"></span>
+          </sc-for>
+          <sc-for list="{{ d.wins }}" as="w" hint-placeholder-count="1">
+            <button class="win" type="button" aria-label="{{ w.aria }}" onClick="{{ w.pick }}" style="top: {{ w.top }}; height: {{ w.h }}; background: {{ w.bg }}; border: {{ w.bd }}">{{ w.short }}</button>
+          </sc-for>
+          <sc-if value="{{ showBuffers }}" hint-placeholder-val="{{ true }}">
+            <sc-for list="{{ d.bufs }}" as="u" hint-placeholder-count="1">
+              <span class="buf" style="top: {{ u.top }}; height: {{ u.h }}"></span>
+            </sc-for>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="margin-top: 10px; display: flex; justify-content: center; gap: 6px" aria-hidden="true">
+    <sc-for list="{{ dots }}" as="o" hint-placeholder-count="7">
+      <span style="width: {{ o.w }}; height: 6px; border-radius: 3px; background: {{ o.bg }}; transition: all .2s"></span>
+    </sc-for>
+  </div>
+
+  <div style="margin-top: 6px; display: flex; align-items: center; gap: 12px; min-height: 44px">
+    <span style="flex: 1; font-size: 14px; color: #C9D2D3">Show 15-min buffers around events</span>
+    <button class="tog" type="button" role="switch" aria-checked="{{ bufChecked }}" aria-label="Show buffers" onClick="{{ toggleBuffers }}" style="background: {{ bufTrack }}">
+      <span class="knob" style="transform: {{ bufKnob }}"></span>
+    </button>
+  </div>
+
+  <div style="flex: 1"></div>
+  <a class="btn btn-p" href="SwipeTimes.dc.html">Swipe on 5 times</a>
+  <a href="NoTimes.dc.html" style="margin-top: 4px; min-height: 40px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; text-decoration: none">Preview: no time works for everyone</a>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { showBuffers: true, sel: null, start: 0 };
+    this.sx = null;
+  }
+  fmt(t) {
+    const h = Math.floor(t), m = Math.round((t - h) * 60);
+    const hh = ((h + 11) % 12) + 1;
+    return hh + (m ? ':' + String(m).padStart(2, '0') : '') + (h >= 12 ? 'p' : 'a');
+  }
+  fmtLong(t) {
+    const h = Math.floor(t), m = Math.round((t - h) * 60);
+    const hh = ((h + 11) % 12) + 1;
+    return hh + ':' + String(m).padStart(2, '0') + (h >= 12 ? ' PM' : ' AM');
+  }
+  go(delta) {
+    const start = Math.max(0, Math.min(4, this.state.start + delta));
+    this.setState({ start });
+  }
+  renderVals() {
+    const s = this.state;
+    const PX = 26, START = 9;
+    const y = (t) => ((t - START) * PX) + 'px';
+    const hgt = (a, b) => ((b - a) * PX) + 'px';
+    const colors = ['#E8ECEC', '#FFCC00', '#CB30E0', '#6E8BFF'];
+    const busy = [
+      [[0, 9, 12], [1, 10, 15], [2, 9, 17], [3, 13, 18]],
+      [[0, 9, 11], [0, 13, 17], [1, 14, 18.25], [2, 10, 16], [3, 9, 18]],
+      [[0, 10, 15], [1, 9, 13], [2, 11, 19], [3, 12, 20]],
+      [[0, 9, 12], [1, 10, 14], [2, 13, 14.75], [3, 9, 13], [3, 16.5, 20]],
+      [[0, 9, 16], [1, 12, 17], [2, 10, 15], [3, 9, 18.5]],
+      [[1, 9, 10.5], [2, 15, 17], [3, 14.5, 19]],
+      [[0, 9, 13], [1, 18, 21], [2, 12, 15.5], [3, 9, 12]]
+    ];
+    const wins = [
+      { d: 1, a: 18.5, b: 20, fits: '1 hr' },
+      { d: 3, a: 15, b: 16.25, fits: '1 hr' },
+      { d: 4, a: 18.75, b: 22, fits: '1 hr or 2 hr' },
+      { d: 5, a: 10.75, b: 14.25, fits: '1 hr or 2 hr' },
+      { d: 6, a: 15.75, b: 17.75, fits: '1 hr or 2 hr' }
+    ];
+    const bufs = [[1, 18.25, 18.5], [3, 14.75, 15], [3, 16.25, 16.5], [4, 18.5, 18.75], [5, 10.5, 10.75], [5, 14.25, 14.5], [6, 15.5, 15.75], [6, 17.75, 18]];
+    const names = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    const days = names.map((n, i) => ({
+      short: n.slice(0, 3), num: String(5 + i),
+      busy: busy[i].map(([lane, a, b]) => ({ top: y(a), h: hgt(a, b), left: (6 + lane * 22) + '%', color: colors[lane] })),
+      wins: wins.map((w, wi) => ({ ...w, wi })).filter((w) => w.d === i).map((w) => {
+        const on = s.sel === w.wi;
+        return { top: y(w.a), h: hgt(w.a, w.b), short: this.fmt(w.a) + '–' + this.fmt(w.b),
+          aria: 'Everyone free ' + n + ', Oct ' + (5 + i) + ', ' + this.fmtLong(w.a) + ' to ' + this.fmtLong(w.b),
+          bg: on ? 'rgba(0,195,208,.5)' : 'rgba(0,195,208,.2)', bd: on ? '2px solid #FFFFFF' : '1.5px solid #00C3D0',
+          pick: () => this.setState({ sel: on ? null : w.wi }) };
+      }),
+      bufs: bufs.filter((u) => u[0] === i).map(([, a, b]) => ({ top: y(a), h: hgt(a, b) }))
+    }));
+    const vis = days.slice(s.start, s.start + 3);
+    let detail = '5 windows where everyone is free. Tap one.';
+    if (s.sel !== null) {
+      const w = wins[s.sel];
+      detail = names[w.d].slice(0, 3) + ' Oct ' + (5 + w.d) + ' · ' + this.fmtLong(w.a) + ' – ' + this.fmtLong(w.b) + ' · fits ' + w.fits;
+    }
+    return {
+      people: [{ name: 'You', color: colors[0] }, { name: 'Seth', color: colors[1] }, { name: 'Matt', color: colors[2] }, { name: 'Mark', color: colors[3] }],
+      visible: vis,
+      rangeLabel: 'Oct ' + (5 + s.start) + ' – ' + (7 + s.start),
+      atStart: s.start === 0, atEnd: s.start === 4,
+      prev: () => this.go(-1),
+      next: () => this.go(1),
+      dots: names.map((n, i) => {
+        const on = i >= s.start && i < s.start + 3;
+        return { w: on ? '18px' : '6px', bg: on ? '#00C3D0' : '#2C3A3C' };
+      }),
+      down: (e) => { this.sx = e.clientX; },
+      up: (e) => {
+        if (this.sx === null) return;
+        const dx = e.clientX - this.sx;
+        this.sx = null;
+        if (dx < -40) this.go(dx < -160 ? 3 : 1);
+        else if (dx > 40) this.go(dx > 160 ? -3 : -1);
+      },
+      hours: [9, 12, 15, 18, 21].map((h) => ({ top: y(h), label: (((h + 11) % 12) + 1) + (h >= 12 ? 'p' : 'a') })),
+      detail,
+      showBuffers: s.showBuffers,
+      bufChecked: s.showBuffers ? 'true' : 'false',
+      bufTrack: s.showBuffers ? '#00C3D0' : '#3A4A4C',
+      bufKnob: s.showBuffers ? 'translateX(20px)' : 'translateX(0px)',
+      toggleBuffers: () => this.setState({ showBuffers: !s.showBuffers })
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Eklendi — Phone number</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+*{box-sizing:border-box}
+a{color:#00C3D0}a:hover{color:#5BE3EC}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;height:56px;border-radius:16px;font:inherit;font-size:17px;font-weight:700;text-decoration:none;border:0;cursor:pointer;width:100%}
+.btn-p{background:#00C3D0;color:#00282B}.btn-p:hover{background:#2BD3DE;color:#00282B}
+.back{display:inline-flex;align-items:center;gap:6px;color:#FFFFFF;text-decoration:none;font-size:17px;min-height:44px;padding-right:12px}
+.back:hover{color:#00C3D0}
+.row{display:flex;align-items:center;gap:12px;height:56px;padding:0 18px}
+.row input{flex:1;min-width:0;background:transparent;border:0;color:#FFFFFF;font:inherit;font-size:17px;outline:none}
+.row input::placeholder{color:#8A9799}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; background: #000000; color: #FFFFFF; font-family: Figtree, -apple-system, system-ui, sans-serif; display: flex; flex-direction: column; padding: 56px 24px 40px">
+  <a class="back" href="Main.dc.html">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+    Back
+  </a>
+  <div style="margin-top: 48px; display: flex; flex-direction: column; gap: 10px">
+    <h1 style="margin: 0; font-size: 32px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.15">Enter your phone number</h1>
+    <p style="margin: 0; font-size: 16px; color: #A3AFB1; line-height: 1.45">Friends find you by your number. We’ll text a code to confirm it.</p>
+  </div>
+  <div style="margin-top: 32px; background: #162022; border: 1px solid #243133; border-radius: 18px; overflow: hidden">
+    <label class="row" style="border-bottom: 1px solid #243133">
+      <span style="font-size: 15px; color: #A3AFB1; width: 72px">Country</span>
+      <select style="flex: 1; background: transparent; border: 0; color: #FFFFFF; font: inherit; font-size: 17px; outline: none; appearance: none">
+        <option>United States</option>
+        <option>Canada</option>
+        <option>United Kingdom</option>
+        <option>Singapore</option>
+      </select>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8A9799" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg>
+    </label>
+    <label class="row">
+      <span style="font-size: 17px; font-weight: 600; width: 44px">+1</span>
+      <span style="width: 1px; height: 28px; background: #2C3A3C"></span>
+      <span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Phone number</span>
+      <input type="tel" inputmode="tel" placeholder="(210) 555-0142" autocomplete="tel-national">
+    </label>
+  </div>
+  <div style="flex: 1"></div>
+  <a class="btn btn-p" href="Connect.dc.html">Next</a>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

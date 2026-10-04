@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Eklendi — Friends</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+*{box-sizing:border-box}
+a{color:#00C3D0}a:hover{color:#5BE3EC}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;height:52px;border-radius:16px;font:inherit;font-size:16px;font-weight:700;text-decoration:none;border:0;cursor:pointer;width:100%}
+.btn-p{background:#00C3D0;color:#00282B}.btn-p:hover{background:#2BD3DE}
+.sec{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#00C3D0;margin:0}
+.row{display:flex;align-items:center;gap:14px;min-height:62px}
+.av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#0B0B0B;flex:none}
+.small{min-height:36px;padding:0 14px;border-radius:999px;font:inherit;font-size:14px;font-weight:700;cursor:pointer}
+.tab{width:56px;height:48px;display:flex;align-items:center;justify-content:center;color:#8A9799;text-decoration:none;border-radius:12px}
+.tab:hover{color:#FFFFFF}
+.x{width:44px;height:44px;border-radius:50%;border:0;background:#1E2B2D;color:#FFFFFF;display:flex;align-items:center;justify-content:center;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; background: #000000; color: #FFFFFF; font-family: Figtree, -apple-system, system-ui, sans-serif; display: flex; flex-direction: column; position: relative; overflow: hidden">
+  <div style="padding: 64px 24px 0; display: flex; flex-direction: column; flex: 1; min-height: 0">
+    <div style="display: flex; align-items: baseline; justify-content: space-between">
+      <h1 style="margin: 0; font-size: 32px; font-weight: 700; letter-spacing: -0.02em">Friends</h1>
+      <span style="font-size: 14px; color: #A3AFB1">{{ countLabel }}</span>
+    </div>
+    <button class="btn btn-p" type="button" onClick="{{ openSheet }}" style="margin-top: 20px">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"></circle><path d="M2.5 20c.8-3.6 3.3-5.5 6.5-5.5s5.7 1.9 6.5 5.5"></path><path d="M19 8v6M16 11h6"></path></svg>
+      Add from your contacts
+    </button>
+    <div style="margin-top: 20px; flex: 1; min-height: 0; overflow-y: auto; background: #162022; border: 1px solid #243133; border-radius: 20px; padding: 4px 16px">
+      <sc-for list="{{ friends }}" as="f" hint-placeholder-count="5">
+        <div class="row" style="border-bottom: {{ f.border }}">
+          <span class="av" style="background: {{ f.color }}">{{ f.initials }}</span>
+          <span style="flex: 1; display: flex; flex-direction: column; gap: 2px">
+            <span style="font-size: 16px; font-weight: 700">{{ f.name }}</span>
+            <span style="font-size: 13px; color: #A3AFB1">{{ f.note }}</span>
+          </span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  <nav aria-label="Main" style="height: 84px; margin-top: 16px; border-top: 1px solid #162022; display: flex; justify-content: center; gap: 40px; padding-top: 8px">
+    <a class="tab" href="Home.dc.html" aria-label="Home">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10.5L12 4l8 6.5V20a1 1 0 0 1-1 1h-4.5v-6h-5v6H5a1 1 0 0 1-1-1z"></path></svg>
+    </a>
+    <a class="tab" href="Friends.dc.html" aria-label="Friends" aria-current="page" style="color: #FFFFFF">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"></circle><path d="M2.5 20c.8-3.6 3.3-5.5 6.5-5.5s5.7 1.9 6.5 5.5"></path><circle cx="17" cy="9" r="2.5"></circle><path d="M17 14c2.3 0 4 1.4 4.6 4"></path></svg>
+    </a>
+    <a class="tab" href="Settings.dc.html" aria-label="Settings">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"></path></svg>
+    </a>
+  </nav>
+
+  <sc-if value="{{ sheetOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position: absolute; inset: 0; background: rgba(0,0,0,.6)"></div>
+    <div role="dialog" aria-label="Add from contacts" style="position: absolute; left: 0; right: 0; bottom: 0; height: 700px; background: #0E1617; border-top: 1px solid #243133; border-radius: 28px 28px 0 0; padding: 12px 20px 32px; display: flex; flex-direction: column">
+      <div style="width: 40px; height: 5px; border-radius: 3px; background: #3A4A4C; align-self: center"></div>
+      <div style="margin-top: 14px; display: flex; align-items: center; justify-content: space-between">
+        <h2 style="margin: 0; font-size: 24px; font-weight: 700">Your contacts</h2>
+        <button class="x" type="button" aria-label="Close" onClick="{{ closeSheet }}">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+        </button>
+      </div>
+      <p style="margin: 6px 0 0; font-size: 14px; color: #A3AFB1">From your iPhone contacts. Only people you add become friends.</p>
+
+      <p class="sec" style="margin-top: 20px">On Eklendi</p>
+      <div style="margin-top: 6px">
+        <sc-for list="{{ onApp }}" as="c" hint-placeholder-count="3">
+          <div class="row" style="border-bottom: 1px solid #1E2A2C">
+            <span class="av" style="background: #E8ECEC">{{ c.initials }}</span>
+            <span style="flex: 1; display: flex; flex-direction: column; gap: 2px">
+              <span style="font-size: 16px; font-weight: 700">{{ c.name }}</span>
+              <span style="font-size: 13px; color: #A3AFB1">{{ c.phone }}</span>
+            </span>
+            <button class="small" type="button" onClick="{{ c.add }}" aria-label="{{ c.aria }}" style="background: {{ c.bg }}; color: {{ c.fg }}; border: 1px solid {{ c.bd }}">{{ c.label }}</button>
+          </div>
+        </sc-for>
+      </div>
+
+      <p class="sec" style="margin-top: 20px; color: #8A9799">Not on Eklendi yet</p>
+      <div style="margin-top: 6px">
+        <sc-for list="{{ offApp }}" as="c" hint-placeholder-count="2">
+          <div class="row" style="border-bottom: 1px solid #1E2A2C">
+            <span class="av" style="background: #2A3436; color: #A3AFB1">{{ c.initials }}</span>
+            <span style="flex: 1; display: flex; flex-direction: column; gap: 2px">
+              <span style="font-size: 16px; font-weight: 700">{{ c.name }}</span>
+              <span style="font-size: 13px; color: #A3AFB1">{{ c.phone }}</span>
+            </span>
+            <button class="small" type="button" onClick="{{ c.invite }}" aria-label="{{ c.aria }}" style="background: transparent; color: {{ c.fg }}; border: 1px solid #3A4A4C">{{ c.label }}</button>
+          </div>
+        </sc-for>
+      </div>
+      <div style="flex: 1"></div>
+      <button class="btn btn-p" type="button" onClick="{{ closeSheet }}">Done</button>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { sheet: false, added: {}, invited: {} };
+  }
+  renderVals() {
+    const s = this.state;
+    const base = [
+      { name: 'Seth Fogarty', initials: 'SF', color: '#FFCC00', note: '3 hangouts together' },
+      { name: 'Matt Hibbs', initials: 'MH', color: '#CB30E0', note: '3 hangouts together' },
+      { name: 'Mark Lewis', initials: 'ML', color: '#6E8BFF', note: '2 hangouts together' },
+      { name: 'Jackson Ford', initials: 'JF', color: '#E8ECEC', note: '1 hangout together' },
+      { name: 'Sam Batesh', initials: 'SB', color: '#E8ECEC', note: 'No hangouts yet' }
+    ];
+    const onApp = [
+      { id: 'pp', name: 'Peter Parker', initials: 'PP', phone: '(210) 555-0187' },
+      { id: 'rc', name: 'Riley Chen', initials: 'RC', phone: '(210) 555-0123' },
+      { id: 'do', name: 'Dana Ortiz', initials: 'DO', phone: '(512) 555-0164' }
+    ];
+    const offApp = [
+      { id: 'jk', name: 'Jordan Kim', initials: 'JK', phone: '(210) 555-0199' },
+      { id: 'ap', name: 'Avery Patel', initials: 'AP', phone: '(830) 555-0135' }
+    ];
+    const newFriends = onApp.filter((c) => s.added[c.id]).map((c) => ({ name: c.name, initials: c.initials, color: '#E8ECEC', note: 'Just added' }));
+    const all = newFriends.concat(base);
+    return {
+      friends: all.map((f, i) => ({ ...f, border: i < all.length - 1 ? '1px solid #243133' : '0px solid transparent' })),
+      countLabel: all.length + ' friends',
+      sheetOpen: s.sheet,
+      openSheet: () => this.setState({ sheet: true }),
+      closeSheet: () => this.setState({ sheet: false }),
+      onApp: onApp.map((c) => {
+        const on = !!s.added[c.id];
+        return { ...c, label: on ? 'Added' : 'Add', aria: (on ? 'Added ' : 'Add ') + c.name,
+          bg: on ? 'transparent' : '#00C3D0', fg: on ? '#00C3D0' : '#00282B', bd: '#00C3D0',
+          add: () => this.setState({ added: { ...s.added, [c.id]: !on } }) };
+      }),
+      offApp: offApp.map((c) => {
+        const on = !!s.invited[c.id];
+        return { ...c, label: on ? 'Invited' : 'Invite', aria: 'Text ' + c.name + ' an invite', fg: on ? '#8A9799' : '#FFFFFF',
+          invite: () => this.setState({ invited: { ...s.invited, [c.id]: true } }) };
+      })
+    };
+  }
+}
+</script>
+</body>
+</html>

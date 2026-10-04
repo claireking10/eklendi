@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Eklendi — Your interests</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+*{box-sizing:border-box}
+a{color:#00C3D0}a:hover{color:#5BE3EC}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;height:56px;border-radius:16px;font:inherit;font-size:17px;font-weight:700;text-decoration:none;border:0;cursor:pointer;width:100%}
+.btn-p{background:#00C3D0;color:#00282B}.btn-p:hover{background:#2BD3DE;color:#00282B}
+.back{display:inline-flex;align-items:center;gap:6px;color:#FFFFFF;text-decoration:none;font-size:17px;min-height:44px;padding-right:12px}
+.back:hover{color:#00C3D0}
+.sec{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#00C3D0;margin:0}
+.idea{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 14px;border-radius:999px;background:#162022;border:1px solid #2C3A3C;color:#E8ECEC;font:inherit;font-size:14px;font-weight:600;cursor:pointer}
+.idea:hover{border-color:#00C3D0}
+textarea::placeholder{color:#8A9799}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; background: #000000; color: #FFFFFF; font-family: Figtree, -apple-system, system-ui, sans-serif; display: flex; flex-direction: column; padding: 56px 24px 40px">
+  <a class="back" href="Connect.dc.html">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+    Back
+  </a>
+  <div style="margin-top: 12px; display: flex; align-items: center; gap: 8px">
+    <span style="display: inline-flex; align-items: center; height: 26px; padding: 0 10px; border-radius: 999px; background: #1E2B2D; color: #C9D2D3; font-size: 12px; font-weight: 700">Optional</span>
+  </div>
+  <h1 style="margin: 10px 0 0; font-size: 30px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.15">What kinds of hangouts are you into?</h1>
+  <p style="margin: 8px 0 0; font-size: 15px; color: #A3AFB1; line-height: 1.45">Write it however you like. We’ll lean toward these, and still mix in new ideas.</p>
+
+  <label style="margin-top: 22px; display: flex; flex-direction: column; gap: 8px">
+    <span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Hangouts you’re interested in</span>
+    <textarea rows="6" value="{{ text }}" onInput="{{ onText }}" placeholder="e.g. trying new coffee shops, board game cafés, hiking on weekends, anything with tacos" style="width: 100%; min-height: 168px; resize: none; padding: 16px; background: #162022; border: 1px solid #243133; border-radius: 18px; color: #FFFFFF; font: inherit; font-size: 16px; line-height: 1.5; outline: none"></textarea>
+  </label>
+
+  <p class="sec" style="margin-top: 20px; color: #8A9799">Need a nudge? Tap to add</p>
+  <div style="margin-top: 10px; display: flex; flex-wrap: wrap; gap: 8px">
+    <sc-for list="{{ ideas }}" as="i" hint-placeholder-count="6">
+      <button class="idea" type="button" onClick="{{ i.add }}">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+        {{ i.label }}
+      </button>
+    </sc-for>
+  </div>
+
+  <div style="flex: 1"></div>
+  <p style="margin: 0 0 12px; font-size: 13px; color: #A3AFB1; text-align: center">You can change this anytime in Settings.</p>
+  <a class="btn btn-p" href="Home.dc.html">{{ cta }}</a>
+  <a href="Home.dc.html" style="margin-top: 6px; min-height: 44px; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; text-decoration: none">Skip for now</a>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { text: '' };
+  }
+  renderVals() {
+    const s = this.state;
+    const ideas = ['Coffee shops', 'Live music', 'Board games', 'Hiking', 'Trying new restaurants', 'Movies'];
+    return {
+      text: s.text,
+      onText: (e) => this.setState({ text: e.target.value }),
+      ideas: ideas.filter((l) => s.text.toLowerCase().indexOf(l.toLowerCase()) === -1).map((l) => ({
+        label: l,
+        add: () => this.setState({ text: s.text.trim() ? s.text.trim().replace(/[,.]$/, '') + ', ' + l.toLowerCase() : l })
+      })),
+      cta: s.text.trim() ? 'Save and continue' : 'Continue'
+    };
+  }
+}
+</script>
+</body>
+</html>

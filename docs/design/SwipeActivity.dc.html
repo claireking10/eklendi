@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Eklendi — Activity prompts</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+*{box-sizing:border-box}
+a{color:#00C3D0}a:hover{color:#5BE3EC}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;height:56px;border-radius:16px;font:inherit;font-size:17px;font-weight:700;text-decoration:none;border:0;cursor:pointer;width:100%}
+.btn-p{background:#00C3D0;color:#00282B}.btn-p:hover{background:#2BD3DE;color:#00282B}
+.back{display:inline-flex;align-items:center;gap:6px;color:#FFFFFF;text-decoration:none;font-size:17px;min-height:44px;padding-right:12px}
+.back:hover{color:#00C3D0}
+.sec{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#00C3D0;margin:0}
+.card{position:absolute;inset:0;background:#162022;border:1px solid #2A3739;border-radius:28px;padding:24px;display:flex;flex-direction:column;touch-action:none;user-select:none;cursor:grab}
+.trail{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px;border-radius:999px;background:#162022;border:1px solid #243133;font-size:13px;font-weight:600;color:#C9D2D3}
+.vote{display:flex;flex-direction:column;align-items:center;gap:6px;background:transparent;border:0;color:#FFFFFF;font:inherit;font-size:13px;font-weight:700;cursor:pointer;padding:0}
+.ring{width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:transform .15s}
+.vote:hover .ring{transform:scale(1.06)}
+.dc{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:50px;border-radius:14px;background:transparent;border:1px dashed #4A5B5D;color:#E8ECEC;font:inherit;font-size:16px;font-weight:700;cursor:pointer}
+.dc:hover{border-color:#00C3D0;color:#00C3D0}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; background: #000000; color: #FFFFFF; font-family: Figtree, -apple-system, system-ui, sans-serif; display: flex; flex-direction: column; padding: 56px 24px 32px; overflow: hidden">
+  <a class="back" href="SwipeTimes.dc.html">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+    Back
+  </a>
+  <p class="sec" style="margin-top: 10px">Thursday crew · Step 2 of 3</p>
+  <h1 style="margin: 6px 0 0; font-size: 28px; font-weight: 700; letter-spacing: -0.02em">What sounds good?</h1>
+  <p style="margin: 10px 0 0; font-size: 15px; font-weight: 700; color: #00C3D0">{{ counter }}</p>
+
+  <sc-if value="{{ active }}" hint-placeholder-val="{{ true }}">
+    <div style="position: relative; height: 320px; margin-top: 16px">
+      <sc-for list="{{ stack }}" as="k" hint-placeholder-count="3">
+        <div class="card" aria-hidden="{{ k.hidden }}" onPointerDown="{{ k.down }}" onPointerMove="{{ k.move }}" onPointerUp="{{ k.up }}" onPointerCancel="{{ k.up }}" style="transform: {{ k.tf }}; transition: {{ k.tr }}; opacity: {{ k.op }}; z-index: {{ k.z }}; pointer-events: {{ k.pe }}; border-color: {{ k.bd }}; box-shadow: {{ k.glow }}">
+          <span style="align-self: flex-start; display: inline-flex; align-items: center; height: 28px; padding: 0 12px; border-radius: 999px; background: #24484B; color: #CFF6F8; font-size: 13px; font-weight: 700">{{ k.d.tag }}</span>
+          <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 12px">
+            <span style="font-size: 40px; font-weight: 900; letter-spacing: -0.02em; line-height: 1.05">{{ k.d.q }}</span>
+            <span style="font-size: 16px; color: #A3AFB1; line-height: 1.45">{{ k.d.sub }}</span>
+          </div>
+          <span style="font-size: 13px; color: #8A9799">{{ k.d.examples }}</span>
+          <span aria-hidden="true" style="position: absolute; inset: 0; border-radius: inherit; pointer-events: none; background-image: linear-gradient(to bottom right, rgba(0,0,0,.9) 0%, rgba(0,0,0,.9) 38%, rgba(0,0,0,0) 62%, rgba(0,0,0,0) 100%); background-size: 260% 260%; background-repeat: no-repeat; background-position: {{ k.dark }} {{ k.dark }}; transition: {{ k.darkTr }}"></span>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="margin-top: 24px; display: flex; justify-content: space-evenly">
+      <button class="vote" type="button" onClick="{{ voteNo }}" aria-label="No, swipe left">
+        <span class="ring" style="border: 2px solid #E8ECEC">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E8ECEC" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+        </span>No
+      </button>
+      <button class="vote" type="button" onClick="{{ voteMaybe }}" aria-label="Maybe, swipe down">
+        <span class="ring" style="border: 2px solid #FFCC00">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFCC00" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v13M6 12l6 6 6-6"></path></svg>
+        </span>Maybe
+      </button>
+      <button class="vote" type="button" onClick="{{ voteYes }}" aria-label="Yes, swipe right">
+        <span class="ring" style="background: #00C3D0">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#00282B" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
+        </span>Yes
+      </button>
+    </div>
+    <button class="dc" type="button" onClick="{{ voteSkip }}" style="margin-top: 22px">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14"></path></svg>
+      I don’t care
+    </button>
+    <p style="margin: 10px 0 0; font-size: 13px; color: #A3AFB1; text-align: center">Counts as neutral. It won’t rule anything out.</p>
+  </sc-if>
+
+  <sc-if value="{{ done }}" hint-placeholder-val="{{ false }}">
+    <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 16px">
+      <h2 style="margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -0.02em">Got it. That’s all we need.</h2>
+      <p style="margin: 0; font-size: 15px; color: #A3AFB1; line-height: 1.5">{{ skipNote }}</p>
+      <div style="background: #13292B; border: 1px solid #1F4A4D; border-radius: 18px; padding: 16px; display: flex; gap: 12px; align-items: flex-start">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#00C3D0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; margin-top: 1px"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v5M12 16.5v.01"></path></svg>
+        <span style="font-size: 14px; line-height: 1.5; color: #CFF6F8">If most of the group doesn’t care about something, like price, we’ll pick a sensible default for it.</span>
+      </div>
+      <button type="button" onClick="{{ reset }}" style="align-self: flex-start; background: transparent; border: 0; color: #00C3D0; font: inherit; font-size: 15px; font-weight: 700; min-height: 44px; cursor: pointer; padding: 0">Start over</button>
+    </div>
+    <a class="btn btn-p" href="Waiting.dc.html">Done</a>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { i: 0, dx: 0, dy: 0, drag: false, exit: null, answers: [] };
+    this.sx = 0; this.sy = 0;
+  }
+  survey() {
+    return [
+      { tag: 'Type', q: 'Food & drink?', sub: 'Restaurants, cafés, dessert spots.', examples: 'Tacos, brunch, bubble tea' },
+      { tag: 'Type', q: 'Something active?', sub: 'Get moving a little.', examples: 'Bowling, mini golf, climbing' },
+      { tag: 'Type', q: 'Games?', sub: 'Play something together.', examples: 'Board game café, arcade, trivia' },
+      { tag: 'Type', q: 'Arts & entertainment?', sub: 'Watch, listen or look around.', examples: 'Movies, live music, museums' },
+      { tag: 'Type', q: 'Nature?', sub: 'Parks, trails and open air.', examples: 'Picnic, hike, botanical garden' },
+      { tag: 'Type', q: 'Markets & shopping?', sub: 'Wander and browse.', examples: 'Farmers market, thrift stores' },
+      { tag: 'Type', q: 'Events?', sub: 'Something happening that day.', examples: 'Festivals, shows, pop-ups' },
+      { tag: 'Setting', q: 'Indoors?', sub: 'Inside, whatever the weather.', examples: 'Cafés, theaters, game rooms' },
+      { tag: 'Setting', q: 'Outdoors?', sub: 'Out in the open air.', examples: 'Patios, parks, open-air markets' },
+      { tag: 'Price', q: 'Free or under $15?', sub: 'Per person.', examples: 'Parks, coffee, markets' },
+      { tag: 'Price', q: '$15–$30?', sub: 'Per person.', examples: 'Bowling, casual dinner, movies' },
+      { tag: 'Price', q: 'Over $30?', sub: 'Per person, for something special.', examples: 'Concerts, nicer dinners' },
+      { tag: 'Vibe', q: 'Chill and low-key?', sub: 'Easy to talk, nothing loud.', examples: 'Quiet café, a walk in the park' },
+      { tag: 'Vibe', q: 'Lively and busy?', sub: 'Crowds and energy are fine.', examples: 'Food halls, trivia night, arcades' }
+    ];
+  }
+  vote(v) {
+    if (this.state.exit || this.state.entering) return;
+    this.setState({ drag: false, exit: v });
+    setTimeout(() => {
+      this.setState((st) => ({ i: st.i + 1, exit: null, dx: 0, dy: 0, entering: true, answers: st.answers.concat([v]) }));
+      clearTimeout(this.dropT);
+      this.dropT = setTimeout(() => this.setState({ entering: false }), 40);
+    }, 280);
+  }
+  renderVals() {
+    const s = this.state;
+    const list = this.survey();
+    const n = list.length;
+    const active = s.i < n;
+    let tx = s.dx, ty = s.dy, rot = s.dx / 18;
+    if (s.exit === 'yes') { tx = 520; ty = 40; rot = 22; }
+    if (s.exit === 'no') { tx = -520; ty = 40; rot = -22; }
+    if (s.exit === 'maybe') { tx = 0; ty = 720; rot = 0; }
+    if (s.exit === 'skip') { tx = 0; ty = -620; rot = 0; }
+    const clamp = (x) => Math.max(0, Math.min(1, x));
+    const skips = s.answers.filter((x) => x === 'skip').length;
+    const out = {
+      active, done: !active,
+      node: active ? list[s.i] : list[n - 1],
+      counter: Math.min(s.i + 1, n) + ' of ' + n,
+      tf: 'translate(' + tx + 'px, ' + ty + 'px) rotate(' + rot + 'deg)',
+      tr: (s.drag || s.entering) ? 'none' : 'transform .28s ease, opacity .28s ease',
+      op: (s.exit && s.exit !== 'no') ? '0' : '1',
+      dark: (100 - 100 * (s.exit === 'no' ? 1 : Math.max(0, Math.min(1, -s.dx / 200)))) + '%',
+      darkTr: (s.drag || s.entering) ? 'none' : 'background-position .3s ease',
+      yesOp: String(s.exit === 'yes' ? 1 : clamp(s.dx / 90)),
+      noOp: String(s.exit === 'no' ? 1 : clamp(-s.dx / 90)),
+      maybeOp: String(s.exit === 'maybe' ? 1 : clamp((s.dy - Math.abs(s.dx)) / 90)),
+      skipNote: skips > 0
+        ? 'You answered ' + (n - skips) + ' of ' + n + ' and said “I don’t care” to ' + skips + '. Those stay open, so the group decides.'
+        : 'You answered all ' + n + '. We’ll combine your answers with everyone else’s.',
+      down: (e) => {
+        if (s.exit || s.entering) return;
+        if (e.currentTarget && e.currentTarget.setPointerCapture) e.currentTarget.setPointerCapture(e.pointerId);
+        this.sx = e.clientX; this.sy = e.clientY;
+        this.setState({ drag: true, dx: 0, dy: 0 });
+      },
+      move: (e) => {
+        if (!this.state.drag) return;
+        this.setState({ dx: e.clientX - this.sx, dy: Math.max(0, e.clientY - this.sy) });
+      },
+      up: () => {
+        const st = this.state;
+        if (!st.drag) return;
+        let v = null;
+        if (st.dx > 90) v = 'yes'; else if (st.dx < -90) v = 'no'; else if (st.dy > 90) v = 'maybe';
+        if (v) this.vote(v); else this.setState({ drag: false, dx: 0, dy: 0 });
+      },
+      voteYes: () => this.vote('yes'),
+      voteNo: () => this.vote('no'),
+      voteMaybe: () => this.vote('maybe'),
+      voteSkip: () => this.vote('skip'),
+      reset: () => this.setState({ i: 0, answers: [], exit: null, dx: 0, dy: 0 })
+    };
+    out.stack = this.buildStack(out, list, s);
+    return out;
+  }
+  glowFor(out) {
+    const opts = [['0,195,208', +out.yesOp], ['255,255,255', +out.maybeOp]];
+    opts.sort((x, y) => y[1] - x[1]);
+    const rgb = opts[0][0], a = Math.max(0, Math.min(1, opts[0][1]));
+    if (a < 0.02) return { bd: '#2A3739', glow: 'none' };
+    return {
+      bd: 'rgba(' + rgb + ',' + (0.35 + 0.65 * a).toFixed(2) + ')',
+      glow: '0 0 ' + Math.round(28 * a) + 'px ' + Math.round(4 * a) + 'px rgba(' + rgb + ',' + (0.6 * a).toFixed(2) + '), inset 0 0 0 ' + (2 * a).toFixed(1) + 'px rgba(' + rgb + ',' + a.toFixed(2) + ')'
+    };
+  }
+  buildStack(out, data, s) {
+    const items = [];
+    const noop = () => {};
+    for (let d = 2; d >= 0; d--) {
+      const idx = s.i + d;
+      if (idx >= data.length) continue;
+      if (d === 0) {
+        items.push({ d: data[idx], tf: out.tf, tr: out.tr, op: out.op, yesOp: out.yesOp, noOp: out.noOp, maybeOp: out.maybeOp,
+          down: out.down, move: out.move, up: out.up, z: 3, pe: 'auto', hidden: 'false', dark: out.dark, darkTr: out.darkTr, ...this.glowFor(out) });
+      } else {
+        const depth = s.exit ? d - 1 : d;
+        items.push({ d: data[idx], tf: 'translateY(' + (14 * depth) + 'px) scale(' + (1 - 0.05 * depth) + ')',
+          tr: s.entering ? 'none' : 'transform .28s ease', op: '1', yesOp: '0', noOp: '0', maybeOp: '0',
+          down: noop, move: noop, up: noop, z: 3 - d, pe: 'none', hidden: 'true', bd: '#2A3739', glow: 'none', dark: '100%', darkTr: 'none' });
+      }
+    }
+    return items;
+  }
+}
+</script>
+</body>
+</html>

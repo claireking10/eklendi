@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Eklendi — Day availability</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+*{box-sizing:border-box}
+a{color:#00C3D0}a:hover{color:#5BE3EC}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;height:52px;border-radius:16px;font:inherit;font-size:17px;font-weight:700;text-decoration:none;border:0;cursor:pointer;width:100%}
+.back{display:inline-flex;align-items:center;gap:6px;color:#FFFFFF;text-decoration:none;font-size:17px;min-height:44px;padding-right:12px}
+.back:hover{color:#00C3D0}
+.sec{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#00C3D0;margin:0}
+.step{width:44px;height:44px;border-radius:12px;border:1px solid #2C3A3C;background:#1E2B2D;color:#FFFFFF;font:inherit;font-size:22px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
+.step:hover{border-color:#00C3D0}
+.chip{min-height:44px;padding:0 16px;border-radius:999px;font:inherit;font-size:15px;font-weight:700;cursor:pointer}
+.buf{position:absolute;left:0;right:0;pointer-events:none;background:repeating-linear-gradient(135deg,rgba(0,195,208,.6) 0 2px,transparent 2px 5px);pointer-events:none}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; background: #000000; color: #FFFFFF; font-family: Figtree, -apple-system, system-ui, sans-serif; display: flex; flex-direction: column; padding: 56px 20px 28px">
+  <a class="back" href="SwipeTimes.dc.html">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+    Back to swiping
+  </a>
+  <p class="sec" style="margin-top: 8px">Thursday crew · Availability</p>
+  <h1 style="margin: 6px 0 0; font-size: 28px; font-weight: 700; letter-spacing: -0.02em">Thursday, Oct 8</h1>
+  <p style="margin: 4px 0 0; font-size: 14px; color: #A3AFB1">Suggested 3 – 4 PM · Tap or drag on the calendar to try another time</p>
+
+  <div style="margin-top: 14px; background: #0E1617; border: 1px solid #1E2A2C; border-radius: 18px; padding: 10px 10px 12px 0">
+    <div style="display: grid; grid-template-columns: 38px repeat(4, minmax(0, 1fr)); gap: 0px">
+      <span></span>
+      <sc-for list="{{ lanes }}" as="l" hint-placeholder-count="4">
+        <span style="display: flex; align-items: center; justify-content: center; gap: 6px; height: 28px; font-size: 13px; font-weight: 700">
+          <span style="width: 10px; height: 10px; border-radius: 3px; background: {{ l.color }}"></span>{{ l.name }}
+        </span>
+      </sc-for>
+    </div>
+    <div style="position: relative; display: grid; grid-template-columns: 38px repeat(4, minmax(0, 1fr)); margin-top: 6px">
+      <div style="position: relative; height: 286px">
+        <sc-for list="{{ hours }}" as="h" hint-placeholder-count="5">
+          <span style="position: absolute; right: 6px; top: {{ h.top }}; font-size: 11px; color: #8A9799; transform: translateY(-50%)">{{ h.label }}</span>
+        </sc-for>
+      </div>
+      <sc-for list="{{ lanes }}" as="l" hint-placeholder-count="4">
+        <div style="position: relative; height: 286px; border-left: 1px solid #1E2A2C">
+          <sc-for list="{{ hours }}" as="h" hint-placeholder-count="5">
+            <span style="position: absolute; left: 0; right: 0; top: {{ h.top }}; height: 1px; background: #1A2527"></span>
+          </sc-for>
+          <sc-for list="{{ l.busy }}" as="b" hint-placeholder-count="2">
+            <span style="position: absolute; left: 4px; right: 4px; top: {{ b.top }}; height: {{ b.h }}; border-radius: 6px; background: {{ l.color }}; color: #0B0B0B; font-size: 11px; font-weight: 700; padding: 4px 6px; overflow: hidden">Busy</span>
+          </sc-for>
+        </div>
+      </sc-for>
+      <div onPointerDown="{{ pDown }}" onPointerMove="{{ pMove }}" onPointerUp="{{ pUp }}" onPointerCancel="{{ pUp }}" style="position: absolute; left: 38px; right: 0; top: 0; height: 286px; touch-action: none; user-select: none; cursor: crosshair">
+        <sc-for list="{{ bufs }}" as="u" hint-placeholder-count="2">
+          <span class="buf" style="top: {{ u.top }}; height: {{ u.h }}"></span>
+        </sc-for>
+        <span style="pointer-events: none; position: absolute; left: 2px; right: 2px; top: {{ sugTop }}; height: {{ sugH }}; border-radius: 8px; border: 2px solid #00C3D0; background: rgba(0,195,208,.22); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; color: #CFF6F8">Suggested · 3 – 4p</span>
+        <span data-idea="1" style="position: absolute; left: 2px; right: 2px; top: {{ propTop }}; height: {{ propH }}; border-radius: 8px; border: 2px dashed {{ propColor }}; background: {{ propBg }}; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 12px; font-weight: 800; color: #FFFFFF; cursor: {{ propCursor }}; box-shadow: {{ propShadow }}; transition: {{ propTr }}">
+          <span style="width: 28px; height: 3px; border-radius: 2px; background: {{ propColor }}; opacity: .9"></span>
+          Your idea · {{ propShort }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <sc-if value="{{ editing }}" hint-placeholder-val="{{ true }}">
+    <div style="margin-top: 14px; background: #162022; border: 1px solid #243133; border-radius: 20px; padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 12px">
+      <div style="display: flex; align-items: center; justify-content: space-between">
+        <span style="font-size: 17px; font-weight: 700">Suggest another time</span>
+        <span style="font-size: 13px; font-weight: 700; color: {{ statusColor }}">{{ status }}</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px">
+        <button class="step" type="button" aria-label="Earlier" onClick="{{ earlier }}">−</button>
+        <span style="flex: 1; text-align: center; font-size: 20px; font-weight: 800">{{ propLong }}</span>
+        <button class="step" type="button" aria-label="Later" onClick="{{ later }}">+</button>
+      </div>
+      <div style="display: flex; gap: 8px">
+        <sc-for list="{{ durs }}" as="d" hint-placeholder-count="2">
+          <button class="chip" type="button" aria-pressed="{{ d.pressed }}" onClick="{{ d.pick }}" style="background: {{ d.bg }}; color: {{ d.fg }}; border: 1px solid {{ d.bd }}">{{ d.label }}</button>
+        </sc-for>
+      </div>
+      <button class="btn" type="button" onClick="{{ send }}" style="background: {{ sendBg }}; color: {{ sendFg }}">{{ sendLabel }}</button>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ sent }}" hint-placeholder-val="{{ false }}">
+    <div style="margin-top: 14px; background: #13292B; border: 1px solid #1F4A4D; border-radius: 20px; padding: 18px 16px; display: flex; flex-direction: column; gap: 10px">
+      <div style="display: flex; align-items: center; gap: 10px">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00C3D0" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
+        <span style="font-size: 17px; font-weight: 700">Sent to Seth, Matt and Mark</span>
+      </div>
+      <span style="font-size: 14px; color: #CFF6F8; line-height: 1.5">{{ sentBody }}</span>
+      <div style="display: flex; gap: 18px">
+        <button type="button" onClick="{{ again }}" style="background: transparent; border: 0; color: #00C3D0; font: inherit; font-size: 15px; font-weight: 700; min-height: 44px; cursor: pointer; padding: 0">Suggest another</button>
+        <a href="SwipeTimes.dc.html" style="font-size: 15px; font-weight: 700; min-height: 44px; display: inline-flex; align-items: center; text-decoration: none">Back to swiping</a>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { start: 20.5, dur: 1, sent: false, dragging: false };
+    this.off = 0;
+  }
+  fmt(t, long) {
+    const h = Math.floor(t), m = Math.round((t - h) * 60);
+    const hh = ((h + 11) % 12) + 1;
+    if (long) return hh + ':' + String(m).padStart(2, '0') + (h >= 12 ? ' PM' : ' AM');
+    return hh + (m ? ':' + String(m).padStart(2, '0') : '') + (h >= 12 ? 'p' : 'a');
+  }
+  timeAt(e, el) {
+    const r = el.getBoundingClientRect();
+    const scale = r.height / 286 || 1;
+    return 9 + ((e.clientY - r.top) / scale) / 22;
+  }
+  clampStart(t) {
+    const snapped = Math.round(t * 4) / 4;
+    return Math.max(9, Math.min(22 - this.state.dur, snapped));
+  }
+  renderVals() {
+    const s = this.state;
+    const PX = 22, START = 9, END = 22, BUF = 0.25;
+    const y = (t) => ((t - START) * PX) + 'px';
+    const hgt = (a, b) => ((b - a) * PX) + 'px';
+    const people = [
+      { name: 'You', color: '#E8ECEC', busy: [[9, 12]] },
+      { name: 'Seth', color: '#FFCC00', busy: [[10, 14]] },
+      { name: 'Matt', color: '#CB30E0', busy: [[13, 14.75]] },
+      { name: 'Mark', color: '#6E8BFF', busy: [[9, 13], [16.5, 20]] }
+    ];
+    const a = s.start, b = s.start + s.dur;
+    const clash = people.filter((p) => p.busy.some(([x, z]) => a < z + BUF && b > x - BUF)).map((p) => p.name);
+    const ok = clash.length === 0;
+    const who = clash.length === 1 ? clash[0] + ' is busy' : clash.slice(0, -1).join(', ') + ' and ' + clash[clash.length - 1] + ' are busy';
+    const range = this.fmt(a, true) + ' – ' + this.fmt(b, true);
+    return {
+      lanes: people.map((p) => ({ ...p, busy: p.busy.map(([x, z]) => ({ top: y(x), h: hgt(x, z) })) })),
+      hours: [9, 12, 15, 18, 21].map((h) => ({ top: y(h), label: this.fmt(h) })),
+      bufs: [[14.75, 15], [16.25, 16.5]].map(([x, z]) => ({ top: y(x), h: hgt(x, z) })),
+      sugTop: y(15), sugH: hgt(15, 16),
+      propTop: y(a), propH: hgt(a, b),
+      propShort: this.fmt(a) + '–' + this.fmt(b),
+      propLong: range,
+      propColor: ok ? '#FFCC00' : '#FF8A65',
+      propBg: ok ? 'rgba(255,204,0,.16)' : 'rgba(255,138,101,.18)',
+      status: ok ? 'Everyone’s free' : who,
+      statusColor: ok ? '#00C3D0' : '#FF8A65',
+      durs: [1, 2].map((d) => {
+        const on = s.dur === d;
+        return { label: d + ' hr', pressed: on ? 'true' : 'false', bg: on ? '#00C3D0' : '#1E2B2D', fg: on ? '#00282B' : '#FFFFFF', bd: on ? '#00C3D0' : '#2C3A3C',
+          pick: () => this.setState({ dur: d, start: Math.min(s.start, END - d) }) };
+      }),
+      propCursor: s.dragging ? 'grabbing' : 'grab',
+      propShadow: s.dragging ? '0 8px 20px rgba(0,0,0,.5)' : 'none',
+      propTr: s.dragging ? 'none' : 'top .15s ease',
+      pDown: (e) => {
+        if (s.sent) return;
+        const el = e.currentTarget;
+        const t = this.timeAt(e, el);
+        const onIdea = e.target && e.target.closest && e.target.closest('[data-idea]');
+        if (el.setPointerCapture) el.setPointerCapture(e.pointerId);
+        if (onIdea) {
+          this.off = t - s.start;
+        } else {
+          this.off = s.dur / 2;
+          this.setState({ start: this.clampStart(t - this.off) });
+        }
+        this.setState({ dragging: true });
+      },
+      pMove: (e) => {
+        if (!this.state.dragging) return;
+        const t = this.timeAt(e, e.currentTarget);
+        const next = this.clampStart(t - this.off);
+        if (next !== this.state.start) this.setState({ start: next });
+      },
+      pUp: () => { if (this.state.dragging) this.setState({ dragging: false }); },
+      earlier: () => this.setState({ start: Math.max(START, s.start - 0.25) }),
+      later: () => this.setState({ start: Math.min(END - s.dur, s.start + 0.25) }),
+      sendLabel: ok ? 'Send to the group' : 'Send anyway',
+      sendBg: ok ? '#00C3D0' : '#1E2B2D', sendFg: ok ? '#00282B' : '#FFFFFF',
+      send: () => this.setState({ sent: true }),
+      again: () => this.setState({ sent: false }),
+      editing: !s.sent, sent: s.sent,
+      sentBody: 'Thursday ' + range + ' will show up as a new time for everyone to swipe on.'
+    };
+  }
+}
+</script>
+</body>
+</html>

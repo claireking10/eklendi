@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Eklendi — Waiting on the group</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+*{box-sizing:border-box}
+a{color:#00C3D0}a:hover{color:#5BE3EC}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;height:56px;border-radius:16px;font:inherit;font-size:17px;font-weight:700;text-decoration:none;border:0;cursor:pointer;width:100%}
+.btn-p{background:#00C3D0;color:#00282B}.btn-p:hover{background:#2BD3DE;color:#00282B}
+.back{display:inline-flex;align-items:center;gap:6px;color:#FFFFFF;text-decoration:none;font-size:17px;min-height:44px;padding-right:12px}
+.back:hover{color:#00C3D0}
+.sec{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#00C3D0;margin:0}
+.av{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#0B0B0B;flex:none}
+.nudge{min-height:44px;padding:0 18px;border-radius:999px;font:inherit;font-size:14px;font-weight:700;cursor:pointer}
+@keyframes pulse{0%,100%{opacity:.35}50%{opacity:1}}
+.dot{width:6px;height:6px;border-radius:50%;background:#FFCC00;animation:pulse 1.2s infinite}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; background: #000000; color: #FFFFFF; font-family: Figtree, -apple-system, system-ui, sans-serif; display: flex; flex-direction: column; padding: 56px 24px 32px">
+  <a class="back" href="Home.dc.html" aria-label="Back to home" style="padding-right: 0; width: 44px; justify-content: center; margin-left: -10px">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+  </a>
+  <p class="sec" style="margin-top: 10px">Thursday crew · Seth’s view (owner)</p>
+  <h1 style="margin: 6px 0 0; font-size: 28px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.15">{{ headline }}</h1>
+  <p style="margin: 8px 0 0; font-size: 15px; color: #A3AFB1; line-height: 1.45">{{ subline }}</p>
+
+  <div style="margin-top: 24px; display: flex; align-items: center; gap: 12px">
+    <div style="flex: 1; height: 8px; border-radius: 4px; background: #1E2B2D; overflow: hidden">
+      <div style="height: 8px; border-radius: 4px; background: #00C3D0; width: {{ pct }}; transition: width .4s"></div>
+    </div>
+    <span style="font-size: 14px; font-weight: 700">{{ doneCount }} of {{ total }}</span>
+  </div>
+
+  <div style="margin-top: 20px; background: #162022; border: 1px solid #243133; border-radius: 20px; padding: 6px 16px">
+    <sc-for list="{{ members }}" as="m" hint-placeholder-count="4">
+      <div style="display: flex; align-items: center; gap: 14px; min-height: 72px; border-bottom: {{ m.border }}">
+        <span class="av" style="background: {{ m.color }}">{{ m.initials }}</span>
+        <span style="flex: 1; display: flex; flex-direction: column; gap: 3px">
+          <span style="font-size: 16px; font-weight: 700">{{ m.name }}</span>
+          <sc-if value="{{ m.done }}" hint-placeholder-val="{{ true }}">
+            <span style="font-size: 13px; color: #00C3D0; font-weight: 600">Done swiping</span>
+          </sc-if>
+          <sc-if value="{{ m.pending }}" hint-placeholder-val="{{ false }}">
+            <span style="display: inline-flex; align-items: center; gap: 4px; font-size: 13px; color: #FFCC00; font-weight: 600">No response in 2 days <span class="dot"></span><span class="dot" style="animation-delay: .2s"></span><span class="dot" style="animation-delay: .4s"></span></span>
+            <span style="display: flex; gap: 8px; margin: 6px 0 10px">
+              <button class="nudge" type="button" onClick="{{ m.nudge }}" aria-label="{{ m.nAria }}" style="background: {{ m.nBg }}; color: {{ m.nFg }}; border: 1px solid {{ m.nBd }}">{{ m.nLabel }}</button>
+              <button class="nudge" type="button" onClick="{{ m.remove }}" aria-label="{{ m.rAria }}" style="background: transparent; color: #E8ECEC; border: 1px solid #4A5B5D">Remove</button>
+            </span>
+          </sc-if>
+          <sc-if value="{{ m.removed }}" hint-placeholder-val="{{ false }}">
+            <span style="font-size: 13px; color: #8A9799; font-weight: 600">Removed from this hangout</span>
+          </sc-if>
+        </span>
+        <sc-if value="{{ m.done }}" hint-placeholder-val="{{ true }}">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#00C3D0" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
+        </sc-if>
+        <sc-if value="{{ m.removed }}" hint-placeholder-val="{{ false }}">
+          <button class="nudge" type="button" onClick="{{ m.undo }}" style="background: transparent; color: #00C3D0; border: 0; padding: 0 8px">Undo</button>
+        </sc-if>
+      </div>
+    </sc-for>
+  </div>
+  <p style="margin: 12px 4px 0; font-size: 13px; color: #8A9799; line-height: 1.45">The hangout confirms itself as soon as everyone agrees. Only you, as the owner, can nudge or remove people.</p>
+
+  <div style="flex: 1"></div>
+  <button type="button" onClick="{{ simulate }}" style="background: transparent; border: 0; color: #8A9799; font: inherit; font-size: 13px; min-height: 44px; cursor: pointer">{{ simLabel }}</button>
+  <sc-if value="{{ allDone }}" hint-placeholder-val="{{ false }}">
+    <a class="btn btn-p" href="Cards.dc.html">See hangout ideas</a>
+  </sc-if>
+  <sc-if value="{{ notAllDone }}" hint-placeholder-val="{{ true }}">
+    <a class="btn btn-p" href="Cards.dc.html" style="background: #1E2B2D; color: #E8ECEC">Preview ideas so far</a>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { markDone: false, nudged: false, removed: false };
+  }
+  renderVals() {
+    const s = this.state;
+    const ms = [
+      { name: 'You (owner)', initials: 'SF', color: '#FFCC00', done: true, removed: false },
+      { name: 'Zach Weiss', initials: 'ZW', color: '#E8ECEC', done: true, removed: false },
+      { name: 'Matt Hibbs', initials: 'MH', color: '#CB30E0', done: true, removed: false },
+      { name: 'Mark Lewis', initials: 'ML', color: '#6E8BFF', done: s.markDone, removed: s.removed }
+    ];
+    const active = ms.filter((m) => !m.removed);
+    const doneCount = active.filter((m) => m.done).length;
+    const all = doneCount === active.length;
+    return {
+      members: ms.map((m, i) => ({ ...m,
+        done: m.done && !m.removed, pending: !m.done && !m.removed,
+        color: m.removed ? '#3A4A4C' : m.color,
+        border: i < ms.length - 1 ? '1px solid #243133' : '0px solid transparent',
+        nLabel: s.nudged ? 'Nudged' : 'Nudge',
+        nAria: 'Nudge ' + m.name, rAria: 'Remove ' + m.name + ' from this hangout',
+        nBg: s.nudged ? 'transparent' : '#FFCC00', nFg: s.nudged ? '#FFCC00' : '#1A1500', nBd: '#FFCC00',
+        nudge: () => this.setState({ nudged: true }),
+        remove: () => this.setState({ removed: true }),
+        undo: () => this.setState({ removed: false }) })),
+      doneCount, total: active.length, pct: (doneCount / active.length * 100) + '%',
+      allDone: all, notAllDone: !all,
+      headline: all ? 'Everyone’s in. Building your ideas.' : 'Waiting on Mark.',
+      subline: all
+        ? (s.removed ? 'Mark was removed, so we’re going ahead with the three of you.' : 'Ideas are ready to swipe on.')
+        : 'Mark hasn’t swiped yet. Nudge him, or remove him so the group can move on.',
+      simLabel: s.markDone ? 'Reset demo' : 'Demo: Mark finishes swiping',
+      simulate: () => this.setState({ markDone: !s.markDone, nudged: false, removed: false })
+    };
+  }
+}
+</script>
+</body>
+</html>
