@@ -154,7 +154,7 @@ final class HomeSectioningTests: XCTestCase {
         let info: HomeTileInfo = HomeSectioning.info(for: hangout(.votingTimes), me: member(), myUid: me, ownerName: "Seth Fox")
         XCTAssertEqual(info.section, .needsAction)
         XCTAssertEqual(info.action, "Swipe")
-        XCTAssertTrue(info.status.contains("started by Seth"))
+        XCTAssertEqual(info.status, "Times to swipe")
     }
 
     func testVotingTimesDoneIsInProgress() {

@@ -20,7 +20,7 @@ enum HomeSection: Int, CaseIterable, Comparable, Sendable {
 /// What a Home tile says about a hangout. Pure, tested in AccountTests.
 struct HomeTileInfo: Equatable, Sendable {
     let section: HomeSection
-    /// e.g. "Times to swipe · started by Seth"
+    /// Short, one-line status, e.g. "Times to swipe".
     let status: String
     /// Trailing call to action ("Swipe", "Join"), nil when nothing to do.
     let action: String?
@@ -30,32 +30,31 @@ enum HomeSectioning {
     /// Classifies a hangout for the signed-in user. `me` is the user's member doc (nil while loading).
     static func info(for hangout: Hangout, me: HangoutMember?, myUid: String, ownerName: String?,
                      now: Date = Date()) -> HomeTileInfo {
-        let starter: String = startedBy(hangout: hangout, myUid: myUid, ownerName: ownerName)
         if let me = me, me.state == .declined || me.state == .removed {
             return HomeTileInfo(section: .hidden, status: "", action: nil)
         }
         switch hangout.status {
         case .collectingAvailability:
             if me?.state == .invited {
-                return HomeTileInfo(section: .needsAction, status: "New invite · \(starter)", action: "Join")
+                return HomeTileInfo(section: .needsAction, status: "New invite", action: "Join")
             }
             if let me = me, !me.availabilitySubmitted {
-                return HomeTileInfo(section: .needsAction, status: "Share when you’re free · \(starter)", action: "Start")
+                return HomeTileInfo(section: .needsAction, status: "Share when you’re free", action: "Start")
             }
             return HomeTileInfo(section: .inProgress, status: "Waiting for everyone’s calendars", action: nil)
 
         case .votingTimes:
             if let me = me, me.state == .invited || !me.timesDone {
-                return HomeTileInfo(section: .needsAction, status: "Times to swipe · \(starter)", action: "Swipe")
+                return HomeTileInfo(section: .needsAction, status: "Times to swipe", action: "Swipe")
             }
             return HomeTileInfo(section: .inProgress, status: "Waiting for others to swipe times", action: nil)
 
         case .noMutualTime:
-            return HomeTileInfo(section: .needsAction, status: "No time works for everyone · pick another", action: "Pick")
+            return HomeTileInfo(section: .needsAction, status: "No time works for everyone", action: "Pick")
 
         case .survey:
             if let me = me, !me.surveyDone {
-                return HomeTileInfo(section: .needsAction, status: "Quick activity survey · \(starter)", action: "Swipe")
+                return HomeTileInfo(section: .needsAction, status: "Quick activity survey", action: "Swipe")
             }
             return HomeTileInfo(section: .inProgress, status: "Waiting for everyone’s survey", action: nil)
 
@@ -64,12 +63,12 @@ enum HomeSectioning {
 
         case .votingCards:
             if let me = me, me.cardsDoneRound < hangout.round {
-                return HomeTileInfo(section: .needsAction, status: "Hangout ideas to swipe · \(starter)", action: "Swipe")
+                return HomeTileInfo(section: .needsAction, status: "Hangout ideas to swipe", action: "Swipe")
             }
             return HomeTileInfo(section: .inProgress, status: "Waiting for others to swipe ideas", action: nil)
 
         case .noAgreement:
-            return HomeTileInfo(section: .needsAction, status: "Not everyone agrees · swipe on new ideas", action: "Swipe")
+            return HomeTileInfo(section: .needsAction, status: "Not everyone agrees", action: "Swipe")
 
         case .confirmed:
             let end: Date = hangout.confirmed?.end ?? hangout.winningSlot?.end ?? now
