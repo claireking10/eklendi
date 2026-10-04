@@ -123,10 +123,11 @@ struct HangoutMember: Codable, Identifiable, Hashable, Sendable {
     var cardsDoneRound: Int = 0
     var notGoing: Bool = false
     var nudgedAt: Date?
+    var timeZone: String?
 
     enum CodingKeys: String, CodingKey {
         case name, role, state, availabilitySubmitted, busy, bufferMinutes, startLocation,
-             timesDone, surveyDone, cardsDoneRound, notGoing, nudgedAt
+             timesDone, surveyDone, cardsDoneRound, notGoing, nudgedAt, timeZone
     }
 
     var isParticipating: Bool { state == .active }

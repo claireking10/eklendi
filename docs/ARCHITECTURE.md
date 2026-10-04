@@ -17,7 +17,7 @@ Calls callables  ─────────────────────
                                                • Gemini + Google Places (keys = function secrets)
 ```
 
-- **All group logic runs in Cloud Functions** (free windows, buffers, slot ranking, horizon, fallback, winner rules + ties, preference model, centroid, Gemini, Places). It is unit-tested with Vitest in `functions/`.
+- **All group logic runs in Cloud Functions** (free windows, buffers, slot ranking, horizon, fallback, winner rules + ties, preference model, centroid, Gemini, Places). It is unit-tested with `node:test` in `functions/test/`.
 - **The iOS app never holds Gemini/Places keys.** It only talks to Firebase.
 - **All times are stored as Firestore `Timestamp` (UTC)** and displayed in the device's local time zone.
 - **Push notifications are out of scope for now** (need a paid Apple account). Screens update live via Firestore listeners.
@@ -80,11 +80,13 @@ Calls callables  ─────────────────────
 | cardsDoneRound | int | last card round finished (0 = none) |
 | notGoing | bool | "I'm no longer available" after confirmation |
 | nudgedAt | Timestamp? | owner nudge |
+| timeZone | string | IANA id (e.g. `America/Chicago`), written with availability; used for "sensible hours" |
 
 A member counts as **participating** when `state == "active"` (invitees become active when they open the hangout; owner is active from creation). Declined/removed members are excluded from every "everyone" rule.
 
 ### `hangouts/{id}/slots/{slotId}`
 `{ start, end, source: "computed"|"suggested"|"fallback", suggestedBy?: uid, missingMemberIds: [uid], rank: int, label: string, reason: string }`
+- "Sensible hours": slots start no earlier than 9:00 and end no later than 23:00 in the owner's `timeZone` (fallback `America/Chicago`). Slots start on :00 or :30. Never start within 1 hour of now.
 - Max 8 `computed` slots. `label` e.g. "Best match", "Weeknight", "Weekend". `reason` e.g. "Starts 15 min after Matt's class ends".
 - `missingMemberIds` non-empty only for "all but one" fallback slots.
 
