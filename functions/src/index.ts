@@ -79,5 +79,15 @@ export const geocodeLocation = onCall({ secrets, timeoutSeconds: 30 }, async (re
 // Demo mode (no signed-in user): real venues + photos for a fixed allowlist only.
 export const demoVenues = onCall(
   { secrets: [GOOGLE_PLACES_API_KEY], timeoutSeconds: 60, maxInstances: 2 },
-  async () => demoVenuesImpl(),
+  async () => {
+    try {
+      const result = await demoVenuesImpl();
+      const all = Object.values(result.venues);
+      logger.info(`demoVenues: ${all.length} venues, ${all.filter((v) => v.photoUrl).length} with photos`);
+      return result;
+    } catch (e) {
+      logger.warn(`demoVenues failed: ${e instanceof Error ? e.message : String(e)}`);
+      throw e;
+    }
+  },
 );
