@@ -182,6 +182,15 @@ test("fallback offers skip already-offered times", () => {
   const first = computeFallbackOffers({ members, durationsMinutes: [60], durationAny: false, nowMs: NOW, ownerTimeZone: TZ });
   assert.ok(first.length > 0 && first.length <= 8);
   const again = computeFallbackOffers({ members, durationsMinutes: [60], durationAny: false, nowMs: NOW, ownerTimeZone: TZ, exclude: first });
-  for (const s of again) assert.ok(!first.some((f) => f.start === s.start && f.end === s.end));
+  for (const s of again) assert.ok(!first.some((f) => s.start < f.end && f.start < s.end), "no overlap with earlier offers");
   assert.ok(first.some((s) => s.missingMemberIds.length === 1));
+  // Full-group offers are "later this month": after the first two weeks.
+  const full = first.filter((s) => s.missingMemberIds.length === 0);
+  assert.ok(full.length > 0);
+  for (const s of full) assert.ok(s.start >= NOW + DAYS(14));
+  // Two people with votes on the first 8 computed slots still get new options.
+  const two = [member("a"), member("b")];
+  const voted = computeSlots({ members: two, durationsMinutes: [60], durationAny: false, nowMs: NOW, ownerTimeZone: TZ }).slots;
+  const offers = computeFallbackOffers({ members: two, durationsMinutes: [60], durationAny: false, nowMs: NOW, ownerTimeZone: TZ, exclude: voted });
+  assert.ok(offers.length > 0);
 });

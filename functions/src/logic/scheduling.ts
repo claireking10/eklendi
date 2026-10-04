@@ -390,18 +390,32 @@ function finalize(
   });
 }
 
+export interface SlotFilter {
+  /** Only slots starting at or after this instant. */
+  notBefore?: number;
+  /** Skip slots overlapping any of these (e.g. times already offered). */
+  exclude?: Interval[];
+}
+
+function passes(c: Candidate, f: SlotFilter): boolean {
+  if (f.notBefore !== undefined && c.start < f.notBefore) return false;
+  if (f.exclude && f.exclude.some((e) => c.start < e.end && e.start < c.end)) return false;
+  return true;
+}
+
 /** Ranked, spread-out full-group slots in a given horizon (no extension, no fallback). */
-export function findSlots(input: ComputeSlotsInput & { horizonDays: number }): ComputedSlot[] {
+export function findSlots(input: ComputeSlotsInput & { horizonDays: number } & SlotFilter): ComputedSlot[] {
   const tz = resolveTimeZone(input.ownerTimeZone);
   const durations = normalizeDurations(input.durationsMinutes, input.durationAny);
   const max = input.maxSlots ?? MAX_SLOTS;
   if (input.members.length === 0) return [];
-  const cands = candidatesFor(input.members, input.nowMs, tz, input.horizonDays, durations, []);
+  const cands = candidatesFor(input.members, input.nowMs, tz, input.horizonDays, durations, [])
+    .filter((c) => passes(c, input));
   return finalize(selectSpread(cands, max, durations), input.members, tz, "computed");
 }
 
 /** "All but one" slots: windows where every member except one is free (groups of 3+ only). */
-export function findAllButOneSlots(input: ComputeSlotsInput & { horizonDays: number }): ComputedSlot[] {
+export function findAllButOneSlots(input: ComputeSlotsInput & { horizonDays: number } & SlotFilter): ComputedSlot[] {
   const tz = resolveTimeZone(input.ownerTimeZone);
   const durations = normalizeDurations(input.durationsMinutes, input.durationAny);
   const max = input.maxSlots ?? MAX_SLOTS;
@@ -409,7 +423,7 @@ export function findAllButOneSlots(input: ComputeSlotsInput & { horizonDays: num
   const all: Candidate[] = [];
   for (const missing of input.members) {
     const others = input.members.filter((m) => m.uid !== missing.uid);
-    all.push(...candidatesFor(others, input.nowMs, tz, input.horizonDays, durations, [missing.uid]));
+    all.push(...candidatesFor(others, input.nowMs, tz, input.horizonDays, durations, [missing.uid]).filter((c) => passes(c, input)));
   }
   return finalize(selectSpread(all, max, durations), input.members, tz, "fallback");
 }
@@ -433,18 +447,17 @@ export function computeSlots(input: ComputeSlotsInput): ComputeSlotsResult {
 
 /**
  * Alternatives for the "No mutual time" screen (08b) after a time vote found no winner:
- * full-group slots later in the month plus "all but one" slots in the next 2 weeks,
- * skipping any time already offered.
+ * full-group slots later in the month (after the first 2 weeks when possible) plus
+ * "all but one" slots in the next 2 weeks, never overlapping a time already offered.
  */
 export function computeFallbackOffers(
   input: ComputeSlotsInput & { exclude?: Interval[] },
 ): ComputedSlot[] {
   const exclude = input.exclude ?? [];
-  const fresh = (s: ComputedSlot): boolean => !exclude.some((e) => e.start === s.start && e.end === s.end);
-  const later = findSlots({ ...input, horizonDays: EXTENDED_HORIZON_DAYS, maxSlots: MAX_SLOTS })
-    .filter(fresh).slice(0, 4);
-  const abo = findAllButOneSlots({ ...input, horizonDays: HORIZON_DAYS, maxSlots: MAX_SLOTS })
-    .filter(fresh).slice(0, 4);
+  const base = { ...input, exclude, maxSlots: 4 };
+  let later = findSlots({ ...base, horizonDays: EXTENDED_HORIZON_DAYS, notBefore: input.nowMs + HORIZON_DAYS * DAY_MS });
+  if (later.length === 0) later = findSlots({ ...base, horizonDays: EXTENDED_HORIZON_DAYS });
+  const abo = findAllButOneSlots({ ...base, horizonDays: HORIZON_DAYS });
   const out = [...later.map((s) => ({ ...s, source: "fallback" as SlotSource })), ...abo];
   return out.map((s, i) => ({ ...s, rank: i + 1 }));
 }
