@@ -23,6 +23,14 @@ protocol AuthServicing: AnyObject {
     func signIn(phoneE164: String, password: String) async throws
     func signOut() throws
     func deleteAccount() async throws
+    /// Re-evaluates onboarding state (call after saving the profile at the end of onboarding,
+    /// e.g. once name + calendarConnected are set) so `state` moves to `.signedIn`.
+    func refresh() async
+}
+
+extension AuthServicing {
+    /// Default no-op so mocks don't need to implement it.
+    func refresh() async {}
 }
 
 @MainActor
