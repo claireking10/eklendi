@@ -85,17 +85,16 @@ enum EKColor {
     static let avatarText = Color(hex: "#0B0B0B")
 }
 
-/// Bundled fonts (Eklendi/Resources/Fonts): Inter for all text, SeoulNamsan CBL for the
-/// "eklendi" logo. Registered at runtime, so no Info.plist entry is needed. Missing files
-/// fall back to the system font.
+/// Bundled fonts (Eklendi/Resources/Fonts): Inter for all text, Outfit ExtraBold for the
+/// "eklendi" logo (both SIL OFL). Registered at runtime, so no Info.plist entry is needed.
+/// Missing files fall back to the system font.
 enum EKFontRegistry {
     /// PostScript names of every bundled font that registered.
     static let names: Set<String> = registerBundledFonts()
 
-    /// The logo font: a bundled SeoulNamsan font, preferring the CBL weight.
+    /// The logo font (nil if the file isn't bundled).
     static var logoFontName: String? {
-        let namsan: [String] = names.filter { $0.lowercased().contains("namsan") }.sorted()
-        return namsan.first(where: { $0.uppercased().contains("CBL") }) ?? namsan.first
+        names.contains("Outfit-ExtraBold") ? "Outfit-ExtraBold" : nil
     }
 
     private static func registerBundledFonts() -> Set<String> {
@@ -134,7 +133,7 @@ enum EKFont {
         return .custom(name, size: size)
     }
 
-    /// "eklendi" logo in SeoulNamsan CBL (system rounded heavy until the font file is added).
+    /// "eklendi" logo in Outfit ExtraBold (system rounded heavy if the font is missing).
     static func logo(_ size: CGFloat) -> Font {
         if let name = EKFontRegistry.logoFontName {
             return .custom(name, size: size)

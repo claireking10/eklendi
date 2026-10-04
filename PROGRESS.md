@@ -86,7 +86,8 @@ Running log for agents and teammates. **Read this and `CLAUDE.md` before startin
 ## Log
 
 ### 2026-10-04 — Fonts, white button text, day-view colors (Claude, for Claire)
-- **Fonts:** Inter (OFL) bundled in `Eklendi/Resources/Fonts/` (Regular→Black, registered at runtime by `EKFontRegistry` in `DesignSystem/Theme.swift`, no Info.plist entry). Every `.system(size:)` text font now goes through `EKFont.inter(size, weight)`; SF Symbol icons keep the system font. RootView sets Inter as the default font. Logo uses `EKFont.logo(size)` = SeoulNamsan CBL **once its font file is added to `Eklendi/Resources/Fonts/`** (any .ttf/.otf with "Namsan" in its PostScript name; until then: system rounded heavy). Couldn't download it from the agent environment.
+- **Fonts:** Inter (OFL) bundled in `Eklendi/Resources/Fonts/` (Regular→Black, registered at runtime by `EKFontRegistry` in `DesignSystem/Theme.swift`, no Info.plist entry). Every `.system(size:)` text font now goes through `EKFont.inter(size, weight)`; SF Symbol icons keep the system font. RootView sets Inter as the default font. Logo uses `EKFont.logo(size)` = **Outfit ExtraBold** (OFL; static instance made from Google Fonts' variable Outfit). SeoulNamsan CBL dropped at Claire's request.
+- **Home rows:** the status line ("No time works for everyone…") and the confirmed detail line stay on one line and shrink to fit (`minimumScaleFactor(0.6)`) instead of wrapping.
 - **Teal buttons:** `EKColor.onTeal` is now white (buttons, selected chips, badges on teal).
 - **Day view:** "Your idea" uses my lane color (dashed, per design), orange when it clashes. Demo friends now have preset busy times (`DemoPersona.busy`, matching the slot reasons and their "no" votes), set on every demo member in `MockStore.makeMember`.
 

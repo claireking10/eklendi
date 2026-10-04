@@ -218,10 +218,13 @@ struct HomeView: View {
                 AvatarStack(names: entry.others, size: 34, ringColor: EKColor.card, maxVisible: 4)
             }
             HStack(spacing: 10) {
+                // Always one line: the text shrinks to fit narrow phones instead of wrapping.
                 Text(entry.info.status)
                     .font(EKFont.inter(15))
                     .foregroundStyle(EKColor.muted)
-                    .multilineTextAlignment(.leading)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.6)
+                    .allowsTightening(true)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 if let action = entry.info.action {
                     HStack(spacing: 4) {
@@ -230,6 +233,8 @@ struct HomeView: View {
                     }
                     .font(EKFont.calloutBold)
                     .foregroundStyle(EKColor.teal)
+                    .lineLimit(1)
+                    .fixedSize()
                 } else {
                     Image(systemName: "chevron.right")
                         .font(.system(size: 14, weight: .semibold))
@@ -280,6 +285,9 @@ struct HomeView: View {
                     Text(detail)
                         .font(EKFont.inter(14))
                         .foregroundStyle(EKColor.muted)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.6)
+                        .allowsTightening(true)
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
