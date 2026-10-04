@@ -1,7 +1,7 @@
 import XCTest
 
 /// Hangout flows against the in-memory mocks (`-uiTesting -uiTestingSignedIn`, signed in as Zach).
-/// The other members answer with preset choices (Services/DemoPersonas.swift); every group
+/// The other members answer with preset choices (Services/MockStore.swift, `DemoPersona`); every group
 /// has options nobody vetoes, so voting yes everywhere always produces a winner.
 final class HangoutFlowUITests: XCTestCase {
     override func setUpWithError() throws {

@@ -22,7 +22,7 @@ final class AppEnvironment {
     }
 
     /// Demo mode (the default): in-memory mock services with preset friends
-    /// (Services/DemoPersonas.swift), so the app runs without real phone numbers, SMS
+    /// (Services/MockStore.swift, `DemoPersona`), so the app runs without real phone numbers, SMS
     /// codes, passwords or Firebase. Launch with `-liveBackend` to use Firebase instead.
     static var demoMode: Bool {
         !ProcessInfo.processInfo.arguments.contains("-liveBackend")

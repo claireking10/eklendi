@@ -14,7 +14,7 @@ struct MockServiceError: LocalizedError {
 /// - previews → signed in as Zach
 /// - no args (demo mode, the default app launch) → starts `.signedOut` at the login screen
 /// Login (demo): any 10-digit number and any password signs in as the demo user (Zach),
-/// whose friends answer with preset choices (DemoPersonas.swift). Any 6-digit SMS code verifies.
+/// whose friends answer with preset choices (`DemoPersona` in MockStore.swift). Any 6-digit SMS code verifies.
 @MainActor
 @Observable
 final class MockAuthService: AuthServicing {

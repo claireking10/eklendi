@@ -1,7 +1,7 @@
 import XCTest
 @testable import Eklendi
 
-/// Demo mode: 10-digit login and the preset friends (Services/DemoPersonas.swift).
+/// Demo mode: 10-digit login and the preset friends (Services/MockStore.swift, `DemoPersona`).
 final class DemoLoginTests: XCTestCase {
     func testUsernameNeedsExactlyTenDigits() {
         XCTAssertTrue(AccountValidation.isValidUsername("1234567890"))

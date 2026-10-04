@@ -134,7 +134,7 @@ final class MockHangoutRepository: HangoutRepository {
         store.notify()
         store.later { [weak self] in
             guard let self = self else { return }
-            // Demo friends answer with their preset choices (DemoPersonas.swift).
+            // Demo friends answer with their preset choices (`DemoPersona` in MockStore.swift).
             let others: [String] = Array((self.store.members[hangoutId] ?? [:]).keys).filter { $0 != uid }
             for other in others {
                 self.store.fillPresetTimeVotes(hangoutId: hangoutId, uid: other)
