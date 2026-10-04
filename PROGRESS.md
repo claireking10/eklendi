@@ -8,7 +8,8 @@ Running log for agents and teammates. **Read this and `CLAUDE.md` before startin
 - **Requirements:** `CLAUDE.md` (source of truth for product rules and engineering decisions).
 - **Design:** clickable prototype canvas, 19 screens — https://claude.ai/artifact/SciRf8AwsmeDvkPSGDRtHv (shared "anyone with the link"). Screen numbers (01–12, with letter suffixes) are referenced in tickets.
 - **Tickets:** Linear workspace `kalpeklendi`, team **Kalpeklendi**, project **Eklendi App**: KAL-5 to KAL-47, grouped into 6 milestones. KAL-1 to KAL-4 are Linear's default onboarding issues, not project work.
-- **Repo:** only `CLAUDE.md`, `PROGRESS.md`, `README.md`, `LICENSE`, `.gitignore`. Planning docs not committed yet.
+- **GitHub:** https://github.com/claireking10/eklendi. Planning docs are committed on branch `docs/planning` (not merged to `main`, not pushed).
+- **Repo:** only `CLAUDE.md`, `PROGRESS.md`, `README.md`, `LICENSE`, `.gitignore`. 
 
 ## Next steps
 
@@ -19,7 +20,7 @@ Running log for agents and teammates. **Read this and `CLAUDE.md` before startin
    - KAL-12 reusable three-way swipe card stack (Urgent; most later screens depend on it)
    - KAL-8 onboarding: calendars (at least one required), buffer, approximate home location
    - KAL-9 optional interests, KAL-10 Home, KAL-11 push notifications
-2. Set up XCTest + XCUITest targets in KAL-5 so every later ticket ships with tests.
+2. In KAL-5, also set up XCTest + XCUITest targets, a separate Foundation-only Swift package for core logic (testable on Linux), and the **GitHub Actions macOS CI workflow** (build + unit + UI tests on milestone pushes and PRs).
 3. Move tickets to In Progress / Done in Linear as they're picked up and finished; assign to Zach.
 4. Open one PR per milestone branch.
 
@@ -27,6 +28,7 @@ Running log for agents and teammates. **Read this and `CLAUDE.md` before startin
 
 - **Stack decisions:** Firebase replaces CloudKit. All third-party API keys (Gemini, Google Places, Google OAuth secrets) live only in Cloud Functions. Store times in UTC.
 - **Order of decisions in a hangout:** time first (everyone swipes, winner picked), then activity survey, then hangout cards at the winning time.
+- **Build/test setup:** agents can't run Xcode (Linux). CI on GitHub Actions macOS runners builds and runs tests; a teammate with a Mac does manual testing (Simulator or iPhone via cable). No paid Apple Developer account yet → no TestFlight or device push.
 - **The prototype is a design reference, not code to port.** It's HTML on a design canvas; build native SwiftUI.
 - **Known prototype mismatches** (CLAUDE.md wins):
   - Screen 03 lets you continue without connecting a calendar; the app must require at least one.
@@ -35,6 +37,11 @@ Running log for agents and teammates. **Read this and `CLAUDE.md` before startin
 - **Open questions:** none (see CLAUDE.md "Open questions").
 
 ## Log
+
+### 2026-10-04 — Build and test setup decided
+- Teammate with a Mac will test; agents push milestone branches to GitHub.
+- Added free GitHub Actions macOS CI to KAL-5 and CLAUDE.md; core logic goes in a Linux-testable Swift package.
+- Committed CLAUDE.md + PROGRESS.md on branch `docs/planning` (40442a0).
 
 ### 2026-10-04 — Planning wrap-up (Claude, with Zach)
 - Confirmed the six prototype-only details (interest chips, text invites, 1–12 hr custom duration, 14-question survey and price cut-offs, top 3 on "Not everyone agrees", "I can make it" undo); recorded in CLAUDE.md and tickets.

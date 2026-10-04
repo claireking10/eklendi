@@ -197,6 +197,9 @@ Many users can't or won't decide. Treat this as a first-class case, not an edge 
 - One git branch **per Linear milestone**, merged by pull request after review.
 - Tests: **XCTest unit tests** for core logic (free windows, buffers, winner rules and ties, "I don't care", horizon extension, centroid) **and XCUITest UI tests** for the main flows.
 - Work through the Linear tickets in milestone order (Foundations first).
+- **CI:** a GitHub Actions workflow on a **macOS runner** builds the app and runs all unit and UI tests on every milestone-branch push and PR. Check it passes before handing a branch to the team.
+- Agents work in a Linux environment without Xcode: keep core logic in a **separate Swift package** (Foundation only, no UIKit/SwiftUI) so it compiles and tests on Linux; rely on CI for the iOS build and UI tests.
+- **Manual testing** is done by a teammate on a Mac (Xcode Simulator or their iPhone over cable). There's no paid Apple Developer account yet, so no TestFlight or device push notifications until one is added.
 
 ## Progress log
 
