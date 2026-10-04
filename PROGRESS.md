@@ -11,7 +11,33 @@ Running log for agents and teammates. **Read this and `CLAUDE.md` before startin
 - **GitHub:** https://github.com/claireking10/eklendi. Planning docs are committed on branch `docs/planning` (not merged to `main`, not pushed).
 - **Repo:** only `CLAUDE.md`, `PROGRESS.md`, `README.md`, `LICENSE`, `.gitignore`. 
 
-## BUILD STATUS (read first) — hackathon, deadline noon CDT Sun Oct 4
+## >>> HANDOFF — START HERE (written 2026-10-04 ~02:50 CDT by the director session) <<<
+
+**Deadline: noon CDT Sun Oct 4, 2026.** Branch `hackathon/build`. Ignore branch `claude/eklendi-core-flow-review-wvmd9r` completely (Zach's instruction). Build from CLAUDE.md + Linear (KAL-5..KAL-47, project "Eklendi App", team Kalpeklendi).
+
+### Where things stand
+- **All code is written** (commit `2b69277` and earlier): functions logic + state machine + triggers/callables (Dev A), Firebase iOS services + EventKit + Gemini + Places + preferences/geo (Dev C), design system + SwipeCardStack + mocks + RootView/MainTabView (Dev B), account UI (Dev B2), hangout UI (Dev B3). Each agent's summary, files and known gaps are in the "### 2026-10-04 — <role>" sections at the end of this file — read them.
+- **Functions are DEPLOYED** to Firebase `eklendi-633e3` (built on Zach's machine, so the TS compiles). Secrets set. Logic tests: `cd functions && npm test` (pass).
+- **NOT done: QA.** The QA/fix agent was stopped before it made any changes. **No Swift has ever been compiled.** Expect compile errors from 5 agents writing Swift blind.
+- **GitHub:** Zach has pushed through `2576842`. Commits after that (account UI, hangout UI, PROGRESS) are only in the cloud clone and/or need moving to Zach's machine (see below).
+- **Linear:** KAL-5 and KAL-6 marked In Progress; all others still Backlog. Statuses not yet updated for finished work.
+
+### Next steps (in order)
+1. **Get the latest commits to Zach** (see "How commits reach GitHub") and have him push.
+2. **Compile on the Mac / CI.** Teammate: `brew install xcodegen`, put `GoogleService-Info.plist` in repo root (already sent privately), `./scripts/make-secrets.sh && xcodegen generate`, open `Eklendi.xcodeproj`, ⌘B. Paste errors back to Claude. CI (`.github/workflows/ci.yml`, macos-15) also builds on push to `hackathon/**` — check the Actions tab for the `xcodebuild` log artifact. This compile-fix loop is the critical path.
+3. **QA pass** (if a new session has budget): static audit of all Swift — duplicate/undefined symbols across agents' files, protocol conformance (Mock* and Firebase* vs Core/Services.swift incl. `refresh()` and `TimeSlot.offerOnly`), main-actor hops in Firestore/EventKit callbacks, missing imports, project.yml products (FirebaseCore/Auth/Firestore/Functions). The full QA prompt is in the workflow script `eklendi-hackathon-build` (QA section) — can be re-dispatched as a single agent.
+4. **Demo test on device/simulator:** Firebase Console → Authentication → Sign-in method: Phone enabled, add test numbers (e.g. +1 555-555-0101 / code 123456) for the Simulator. Walk: sign up → onboarding (Apple Calendar) → add friend → create hangout → swipe times → survey → cards (Gemini+Places) → confirmed → add to calendar. Use 2 accounts (Simulator + another sim/device).
+5. Update Linear statuses (Done/In Progress) from the agent sections; Google Calendar (KAL-23) and push (KAL-11) are deferred.
+
+### How commits reach GitHub (agents cannot push)
+- Cloud clone `/home/claude/eklendi` (if the new session has it). Otherwise work directly in Zach's local repo `C:\Users\m86an\PersonalRepos\eklendi` via the device bridge, or in a fresh clone of GitHub.
+- Transfer: `git bundle create out.bundle <last-pushed>..hackathon/build` → SendUserFile → device_commit_files into the repo folder → on device `git fetch ./out.bundle hackathon/build:hackathon/build` (if hackathon/build is checked out there, fetch into a temp ref and `git merge --ff-only`) → delete bundle + `.git/*.lock` + `tmp_obj_*`. Then Zach runs `git push origin hackathon/build`.
+- Never commit `GoogleService-Info.plist`, `.env`, `Config/Secrets.xcconfig` (repo is PUBLIC). Never print keys.
+
+### Deploy notes (Windows)
+- `$env:FUNCTIONS_DISCOVERY_TIMEOUT=60` then `firebase deploy --only functions --project eklendi-633e3 --force`. Firestore rules/indexes: `--only firestore`.
+
+## BUILD STATUS — hackathon, deadline noon CDT Sun Oct 4
 
 - **Branch:** `hackathon/build` (all hackathon work; branched from `docs/planning`). Push with `git push -u origin hackathon/build` (Zach runs it).
 - **Scope:** everything in CLAUDE.md + Linear, built in priority order: demo path first (sign up → create hangout → swipe times → survey → Gemini/Places cards → confirmed in Apple Calendar), then remaining tickets. Deferred: push notifications (needs paid Apple account), Google Calendar (OAuth).
@@ -22,7 +48,7 @@ Running log for agents and teammates. **Read this and `CLAUDE.md` before startin
   - Dev C — integrations: `Eklendi/Services/Firebase*.swift`, `CalendarService.swift`, `AppEnvironment+Live.swift`; `functions/src/{gemini,places,preferences,geo}` pieces.
   - QA — reviews each area against CLAUDE.md/tickets, runs logic tests, hunts Swift compile errors.
 - **Tooling limits:** agents have no Swift/Xcode/npm. Logic tests run here (`cd functions && npm test`). iOS build + UI tests run in GitHub Actions (`.github/workflows/ci.yml`) and on the teammate's Mac (see README).
-- **Status:** skeleton committed (project.yml, contracts, CI, harness). Agents being launched.
+- **Status:** all code written; functions deployed; Swift never compiled; QA not run. See HANDOFF above.
 
 ## Hackathon setup (2026-10-04)
 
