@@ -204,15 +204,23 @@ final class MockStore {
         CardSeed(activity: "Brunch", venue: "Sunny Side Kitchen", address: "540 Broadway", description: "Big plates, bottomless coffee and tables that fit a crowd.", category: "food", price: 2, photo: nil, miles: 1.9, tags: ["$$", "Chill"]),
     ]
 
-    /// 3 × active members cards at the winning slot time.
+    /// 3 × active members cards at the winning slot time. The pool is ordered by the group's
+    /// survey answers (the user's real answers + the demo friends' presets).
     func generateCards(hangoutId: String, round: Int) -> [HangoutCard] {
         guard let h = hangouts[hangoutId] else { return [] }
         let count: Int = max(2, activeMembers(hangoutId).count) * 3
         let start: Date = h.winningSlot?.start ?? MockStore.date(dayOffset: 2, hour: 15)
         let end: Date = h.winningSlot?.end ?? start.addingTimeInterval(3600)
+        let answers: [[String: SurveyAnswer]] = Array((surveyAnswers[hangoutId] ?? [:]).values)
+        let ranked: [CardSeed] = cardPool.enumerated().sorted { a, b in
+            let sa: Int = DemoPersona.groupScore(category: a.element.category, priceLevel: a.element.price, answers: answers)
+            let sb: Int = DemoPersona.groupScore(category: b.element.category, priceLevel: b.element.price, answers: answers)
+            if sa != sb { return sa > sb }
+            return a.offset < b.offset
+        }.map { $0.element }
         var out: [HangoutCard] = []
         for i in 0..<count {
-            let seed: CardSeed = cardPool[(i + (round - 1) * 5) % cardPool.count]
+            let seed: CardSeed = ranked[(i + (round - 1) * 5) % ranked.count]
             var card = HangoutCard(round: round, activity: seed.activity, description: seed.description,
                                    category: seed.category, venueName: seed.venue, address: seed.address,
                                    lat: 29.42 + Double(i) * 0.003, lng: -98.49 - Double(i) * 0.002,
@@ -263,14 +271,31 @@ final class MockStore {
         return sorted.first
     }
 
-    /// Other members' simulated votes mirror the user's yes/maybe choices, so a winner exists
-    /// whenever the user said yes or maybe to anything.
-    func simulatedVotes(from mine: [String: Vote]) -> [String: Vote] {
-        var out: [String: Vote] = [:]
-        for (id, v) in mine {
-            out[id] = (v == .no) ? .no : .yes
+    /// Demo mode: a friend's preset time votes (DemoPersonas.swift). Keeps any vote they
+    /// already have.
+    func fillPresetTimeVotes(hangoutId: String, uid: String) {
+        var theirs: [String: Vote] = timeVotes[hangoutId]?[uid] ?? [:]
+        let persona: DemoPersona = DemoPersona.forUser(uid)
+        for slot in slots[hangoutId] ?? [] where slot.offerOnly != true && theirs[slot.id] == nil {
+            theirs[slot.id] = persona.timeVote(for: slot)
         }
-        return out
+        timeVotes[hangoutId, default: [:]][uid] = theirs
+    }
+
+    /// Demo mode: a friend's preset card votes for one round.
+    func fillPresetCardVotes(hangoutId: String, uid: String, round: Int) {
+        var theirs: [String: Vote] = cardVotes[hangoutId]?[round]?[uid] ?? [:]
+        let persona: DemoPersona = DemoPersona.forUser(uid)
+        for card in (cards[hangoutId] ?? []) where card.round == round && theirs[card.id] == nil {
+            theirs[card.id] = persona.cardVote(for: card)
+        }
+        cardVotes[hangoutId, default: [:]][round, default: [:]][uid] = theirs
+    }
+
+    /// Demo mode: a friend's preset survey answers.
+    func fillPresetSurvey(hangoutId: String, uid: String) {
+        guard surveyAnswers[hangoutId]?[uid] == nil else { return }
+        surveyAnswers[hangoutId, default: [:]][uid] = DemoPersona.forUser(uid).surveyAnswers
     }
 
     // MARK: Seed
@@ -324,6 +349,7 @@ final class MockStore {
             if m.id != Ids.zach { m.surveyDone = true }
         }
         slots[Ids.survey] = generateSlots(hangoutId: Ids.survey, durationMinutes: 120)
+        for friend in [Ids.ava, Ids.matt] { fillPresetSurvey(hangoutId: Ids.survey, uid: friend) }
         if let first = slots[Ids.survey]?[3] {
             updateHangout(Ids.survey) { $0.winningSlot = SlotRef(id: first.id, start: first.start, end: first.end) }
         }
@@ -340,6 +366,7 @@ final class MockStore {
         if let first = slots[Ids.votingCards]?[0] {
             updateHangout(Ids.votingCards) { $0.winningSlot = SlotRef(id: first.id, start: first.start, end: first.end) }
         }
+        for friend in [Ids.claire, Ids.seth] { fillPresetSurvey(hangoutId: Ids.votingCards, uid: friend) }
         cards[Ids.votingCards] = generateCards(hangoutId: Ids.votingCards, round: 1)
 
         // 4. confirmed — Coffee at Juniper Café, 4 going.

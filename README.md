@@ -11,7 +11,7 @@ Friend groups swipe on times and activities; the app finds a time everyone's fre
 3. `./scripts/make-secrets.sh && xcodegen generate`
 4. `open Eklendi.xcodeproj` → choose an iPhone simulator → ⌘R (run) or ⌘U (tests).
    - Demo logins use Firebase test phone numbers (e.g. +1 555-555-0101, code 111111).
-   - Launch with the `-uiTesting` argument to use mock data instead of Firebase.
+   - The app runs in **demo mode** by default: mock data, log in with any 10-digit number and any password, and preset friends whose choices your swipes are compared against. Launch with `-liveBackend` to use Firebase.
 5. Re-run `xcodegen generate` after pulling (the .xcodeproj is generated, not committed).
 
 ## Cloud Functions

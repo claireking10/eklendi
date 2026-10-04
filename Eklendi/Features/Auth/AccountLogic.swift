@@ -6,6 +6,28 @@ import Foundation
 enum AccountValidation {
     static let minPasswordLength: Int = 6
     static let codeLength: Int = 6
+    /// Login username length (demo mode: the only login requirement).
+    static let usernameLength: Int = 10
+
+    /// The username's digits, without a leading US "1" country code ("+12105550142" →
+    /// "2105550142"). Anything else typed in the field is ignored.
+    static func demoUsernameDigits(_ input: String) -> String {
+        let digits: String = String(input.filter { $0.isNumber })
+        if digits.count == usernameLength + 1 && digits.hasPrefix("1") {
+            return String(digits.dropFirst())
+        }
+        return digits
+    }
+
+    /// Login check: exactly 10 digits typed in the username field (no country code).
+    static func isValidUsername(_ input: String) -> Bool {
+        input.filter { $0.isNumber }.count == usernameLength
+    }
+
+    /// True when an E.164 number (or raw input) carries a 10-digit username.
+    static func isDemoUsername(_ phone: String) -> Bool {
+        demoUsernameDigits(phone).count == usernameLength
+    }
 
     /// Normalizes user input to E.164. 10 digits → assumes +1 (US). Accepts "+1 (210) 555-0142",
     /// "1-210-555-0142", "210.555.0142", "+44 20 7946 0958". nil when it doesn't look like a number.

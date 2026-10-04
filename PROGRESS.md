@@ -85,6 +85,12 @@ Running log for agents and teammates. **Read this and `CLAUDE.md` before startin
 
 ## Log
 
+### 2026-10-04 — Demo mode + relaxed login (Claude, for Claire)
+- **Demo mode is now the default launch** (`AppEnvironment.demoMode`): mock services, starts on the login screen. `-liveBackend` launch arg switches back to Firebase. UI-test args unchanged.
+- **Login:** the only requirement is a 10-digit username; the password can be anything (including empty). Button enables at exactly 10 digits. In demo, a number belonging to an account logs into it, any other number logs in as the demo user (Zach). Files: `Features/Auth/WelcomeView.swift`, `Features/Auth/AccountLogic.swift` (`isValidUsername`, `demoUsernameDigits`), `Services/MockAuthService.swift`.
+- **Preset friends:** new `Services/DemoPersonas.swift` gives Seth/Matt/Claire/Ava/Noah fixed time votes (by slot rank), card votes (by category, with a price ceiling) and survey answers. Replaces "others mirror your votes" in `MockHangoutRepository`/`MockStore`; card order follows the group's survey answers. Every friend combination keeps ≥2 times and ≥3 cards nobody vetoes, so voting yes still always finds a winner (existing UI tests rely on this).
+- Tests: `EklendiTests/DemoModeTests.swift`. Docs: README, `docs/UI_COMPONENTS.md`. Swift unverified until CI/Mac.
+
 ### 2026-10-04 — Push workflow
 - Agents commit; Zach pushes. Asked Zach to run `git push -u origin docs/planning`.
 

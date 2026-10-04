@@ -132,18 +132,12 @@ final class MockHangoutRepository: HangoutRepository {
         store.timeVotes[hangoutId, default: [:]][uid] = mine
         store.updateMember(hangoutId, uid) { $0.timesDone = true }
         store.notify()
-        let snapshot: [String: Vote] = mine
         store.later { [weak self] in
             guard let self = self else { return }
-            let mirrored: [String: Vote] = self.store.simulatedVotes(from: snapshot)
-            let slotIds: [String] = (self.store.slots[hangoutId] ?? []).map { $0.id }
+            // Demo friends answer with their preset choices (DemoPersonas.swift).
             let others: [String] = Array((self.store.members[hangoutId] ?? [:]).keys).filter { $0 != uid }
             for other in others {
-                var theirs: [String: Vote] = self.store.timeVotes[hangoutId]?[other] ?? [:]
-                for sid in slotIds where theirs[sid] == nil {
-                    theirs[sid] = mirrored[sid] ?? .yes
-                }
-                self.store.timeVotes[hangoutId, default: [:]][other] = theirs
+                self.store.fillPresetTimeVotes(hangoutId: hangoutId, uid: other)
             }
             self.store.simulateOthers(hangoutId, except: uid) { m in
                 m.availabilitySubmitted = true
@@ -159,6 +153,10 @@ final class MockHangoutRepository: HangoutRepository {
         store.notify()
         store.later { [weak self] in
             guard let self = self else { return }
+            let others: [String] = Array((self.store.members[hangoutId] ?? [:]).keys).filter { $0 != uid }
+            for other in others {
+                self.store.fillPresetSurvey(hangoutId: hangoutId, uid: other)
+            }
             self.store.simulateOthers(hangoutId, except: uid) { m in
                 m.surveyDone = true
             }
@@ -174,21 +172,12 @@ final class MockHangoutRepository: HangoutRepository {
         store.cardVotes[hangoutId, default: [:]][round] = roundVotes
         store.updateMember(hangoutId, uid) { $0.cardsDoneRound = round }
         store.notify()
-        let snapshot: [String: Vote] = mine
         store.later { [weak self] in
             guard let self = self else { return }
-            let mirrored: [String: Vote] = self.store.simulatedVotes(from: snapshot)
-            let cardIds: [String] = (self.store.cards[hangoutId] ?? []).filter { $0.round == round }.map { $0.id }
-            var all: [String: [String: Vote]] = self.store.cardVotes[hangoutId]?[round] ?? [:]
             let others: [String] = self.store.activeMembers(hangoutId).map { $0.id }.filter { $0 != uid }
             for other in others {
-                var theirs: [String: Vote] = all[other] ?? [:]
-                for cid in cardIds where theirs[cid] == nil {
-                    theirs[cid] = mirrored[cid] ?? .maybe
-                }
-                all[other] = theirs
+                self.store.fillPresetCardVotes(hangoutId: hangoutId, uid: other, round: round)
             }
-            self.store.cardVotes[hangoutId, default: [:]][round] = all
             self.store.simulateOthers(hangoutId, except: uid) { m in
                 m.cardsDoneRound = round
             }

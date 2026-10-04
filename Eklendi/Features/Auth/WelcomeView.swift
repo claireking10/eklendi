@@ -48,8 +48,9 @@ struct WelcomeView: View {
         .tint(EKColor.teal)
     }
 
+    /// The only login requirement is a 10-digit username; the password can be anything.
     private var canSubmit: Bool {
-        !PhoneFormat.digits(phone).isEmpty && !password.isEmpty && !isLoading
+        AccountValidation.isValidUsername(phone) && !isLoading
     }
 
     private var loginScreen: some View {
@@ -78,6 +79,13 @@ struct WelcomeView: View {
                     EKPhoneField(text: $phone, placeholder: "Phone number", accessibilityId: "loginPhoneField")
                     EKTextField("Password", text: $password, kind: .secure, systemImage: "lock",
                                 accessibilityId: "loginPasswordField")
+                    if AppEnvironment.demoMode {
+                        Text("Demo mode: use any 10-digit number and any password.")
+                            .font(EKFont.callout)
+                            .foregroundStyle(EKColor.muted)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .accessibilityIdentifier("demoModeHint")
+                    }
                     if let errorMessage = errorMessage {
                         ErrorBanner(message: errorMessage) { self.errorMessage = nil }
                     }
@@ -107,14 +115,11 @@ struct WelcomeView: View {
     }
 
     private func logIn() {
-        guard let e164 = AccountValidation.normalizePhone(phone) else {
-            errorMessage = "Enter your 10-digit phone number."
+        guard AccountValidation.isValidUsername(phone) else {
+            errorMessage = "Enter a 10-digit phone number."
             return
         }
-        guard !password.isEmpty else {
-            errorMessage = "Enter your password."
-            return
-        }
+        let e164: String = "+1" + String(phone.filter { $0.isNumber })
         errorMessage = nil
         isLoading = true
         Task { @MainActor in

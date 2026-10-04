@@ -11,8 +11,10 @@ struct MockServiceError: LocalizedError {
 /// - `-uiTesting` → starts `.signedOut` (UI tests walk sign-up)
 /// - `-uiTesting -uiTestingSignedIn` → starts `.signedIn(uid: "u_zach")`
 /// - `-uiTesting -uiTestingOnboarding` → starts `.needsOnboarding` for a fresh user
-/// - no args (previews / no GoogleService-Info.plist) → signed in as Zach
-/// Any 6-digit SMS code verifies. Zach logs in with +15555550100 / password123.
+/// - previews → signed in as Zach
+/// - no args (demo mode, the default app launch) → starts `.signedOut` at the login screen
+/// Login (demo): any 10-digit number and any password signs in as the demo user (Zach),
+/// whose friends answer with preset choices (DemoPersonas.swift). Any 6-digit SMS code verifies.
 @MainActor
 @Observable
 final class MockAuthService: AuthServicing {
@@ -35,7 +37,7 @@ final class MockAuthService: AuthServicing {
             store.enrollNewUser(uid: uid)
             currentUid = uid
             state = .needsOnboarding(uid: uid)
-        } else if args.contains("-uiTesting") {
+        } else if args.contains("-uiTesting") || !AppEnvironment.isPreview {
             state = .signedOut
         } else {
             currentUid = MockStore.Ids.zach
@@ -72,13 +74,20 @@ final class MockAuthService: AuthServicing {
         state = .needsOnboarding(uid: uid)
     }
 
+    /// Demo login: the only check is a 10-digit username; the password can be anything.
+    /// A number that belongs to a seeded or signed-up account logs into it; any other number
+    /// logs into the demo user.
     func signIn(phoneE164: String, password: String) async throws {
         try await Task.sleep(nanoseconds: 300_000_000)
-        guard let user = store.users.values.first(where: { $0.phone == phoneE164 }) else {
-            throw MockServiceError("No account for that number. Sign up first.")
+        guard AccountValidation.isDemoUsername(phoneE164) else {
+            throw MockServiceError("Enter a 10-digit phone number.")
         }
-        guard store.passwords[phoneE164] == password else {
-            throw MockServiceError("Wrong password. Try again.")
+        let digits: String = AccountValidation.demoUsernameDigits(phoneE164)
+        let user: UserProfile? = store.users.values.first(where: {
+            AccountValidation.demoUsernameDigits($0.phone) == digits
+        }) ?? store.users[MockStore.Ids.zach]
+        guard let user = user else {
+            throw MockServiceError("The demo account is missing. Restart the app.")
         }
         currentUid = user.id
         state = MockAuthService.isOnboarded(user) ? .signedIn(uid: user.id) : .needsOnboarding(uid: user.id)

@@ -1,8 +1,8 @@
 import XCTest
 
 /// Hangout flows against the in-memory mocks (`-uiTesting -uiTestingSignedIn`, signed in as Zach).
-/// The mock backend mirrors Zach's yes votes for everyone else, so voting yes everywhere
-/// always produces a winner.
+/// The other members answer with preset choices (Services/DemoPersonas.swift); every group
+/// has options nobody vetoes, so voting yes everywhere always produces a winner.
 final class HangoutFlowUITests: XCTestCase {
     override func setUpWithError() throws {
         continueAfterFailure = false

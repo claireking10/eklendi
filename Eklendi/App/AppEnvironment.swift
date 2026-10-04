@@ -21,9 +21,20 @@ final class AppEnvironment {
         self.calendar = calendar
     }
 
-    /// True when launched by UI tests (`-uiTesting` launch argument) or in previews.
+    /// Demo mode (the default): in-memory mock services with preset friends
+    /// (Services/DemoPersonas.swift), so the app runs without real phone numbers, SMS
+    /// codes, passwords or Firebase. Launch with `-liveBackend` to use Firebase instead.
+    static var demoMode: Bool {
+        !ProcessInfo.processInfo.arguments.contains("-liveBackend")
+    }
+
+    /// True in Xcode previews.
+    static var isPreview: Bool {
+        ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1"
+    }
+
+    /// True in demo mode, when launched by UI tests (`-uiTesting` launch argument) or in previews.
     static var useMocks: Bool {
-        ProcessInfo.processInfo.arguments.contains("-uiTesting")
-            || ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1"
+        demoMode || ProcessInfo.processInfo.arguments.contains("-uiTesting") || isPreview
     }
 }
