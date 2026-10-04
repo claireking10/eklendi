@@ -11,6 +11,19 @@ Running log for agents and teammates. **Read this and `CLAUDE.md` before startin
 - **GitHub:** https://github.com/claireking10/eklendi. Planning docs are committed on branch `docs/planning` (not merged to `main`, not pushed).
 - **Repo:** only `CLAUDE.md`, `PROGRESS.md`, `README.md`, `LICENSE`, `.gitignore`. 
 
+## BUILD STATUS (read first) — hackathon, deadline noon CDT Sun Oct 4
+
+- **Branch:** `hackathon/build` (all hackathon work; branched from `docs/planning`). Push with `git push -u origin hackathon/build` (Zach runs it).
+- **Scope:** everything in CLAUDE.md + Linear, built in priority order: demo path first (sign up → create hangout → swipe times → survey → Gemini/Places cards → confirmed in Apple Calendar), then remaining tickets. Deferred: push notifications (needs paid Apple account), Google Calendar (OAuth).
+- **Contract:** `docs/ARCHITECTURE.md` — Firestore model, state machine, functions, iOS structure. iOS contracts in `Eklendi/Core/` (Models.swift, Services.swift); logic types in `functions/src/logic/types.ts`.
+- **Team (multi-agent workflow, directed by the main Claude session):**
+  - Dev A — backend logic: `functions/src/` (scheduling, winner, state machine, triggers, callables) + `node:test` tests.
+  - Dev B — iOS UI: `Eklendi/DesignSystem/`, `Eklendi/Features/`, `Eklendi/App/RootView.swift`, `Eklendi/Services/Mock*.swift`, UI tests.
+  - Dev C — integrations: `Eklendi/Services/Firebase*.swift`, `CalendarService.swift`, `AppEnvironment+Live.swift`; `functions/src/{gemini,places,preferences,geo}` pieces.
+  - QA — reviews each area against CLAUDE.md/tickets, runs logic tests, hunts Swift compile errors.
+- **Tooling limits:** agents have no Swift/Xcode/npm. Logic tests run here (`cd functions && npm test`). iOS build + UI tests run in GitHub Actions (`.github/workflows/ci.yml`) and on the teammate's Mac (see README).
+- **Status:** skeleton committed (project.yml, contracts, CI, harness). Agents being launched.
+
 ## Hackathon setup (2026-10-04)
 
 - **Deadline: noon CDT, Sunday Oct 4.** Scope is being cut to the demo path (sign up → hangout → swipe times → survey → Gemini/Places cards → confirmed into Apple Calendar); everything else is stretch. Not started yet; waiting for Zach's go-ahead.

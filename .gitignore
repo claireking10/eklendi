@@ -66,4 +66,12 @@ fastlane/test_output
 
 ## Firebase config and API keys (public repo: never commit these)
 GoogleService-Info.plist
-Secrets.xcconfig
+
+
+# Generated
+Config/Secrets.xcconfig
+*.xcodeproj
+functions/node_modules/
+functions/lib/
+.firebase/
+functions/lib-logic/

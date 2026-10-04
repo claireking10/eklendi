@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>UILaunchScreen</key>
+	<dict/>
+	<key>UIUserInterfaceStyle</key>
+	<string>Dark</string>
+	<key>NSCalendarsFullAccessUsageDescription</key>
+	<string>Eklendi reads when you're busy (never event details) to find times that work for your group, and adds confirmed hangouts to your calendar.</string>
+	<key>NSCalendarsWriteOnlyAccessUsageDescription</key>
+	<string>Eklendi adds confirmed hangouts to your calendar.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Used only if you choose "Where I am now" as your starting point, to find places near your group.</string>
+	<key>NSContactsUsageDescription</key>
+	<string>Find friends from your contacts who are on Eklendi.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Choose a profile picture.</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>$(ENCODED_APP_ID)</string>
+			</array>
+		</dict>
+	</array>
+</dict>
+</plist>
