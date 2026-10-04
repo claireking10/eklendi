@@ -557,7 +557,7 @@ struct HFMatchView: View {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(calendarTitle)
                         .font(.system(size: 15, weight: .bold))
-                    if case .failed(let message) = calendarState {
+                    if let message = calendarFailure {
                         Text(message)
                             .font(.system(size: 12))
                             .foregroundStyle(EKColor.muted)
@@ -567,7 +567,7 @@ struct HFMatchView: View {
                 Spacer(minLength: 4)
                 if calendarState == .adding {
                     ProgressView().tint(EKColor.teal)
-                } else if case .failed = calendarState {
+                } else if calendarFailure != nil {
                     Button("Add") {
                         Task { @MainActor in await syncCalendar() }
                     }
@@ -577,6 +577,13 @@ struct HFMatchView: View {
             }
         }
         .accessibilityIdentifier("calendarStatus")
+    }
+
+    private var calendarFailure: String? {
+        switch calendarState {
+        case .failed(let message): return message
+        default: return nil
+        }
     }
 
     private var calendarIcon: String {

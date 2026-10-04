@@ -86,8 +86,7 @@ struct HFWaitingView: View {
             }
         }
         .accessibilityIdentifier("waitingView")
-        .confirmationDialog("Remove \(removing.map { HFFormat.firstName($0.name) } ?? "them")?",
-                            isPresented: removeBinding, titleVisibility: .visible) {
+        .confirmationDialog(Text(removeTitle), isPresented: removeBinding, titleVisibility: .visible) {
             Button("Remove from hangout", role: .destructive) {
                 if let m = removing { remove(m) }
             }
@@ -95,6 +94,11 @@ struct HFWaitingView: View {
         } message: {
             Text("The group keeps planning without them.")
         }
+    }
+
+    private var removeTitle: String {
+        guard let m = removing else { return "Remove from hangout?" }
+        return "Remove \(HFFormat.firstName(m.name))?"
     }
 
     private var removeBinding: Binding<Bool> {
