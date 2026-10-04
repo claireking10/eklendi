@@ -75,6 +75,12 @@ struct OnboardingNameView: View {
 
     @State private var errorMessage: String? = nil
 
+    init(uid: String, model: OnboardingModel, path: Binding<[OnboardingStep]>) {
+        self.uid = uid
+        self.model = model
+        self._path = path
+    }
+
     private var trimmed: String { AccountValidation.trimmedName(model.name) }
 
     var body: some View {
@@ -120,6 +126,11 @@ struct OnboardingConnectView: View {
     @Environment(AppEnvironment.self) private var env: AppEnvironment
     @Bindable var model: OnboardingModel
     @Binding var path: [OnboardingStep]
+
+    init(model: OnboardingModel, path: Binding<[OnboardingStep]>) {
+        self.model = model
+        self._path = path
+    }
 
     @State private var isConnecting: Bool = false
     @State private var isSaving: Bool = false
@@ -245,6 +256,11 @@ struct OnboardingInterestsView: View {
     let uid: String
     @Environment(AppEnvironment.self) private var env: AppEnvironment
     @Bindable var model: OnboardingModel
+
+    init(uid: String, model: OnboardingModel) {
+        self.uid = uid
+        self.model = model
+    }
 
     @State private var isSaving: Bool = false
     @State private var errorMessage: String? = nil

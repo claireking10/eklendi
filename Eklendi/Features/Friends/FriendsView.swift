@@ -305,6 +305,12 @@ struct ContactsMatchSheet: View {
     let matches: [ContactMatch]
     let model: FriendsModel
 
+    init(uid: String, matches: [ContactMatch], model: FriendsModel) {
+        self.uid = uid
+        self.matches = matches
+        self.model = model
+    }
+
     @Environment(AppEnvironment.self) private var env: AppEnvironment
     @Environment(\.dismiss) private var dismiss: DismissAction
     @Environment(\.openURL) private var openURL: OpenURLAction

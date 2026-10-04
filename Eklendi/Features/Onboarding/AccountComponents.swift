@@ -75,6 +75,13 @@ struct ProfilePhotoPickerButton: View {
 
     @State private var item: PhotosPickerItem? = nil
 
+    init(uid: String, name: String, image: Binding<UIImage?>, size: CGFloat = 72) {
+        self.uid = uid
+        self.name = name
+        self._image = image
+        self.size = size
+    }
+
     var body: some View {
         PhotosPicker(selection: $item, matching: .images) {
             ZStack(alignment: .bottomTrailing) {

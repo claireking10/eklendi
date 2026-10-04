@@ -136,6 +136,11 @@ struct SignUpPhoneView: View {
     @Bindable var model: SignUpModel
     @Binding var path: [SignUpStep]
 
+    init(model: SignUpModel, path: Binding<[SignUpStep]>) {
+        self.model = model
+        self._path = path
+    }
+
     @State private var isLoading: Bool = false
     @State private var errorMessage: String? = nil
 
@@ -189,6 +194,11 @@ struct SignUpCodeView: View {
     @Environment(AppEnvironment.self) private var env: AppEnvironment
     @Bindable var model: SignUpModel
     @Binding var path: [SignUpStep]
+
+    init(model: SignUpModel, path: Binding<[SignUpStep]>) {
+        self.model = model
+        self._path = path
+    }
 
     @State private var isResending: Bool = false
     @State private var errorMessage: String? = nil
@@ -257,6 +267,11 @@ struct SignUpPasswordView: View {
     @Environment(AppEnvironment.self) private var env: AppEnvironment
     @Bindable var model: SignUpModel
     @Binding var path: [SignUpStep]
+
+    init(model: SignUpModel, path: Binding<[SignUpStep]>) {
+        self.model = model
+        self._path = path
+    }
 
     @State private var isLoading: Bool = false
     @State private var errorMessage: String? = nil
