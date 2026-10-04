@@ -553,17 +553,21 @@ export async function resetForReopen(hangoutId: string, beforeRound: number): Pr
     if (h.reopenResetRound === current && current > beforeRound) return; // already reset
     const newRound = current > beforeRound ? current : beforeRound + 1;
 
-    const members = await txMembers(tx, ref);
-    const slots = await tx.get(ref.collection("slots"));
-    const timeVotes = await tx.get(ref.collection("timeVotes"));
-    const survey = await tx.get(ref.collection("surveyAnswers"));
-
-    for (const d of slots.docs) tx.delete(d.ref);
-    for (const d of timeVotes.docs) tx.delete(d.ref);
-    for (const d of survey.docs) tx.delete(d.ref);
-    for (const m of members) {
-      if (!inGroup(m.data)) continue;
-      tx.update(m.ref, { availabilitySubmitted: false, timesDone: false, surveyDone: false, notGoing: false, busy: [] });
+    // The iOS client's reopen() already bumps the round and resets members/slots/votes in one batch.
+    // Only do that work here if it didn't (round unchanged), so we never wipe availability that a
+    // member re-submitted right after the reopen.
+    if (current === beforeRound) {
+      const members = await txMembers(tx, ref);
+      const slots = await tx.get(ref.collection("slots"));
+      const timeVotes = await tx.get(ref.collection("timeVotes"));
+      const survey = await tx.get(ref.collection("surveyAnswers"));
+      for (const d of slots.docs) tx.delete(d.ref);
+      for (const d of timeVotes.docs) tx.delete(d.ref);
+      for (const d of survey.docs) tx.delete(d.ref);
+      for (const m of members) {
+        if (!inGroup(m.data)) continue;
+        tx.update(m.ref, { availabilitySubmitted: false, timesDone: false, surveyDone: false, notGoing: false, busy: [] });
+      }
     }
     tx.update(ref, {
       round: newRound,
@@ -575,7 +579,7 @@ export async function resetForReopen(hangoutId: string, beforeRound: number): Pr
       topCardIds: [],
       generationRound: FieldValue.delete(),
       generationStartedAt: FieldValue.delete(),
-      statusMessage: "Back to planning. Everyone picks a time and takes the survey again.",
+      statusMessage: h.statusMessage ? h.statusMessage : "Back to planning. Everyone picks a time and takes the survey again.",
       updatedAt: FieldValue.serverTimestamp(),
     });
   });

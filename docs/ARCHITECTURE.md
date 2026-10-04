@@ -96,6 +96,12 @@ A member counts as **participating** when `state == "active"` (invitees become a
 `{ round, activity, description, category, venueName, address, lat, lng, distanceMiles, priceLevel: int?, photoUrl: string?, placeId, start, end, tags: [string] }`
 ### `hangouts/{id}/cardVotes/{uid}_{round}` `{ round, votes: { [cardId]: "yes"|"maybe"|"no" } }`
 
+### Server-written extras (additive, written by Cloud Functions; clients may ignore)
+- `slots`: `durationMinutes: int` on every slot. `offerOnly: true` marks the alternatives shown on **08b "No mutual time"** after a time vote with no winner (`source: "fallback"`, `label` "Later this month" or "All but one"). They are **not** swiped on: the client sends the picked ones with `suggestTime` (which promotes the match to `suggested`, deletes the other offers and returns to `votingTimes`). Swipe screens should skip `offerOnly` slots.
+- `hangouts/{id}`: `topCardIds: [string]` — the top 3 card ids for **11a "Not everyone agrees"** (most yes, then most maybe); `generationRound: int` + `generationStartedAt: Timestamp` guard card generation; `reopenResetRound: int` marks a handled reopen.
+- Members still `invited` count as pending: every "everyone has done X" gate waits for invited + active members (declined/removed are excluded). The owner can remove a member to move on.
+- Busy blocks should cover **30 days** so the extended horizon has real data.
+
 ## Hangout state machine (`status`)
 
 ```

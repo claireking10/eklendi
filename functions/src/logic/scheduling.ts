@@ -458,6 +458,6 @@ export function computeFallbackOffers(
   let later = findSlots({ ...base, horizonDays: EXTENDED_HORIZON_DAYS, notBefore: input.nowMs + HORIZON_DAYS * DAY_MS });
   if (later.length === 0) later = findSlots({ ...base, horizonDays: EXTENDED_HORIZON_DAYS });
   const abo = findAllButOneSlots({ ...base, horizonDays: HORIZON_DAYS });
-  const out = [...later.map((s) => ({ ...s, source: "fallback" as SlotSource })), ...abo];
+  const out = [...later.map((s) => ({ ...s, source: "fallback" as SlotSource, label: "Later this month" })), ...abo];
   return out.map((s, i) => ({ ...s, rank: i + 1 }));
 }
