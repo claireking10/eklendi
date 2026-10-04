@@ -20,17 +20,23 @@ import SwiftUI
 ///   cards to the end. `onFinished` fires after the vote that leaves no unvoted items.
 ///   To restart ("Redo my swipes"), give the stack a new `.id(...)`.
 /// - `onVote` is called once per card, after its exit animation.
+/// - Optional skip button (survey "I don't care"): pass `skipTitle: "I don't care"` and
+///   `onSkip: { item in ... }`. The card fades out and `onSkip` fires instead of `onVote`
+///   (id "swipeSkip").
 struct SwipeCardStack<Item: Identifiable, Content: View>: View {
     let items: [Item]
     let onVote: (Item, Vote) -> Void
     let onFinished: () -> Void
     var showsButtons: Bool = true
+    let skipTitle: String?
+    let onSkip: ((Item) -> Void)?
     let content: (Item) -> Content
 
     @State private var votedIds: Set<Item.ID> = []
     @State private var drag: CGSize = .zero
     @State private var exiting: Vote? = nil
     @State private var exitingId: Item.ID? = nil
+    @State private var skipping: Bool = false
     @State private var pendingToken: Int = 0
     @State private var voteCount: Int = 0
 
@@ -41,11 +47,15 @@ struct SwipeCardStack<Item: Identifiable, Content: View>: View {
          showsButtons: Bool = true,
          onVote: @escaping (Item, Vote) -> Void,
          onFinished: @escaping () -> Void = {},
+         skipTitle: String? = nil,
+         onSkip: ((Item) -> Void)? = nil,
          @ViewBuilder content: @escaping (Item) -> Content) {
         self.items = items
         self.showsButtons = showsButtons
         self.onVote = onVote
         self.onFinished = onFinished
+        self.skipTitle = skipTitle
+        self.onSkip = onSkip
         self.content = content
     }
 
@@ -83,6 +93,11 @@ struct SwipeCardStack<Item: Identifiable, Content: View>: View {
             if showsButtons {
                 voteButtons
             }
+            if let skipTitle = skipTitle {
+                Chip(skipTitle, style: .dontCare) { skip() }
+                    .accessibilityIdentifier("swipeSkip")
+                    .disabled(remaining.isEmpty)
+            }
         }
         .sensoryFeedback(.impact(weight: .light), trigger: voteCount)
     }
@@ -93,12 +108,12 @@ struct SwipeCardStack<Item: Identifiable, Content: View>: View {
     /// when it moves up to become the top card.
     private func card(for layer: Layer) -> some View {
         let isTop: Bool = layer.depth == 0
-        let shift: Int = (exiting != nil && !isTop) ? layer.depth - 1 : layer.depth
+        let shift: Int = ((exiting != nil || skipping) && !isTop) ? layer.depth - 1 : layer.depth
         let depth: CGFloat = CGFloat(max(shift, 0))
         let backOffset = CGSize(width: 0, height: 14 * depth)
 
         return cardChrome(for: layer.item, isTop: isTop)
-            .scaleEffect(isTop ? 1.0 : 1.0 - 0.05 * depth, anchor: .top)
+            .scaleEffect(isTop ? (skipping ? 0.92 : 1.0) : 1.0 - 0.05 * depth, anchor: .top)
             .offset(isTop ? topOffset : backOffset)
             .rotationEffect(.degrees(isTop ? topRotation : 0))
             .opacity(isTop ? topOpacity : 1)
@@ -183,6 +198,7 @@ struct SwipeCardStack<Item: Identifiable, Content: View>: View {
     }
 
     private var topOpacity: Double {
+        if skipping { return 0 }
         switch exiting {
         case .yes, .maybe: return 0
         default: return 1
@@ -192,11 +208,11 @@ struct SwipeCardStack<Item: Identifiable, Content: View>: View {
     private var dragGesture: some Gesture {
         DragGesture(minimumDistance: 8)
             .onChanged { value in
-                guard exiting == nil else { return }
+                guard exiting == nil, !skipping else { return }
                 drag = CGSize(width: value.translation.width, height: max(0, value.translation.height))
             }
             .onEnded { value in
-                guard exiting == nil else { return }
+                guard exiting == nil, !skipping else { return }
                 let dx: CGFloat = value.translation.width
                 let dy: CGFloat = value.translation.height
                 let px: CGFloat = value.predictedEndTranslation.width
@@ -223,7 +239,7 @@ struct SwipeCardStack<Item: Identifiable, Content: View>: View {
 
     private func commit(_ vote: Vote) {
         // A second tap while a card is still flying off finishes that card right away.
-        if exiting != nil { finishPending() }
+        if exiting != nil || skipping { finishPending() }
         guard let item = remaining.first else { return }
         pendingToken += 1
         let token: Int = pendingToken
@@ -236,11 +252,28 @@ struct SwipeCardStack<Item: Identifiable, Content: View>: View {
         }
     }
 
+    private func skip() {
+        if exiting != nil || skipping { finishPending() }
+        guard let item = remaining.first else { return }
+        pendingToken += 1
+        let token: Int = pendingToken
+        exitingId = item.id
+        withAnimation(.easeOut(duration: exitDuration)) {
+            skipping = true
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + exitDuration) {
+            if token == pendingToken { finishPending() }
+        }
+    }
+
     private func finishPending() {
-        guard let vote = exiting, let id = exitingId,
+        let vote: Vote? = exiting
+        let wasSkip: Bool = skipping
+        guard let id = exitingId, (vote != nil || wasSkip),
               let item = items.first(where: { $0.id == id }) else {
             exiting = nil
             exitingId = nil
+            skipping = false
             return
         }
         var newVoted: Set<Item.ID> = votedIds
@@ -253,11 +286,16 @@ struct SwipeCardStack<Item: Identifiable, Content: View>: View {
             votedIds = newVoted
             exiting = nil
             exitingId = nil
+            skipping = false
             drag = .zero
         }
         pendingToken += 1   // invalidate any scheduled finish for this card
         voteCount += 1
-        onVote(item, vote)
+        if let vote = vote {
+            onVote(item, vote)
+        } else {
+            onSkip?(item)
+        }
         if finished { onFinished() }
     }
 
