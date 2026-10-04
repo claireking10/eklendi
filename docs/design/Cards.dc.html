@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Eklendi — Vote on hangouts</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+*{box-sizing:border-box}
+a{color:#00C3D0}a:hover{color:#5BE3EC}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;height:56px;border-radius:16px;font:inherit;font-size:17px;font-weight:700;text-decoration:none;border:0;cursor:pointer;width:100%}
+.btn-p{background:#00C3D0;color:#00282B}.btn-p:hover{background:#2BD3DE;color:#00282B}
+.back{display:inline-flex;align-items:center;gap:6px;color:#FFFFFF;text-decoration:none;font-size:17px;min-height:44px;padding-right:12px}
+.back:hover{color:#00C3D0}
+.sec{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#00C3D0;margin:0}
+.card{position:absolute;inset:0;border:1px solid #2A3739;border-radius:30px;overflow:hidden;touch-action:none;user-select:none;cursor:grab}
+.bubble{position:absolute;left:12px;right:12px;bottom:118px;padding:16px 18px 18px;border-radius:22px;background:rgba(8,14,15,.8);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;gap:6px}
+.pill{display:inline-flex;align-items:center;height:26px;padding:0 11px;border-radius:999px;font-size:12px;font-weight:700}
+.votes{position:absolute;left:0;right:0;bottom:18px;z-index:5;display:flex;justify-content:space-evenly;pointer-events:none}
+.vote{display:flex;flex-direction:column;align-items:center;gap:6px;background:transparent;border:0;color:#FFFFFF;font:inherit;font-size:13px;font-weight:700;cursor:pointer;padding:0;pointer-events:auto;text-shadow:0 1px 3px rgba(0,0,0,.8)}
+.ring{width:62px;height:62px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:transform .15s;box-shadow:0 6px 18px rgba(0,0,0,.45)}
+.vote:hover .ring{transform:scale(1.06)}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; background: #000000; color: #FFFFFF; font-family: Figtree, -apple-system, system-ui, sans-serif; display: flex; flex-direction: column; padding: 56px 20px 24px; overflow: hidden">
+  <a class="back" href="Waiting.dc.html">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+    Back
+  </a>
+  <p class="sec" style="margin-top: 8px">Thursday crew · Step 3 of 3</p>
+  <div style="margin-top: 6px; display: flex; align-items: baseline; justify-content: space-between">
+    <h1 style="margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -0.02em">Pick a hangout.</h1>
+    <span style="font-size: 14px; color: #A3AFB1; font-weight: 600">{{ counter }}</span>
+  </div>
+
+  <sc-if value="{{ active }}" hint-placeholder-val="{{ true }}">
+    <div style="position: relative; height: 640px; margin-top: 14px">
+      <sc-for list="{{ stack }}" as="k" hint-placeholder-count="3">
+        <div class="card" aria-hidden="{{ k.hidden }}" onPointerDown="{{ k.down }}" onPointerMove="{{ k.move }}" onPointerUp="{{ k.up }}" onPointerCancel="{{ k.up }}" style="background: {{ k.d.photo }}; transform: {{ k.tf }}; transition: {{ k.tr }}; opacity: {{ k.op }}; z-index: {{ k.z }}; pointer-events: {{ k.pe }}; border-color: {{ k.bd }}; box-shadow: {{ k.glow }}">
+          <span style="position: absolute; top: 16px; left: 16px; font-size: 12px; font-weight: 600; color: #DDEBEC; background: rgba(0,0,0,.55); padding: 5px 10px; border-radius: 9px">[{{ k.d.venue }} photo · Google Places]</span>
+          <div class="bubble">
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px">
+              <span style="font-size: 14px; font-weight: 700; color: #00C3D0">{{ k.d.when }}</span>
+              <div style="display: flex; gap: 6px">
+                <sc-for list="{{ k.d.tags }}" as="t" hint-placeholder-count="2">
+                  <span class="pill" style="background: #24484B; color: #CFF6F8">{{ t }}</span>
+                </sc-for>
+              </div>
+            </div>
+            <span style="font-size: 30px; font-weight: 900; letter-spacing: -0.01em; line-height: 1.1">{{ k.d.activity }}</span>
+            <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 15px; font-weight: 600; color: #E8ECEC">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z"></path><circle cx="12" cy="9.5" r="2.5"></circle></svg>
+              {{ k.d.venue }} · {{ k.d.distance }}
+            </span>
+            <span style="font-size: 14px; color: #C9D2D3; line-height: 1.5; margin-top: 2px">{{ k.d.desc }}</span>
+          </div>
+          <span aria-hidden="true" style="position: absolute; inset: 0; border-radius: inherit; pointer-events: none; background-image: linear-gradient(to bottom right, rgba(0,0,0,.9) 0%, rgba(0,0,0,.9) 38%, rgba(0,0,0,0) 62%, rgba(0,0,0,0) 100%); background-size: 260% 260%; background-repeat: no-repeat; background-position: {{ k.dark }} {{ k.dark }}; transition: {{ k.darkTr }}"></span>
+        </div>
+      </sc-for>
+
+      <div class="votes">
+        <button class="vote" type="button" onClick="{{ voteNo }}" aria-label="No, swipe left">
+          <span class="ring" style="background: rgba(8,14,15,.85); border: 2px solid #E8ECEC">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E8ECEC" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+          </span>No
+        </button>
+        <button class="vote" type="button" onClick="{{ voteMaybe }}" aria-label="Maybe, swipe down">
+          <span class="ring" style="background: rgba(8,14,15,.85); border: 2px solid #FFCC00">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFCC00" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v13M6 12l6 6 6-6"></path></svg>
+          </span>Maybe
+        </button>
+        <button class="vote" type="button" onClick="{{ voteYes }}" aria-label="Yes, swipe right">
+          <span class="ring" style="background: #00C3D0">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#00282B" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
+          </span>Yes
+        </button>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ done }}" hint-placeholder-val="{{ false }}">
+    <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 16px">
+      <h2 style="margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -0.02em">{{ doneTitle }}</h2>
+      <p style="margin: 0; font-size: 15px; color: #A3AFB1; line-height: 1.5">{{ doneBody }}</p>
+      <button type="button" onClick="{{ reset }}" style="align-self: flex-start; background: transparent; border: 0; color: #00C3D0; font: inherit; font-size: 15px; font-weight: 700; min-height: 44px; cursor: pointer; padding: 0">Vote again</button>
+    </div>
+    <a class="btn btn-p" href="Match.dc.html">Demo: everyone agreed</a>
+    <a href="NoConsensus.dc.html" style="margin-top: 6px; min-height: 44px; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; text-decoration: none">Demo: not everyone agrees</a>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { i: 0, dx: 0, dy: 0, drag: false, exit: null, votes: [] };
+    this.sx = 0; this.sy = 0;
+  }
+  vote(v) {
+    if (this.state.exit || this.state.entering) return;
+    this.setState({ drag: false, exit: v });
+    setTimeout(() => {
+      this.setState((st) => ({ i: st.i + 1, exit: null, dx: 0, dy: 0, entering: true, votes: st.votes.concat([v]) }));
+      clearTimeout(this.dropT);
+      this.dropT = setTimeout(() => this.setState({ entering: false }), 40);
+    }, 280);
+  }
+  renderVals() {
+    const s = this.state;
+    const cards = [
+      { when: 'Thu, Oct 8 · 3:00 – 4:00 PM', tags: ['1 hr', '$'], activity: 'Coffee + pastries', venue: 'Juniper Café', distance: '0.6 mi',
+        desc: 'A bright neighborhood café with big tables. Easy for four, and you’re done before dinner.',
+        photo: 'repeating-linear-gradient(135deg, #2A4A4E 0 14px, #23403F 14px 28px)' },
+      { when: 'Thu, Oct 8 · 3:00 – 4:00 PM', tags: ['1 hr', '$$'], activity: 'Bowling', venue: 'Ridgeline Lanes', distance: '3.1 mi',
+        desc: 'One quick game and a basket of fries. Weekday afternoons are rarely busy.',
+        photo: 'repeating-linear-gradient(135deg, #3A3358 0 14px, #322B4E 14px 28px)' },
+      { when: 'Sat, Oct 10 · 11:00 AM – 1:00 PM', tags: ['2 hr', 'free'], activity: 'Picnic in the park', venue: 'Alder Park', distance: '1.2 mi',
+        desc: 'Grab sandwiches on the way and claim a shady spot by the pond.',
+        photo: 'repeating-linear-gradient(135deg, #3B4A22 0 14px, #33411D 14px 28px)' },
+      { when: 'Fri, Oct 9 · 7:00 – 9:00 PM', tags: ['2 hr', '$'], activity: 'Board game café', venue: 'Meeple House', distance: '2.4 mi',
+        desc: 'Hundreds of games on the shelves and staff who’ll teach you one in five minutes.',
+        photo: 'repeating-linear-gradient(135deg, #4A3A22 0 14px, #41331D 14px 28px)' },
+      { when: 'Thu, Oct 8 · 3:00 – 4:00 PM', tags: ['1 hr', '$'], activity: 'Tacos + horchata', venue: 'La Brasa Taquería', distance: '1.8 mi',
+        desc: 'Counter-service tacos with a patio. Quick, cheap and easy to share.',
+        photo: 'repeating-linear-gradient(135deg, #2A4A4E 0 14px, #23403F 14px 28px)' },
+      { when: 'Sat, Oct 10 · 11:00 AM – 1:00 PM', tags: ['2 hr', '$$'], activity: 'Mini golf', venue: 'Cedar Hollow Mini Golf', distance: '4.0 mi',
+        desc: 'Eighteen holes with a little friendly trash talk. Shaded course for warm days.',
+        photo: 'repeating-linear-gradient(135deg, #3A3358 0 14px, #322B4E 14px 28px)' },
+      { when: 'Tue, Oct 6 · 6:30 – 7:30 PM', tags: ['1 hr', '$'], activity: 'Trivia night', venue: 'The Copper Kettle', distance: '2.9 mi',
+        desc: 'Weekly pub trivia with teams of up to six. Four is the sweet spot.',
+        photo: 'repeating-linear-gradient(135deg, #3B4A22 0 14px, #33411D 14px 28px)' },
+      { when: 'Fri, Oct 9 · 7:00 – 9:00 PM', tags: ['2 hr', '$$'], activity: 'Arcade', venue: 'Pixel Pier', distance: '5.2 mi',
+        desc: 'Retro cabinets, air hockey and a prize counter. Load a card and split it.',
+        photo: 'repeating-linear-gradient(135deg, #4A3A22 0 14px, #41331D 14px 28px)' },
+      { when: 'Sat, Oct 10 · 11:00 AM – 1:00 PM', tags: ['2 hr', 'free'], activity: 'Farmers market', venue: 'Riverside Market', distance: '1.5 mi',
+        desc: 'Wander the stalls, sample a few things and grab lunch from a food truck.',
+        photo: 'repeating-linear-gradient(135deg, #2A4A4E 0 14px, #23403F 14px 28px)' },
+      { when: 'Thu, Oct 8 · 3:00 – 4:00 PM', tags: ['1 hr', '$'], activity: 'Bubble tea run', venue: 'Lotus Tea Bar', distance: '0.9 mi',
+        desc: 'A quick afternoon treat with plenty of seating if you want to linger.',
+        photo: 'repeating-linear-gradient(135deg, #3A3358 0 14px, #322B4E 14px 28px)' },
+      { when: 'Sun, Oct 11 · 3:45 – 5:45 PM', tags: ['2 hr', '$$'], activity: 'Climbing gym', venue: 'Granite Works', distance: '3.6 mi',
+        desc: 'Beginner-friendly bouldering. Shoe rental included with a day pass.',
+        photo: 'repeating-linear-gradient(135deg, #3B4A22 0 14px, #33411D 14px 28px)' },
+      { when: 'Fri, Oct 9 · 7:00 – 9:00 PM', tags: ['2 hr', 'free'], activity: 'Outdoor movie', venue: 'Alder Park Lawn', distance: '1.2 mi',
+        desc: 'Bring a blanket. Food trucks park nearby before the screening starts.',
+        photo: 'repeating-linear-gradient(135deg, #4A3A22 0 14px, #41331D 14px 28px)' }
+    ];
+    const n = cards.length;
+    const active = s.i < n;
+    let tx = s.dx, ty = s.dy, rot = s.dx / 18;
+    if (s.exit === 'yes') { tx = 520; ty = 40; rot = 22; }
+    if (s.exit === 'no') { tx = -520; ty = 40; rot = -22; }
+    if (s.exit === 'maybe') { tx = 0; ty = 820; rot = 0; }
+    const clamp = (x) => Math.max(0, Math.min(1, x));
+    const yes = s.votes.filter((v) => v === 'yes').length;
+    const out = {
+      active, done: !active, hasNext: s.i < n - 1,
+      c: active ? cards[s.i] : cards[n - 1],
+      nextPhoto: cards[Math.min(s.i + 1, n - 1)].photo,
+      counter: Math.min(s.i + 1, n) + ' of ' + n,
+      tf: 'translate(' + tx + 'px, ' + ty + 'px) rotate(' + rot + 'deg)',
+      tr: (s.drag || s.entering) ? 'none' : 'transform .28s ease, opacity .28s ease',
+      op: (s.exit && s.exit !== 'no') ? '0' : '1',
+      dark: (100 - 100 * (s.exit === 'no' ? 1 : Math.max(0, Math.min(1, -s.dx / 200)))) + '%',
+      darkTr: (s.drag || s.entering) ? 'none' : 'background-position .3s ease',
+      yesOp: String(s.exit === 'yes' ? 1 : clamp(s.dx / 90)),
+      noOp: String(s.exit === 'no' ? 1 : clamp(-s.dx / 90)),
+      maybeOp: String(s.exit === 'maybe' ? 1 : clamp((s.dy - Math.abs(s.dx)) / 90)),
+      doneTitle: 'Your votes are in.',
+      doneBody: 'You said yes to ' + yes + ' of ' + n + '. We’ll show the result as soon as everyone has swiped.',
+      down: (e) => {
+        if (s.exit || s.entering) return;
+        if (e.currentTarget && e.currentTarget.setPointerCapture) e.currentTarget.setPointerCapture(e.pointerId);
+        this.sx = e.clientX; this.sy = e.clientY;
+        this.setState({ drag: true, dx: 0, dy: 0 });
+      },
+      move: (e) => {
+        if (!this.state.drag) return;
+        this.setState({ dx: e.clientX - this.sx, dy: Math.max(0, e.clientY - this.sy) });
+      },
+      up: () => {
+        const st = this.state;
+        if (!st.drag) return;
+        let v = null;
+        if (st.dx > 90) v = 'yes'; else if (st.dx < -90) v = 'no'; else if (st.dy > 90) v = 'maybe';
+        if (v) this.vote(v); else this.setState({ drag: false, dx: 0, dy: 0 });
+      },
+      voteYes: () => this.vote('yes'),
+      voteNo: () => this.vote('no'),
+      voteMaybe: () => this.vote('maybe'),
+      reset: () => this.setState({ i: 0, votes: [], exit: null, dx: 0, dy: 0 })
+    };
+    out.stack = this.buildStack(out, cards, s);
+    return out;
+  }
+  glowFor(out) {
+    const opts = [['0,195,208', +out.yesOp], ['255,255,255', +out.maybeOp]];
+    opts.sort((x, y) => y[1] - x[1]);
+    const rgb = opts[0][0], a = Math.max(0, Math.min(1, opts[0][1]));
+    if (a < 0.02) return { bd: '#2A3739', glow: 'none' };
+    return {
+      bd: 'rgba(' + rgb + ',' + (0.35 + 0.65 * a).toFixed(2) + ')',
+      glow: '0 0 ' + Math.round(28 * a) + 'px ' + Math.round(4 * a) + 'px rgba(' + rgb + ',' + (0.6 * a).toFixed(2) + '), inset 0 0 0 ' + (2 * a).toFixed(1) + 'px rgba(' + rgb + ',' + a.toFixed(2) + ')'
+    };
+  }
+  buildStack(out, data, s) {
+    const items = [];
+    const noop = () => {};
+    for (let d = 2; d >= 0; d--) {
+      const idx = s.i + d;
+      if (idx >= data.length) continue;
+      if (d === 0) {
+        items.push({ d: data[idx], tf: out.tf, tr: out.tr, op: out.op, yesOp: out.yesOp, noOp: out.noOp, maybeOp: out.maybeOp,
+          down: out.down, move: out.move, up: out.up, z: 3, pe: 'auto', hidden: 'false', dark: out.dark, darkTr: out.darkTr, ...this.glowFor(out) });
+      } else {
+        const depth = s.exit ? d - 1 : d;
+        items.push({ d: data[idx], tf: 'translateY(' + (14 * depth) + 'px) scale(' + (1 - 0.05 * depth) + ')',
+          tr: s.entering ? 'none' : 'transform .28s ease', op: '1', yesOp: '0', noOp: '0', maybeOp: '0',
+          down: noop, move: noop, up: noop, z: 3 - d, pe: 'none', hidden: 'true', bd: '#2A3739', glow: 'none', dark: '100%', darkTr: 'none' });
+      }
+    }
+    return items;
+  }
+}
+</script>
+</body>
+</html>

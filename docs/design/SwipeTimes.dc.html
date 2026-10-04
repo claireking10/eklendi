@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Eklendi — Swipe on times</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+.decl{min-height:44px;padding:0 4px 0 12px;background:transparent;border:0;color:#FF8A8A;font:inherit;font-size:15px;font-weight:700;cursor:pointer}
+.decl:hover{color:#FFB0B0}
+*{box-sizing:border-box}
+a{color:#00C3D0}a:hover{color:#5BE3EC}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;height:56px;border-radius:16px;font:inherit;font-size:17px;font-weight:700;text-decoration:none;border:0;cursor:pointer;width:100%}
+.btn-p{background:#00C3D0;color:#00282B}.btn-p:hover{background:#2BD3DE;color:#00282B}
+.back{display:inline-flex;align-items:center;gap:6px;color:#FFFFFF;text-decoration:none;font-size:17px;min-height:44px;padding-right:12px}
+.back:hover{color:#00C3D0}
+.sec{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#00C3D0;margin:0}
+.card{position:absolute;inset:0;background:#162022;border:1px solid #2A3739;border-radius:28px;padding:22px;display:flex;flex-direction:column;align-items:center;touch-action:none;user-select:none;cursor:grab}
+.pill{display:inline-flex;align-items:center;height:28px;padding:0 12px;border-radius:999px;font-size:13px;font-weight:700}
+.av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#0B0B0B;border:2px solid #00C3D0;margin-left:-9px}
+.vote{display:flex;flex-direction:column;align-items:center;gap:6px;background:transparent;border:0;color:#FFFFFF;font:inherit;font-size:13px;font-weight:700;cursor:pointer;padding:0}
+.ring{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:transform .15s}
+.vote:hover .ring{transform:scale(1.06)}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; background: #000000; color: #FFFFFF; font-family: Figtree, -apple-system, system-ui, sans-serif; display: flex; flex-direction: column; position: relative; padding: 56px 24px 32px; overflow: hidden">
+  <div style="display: flex; align-items: center; justify-content: space-between">
+    <a class="back" href="Home.dc.html" aria-label="Back to home" style="padding-right: 0; width: 44px; justify-content: center; margin-left: -10px">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+    </a>
+    <button class="decl" type="button" onClick="{{ askDecline }}">Decline hangout</button>
+  </div>
+  <p class="sec" style="margin-top: 10px">Thursday crew · Step 1 of 3</p>
+  <h1 style="margin: 6px 0 0; font-size: 28px; font-weight: 700; letter-spacing: -0.02em">Let’s find a time.</h1>
+  <div style="margin-top: 12px; display: flex; align-items: center; gap: 10px">
+    <div style="flex: 1; height: 6px; border-radius: 3px; background: #1E2B2D; overflow: hidden">
+      <div style="height: 6px; border-radius: 3px; background: #00C3D0; width: {{ progress }}; transition: width .3s"></div>
+    </div>
+    <span style="font-size: 13px; color: #A3AFB1; font-weight: 600">{{ counter }}</span>
+  </div>
+
+  <sc-if value="{{ active }}" hint-placeholder-val="{{ true }}">
+    <div style="position: relative; height: 392px; margin-top: 22px">
+      <sc-for list="{{ stack }}" as="k" hint-placeholder-count="3">
+        <div class="card" aria-hidden="{{ k.hidden }}" onPointerDown="{{ k.down }}" onPointerMove="{{ k.move }}" onPointerUp="{{ k.up }}" onPointerCancel="{{ k.up }}" style="transform: {{ k.tf }}; transition: {{ k.tr }}; opacity: {{ k.op }}; z-index: {{ k.z }}; pointer-events: {{ k.pe }}; border-color: {{ k.bd }}; box-shadow: {{ k.glow }}">
+          <div style="display: flex; width: 100%; align-items: center; justify-content: space-between">
+            <span style="font-size: 16px; font-weight: 700">{{ k.d.tag }}</span>
+            <div style="display: flex; gap: 6px">
+              <sc-for list="{{ k.d.fits }}" as="f" hint-placeholder-count="2">
+                <span class="pill" style="background: #24484B; color: #CFF6F8">{{ f }}</span>
+              </sc-for>
+            </div>
+          </div>
+          <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px">
+            <span style="font-size: 20px; font-weight: 700; color: #00C3D0">{{ k.d.date }}</span>
+            <span style="font-size: 46px; font-weight: 900; letter-spacing: -0.01em; line-height: 1.05">{{ k.d.weekday }}</span>
+            <span style="font-size: 20px; font-weight: 700; margin-top: 4px">{{ k.d.time }}</span>
+            <span style="font-size: 13px; color: #A3AFB1; margin-top: 10px; text-align: center; max-width: 260px; line-height: 1.4">{{ k.d.note }}</span>
+            <a href="DayView.dc.html" style="margin-top: 14px; display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 16px; border-radius: 999px; border: 1px solid #3A4A4C; background: #1E2B2D; color: #FFFFFF; font-size: 14px; font-weight: 700; text-decoration: none">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2.5"></rect><path d="M4 10h16M9 3v4M15 3v4"></path></svg>
+              View availability
+            </a>
+          </div>
+          <div style="width: 100%; height: 56px; border-radius: 16px; background: #00C3D0; color: #00282B; display: flex; align-items: center; justify-content: space-between; padding: 0 12px 0 18px">
+            <span style="font-size: 16px; font-weight: 700">Everyone’s free</span>
+            <div style="display: flex; padding-left: 9px">
+              <span class="av" style="background: #E8ECEC">ZW</span>
+              <span class="av" style="background: #FFCC00">SF</span>
+              <span class="av" style="background: #CB30E0">MH</span>
+              <span class="av" style="background: #6E8BFF">ML</span>
+            </div>
+          </div>
+          <span aria-hidden="true" style="position: absolute; inset: 0; border-radius: inherit; pointer-events: none; background-image: linear-gradient(to bottom right, rgba(0,0,0,.9) 0%, rgba(0,0,0,.9) 38%, rgba(0,0,0,0) 62%, rgba(0,0,0,0) 100%); background-size: 260% 260%; background-repeat: no-repeat; background-position: {{ k.dark }} {{ k.dark }}; transition: {{ k.darkTr }}"></span>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="margin-top: 26px; display: flex; justify-content: space-evenly">
+      <button class="vote" type="button" onClick="{{ voteNo }}" aria-label="No, swipe left">
+        <span class="ring" style="border: 2px solid #E8ECEC">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#E8ECEC" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+        </span>No
+      </button>
+      <button class="vote" type="button" onClick="{{ voteMaybe }}" aria-label="Maybe, swipe down">
+        <span class="ring" style="border: 2px solid #FFCC00">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#FFCC00" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v13M6 12l6 6 6-6"></path></svg>
+        </span>Maybe
+      </button>
+      <button class="vote" type="button" onClick="{{ voteYes }}" aria-label="Yes, swipe right">
+        <span class="ring" style="background: #00C3D0">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#00282B" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
+        </span>Yes
+      </button>
+    </div>
+    <p style="margin: 18px 0 0; font-size: 13px; color: #A3AFB1; text-align: center; line-height: 1.45">Swipe right if it works, left if it doesn’t,<br>or down if you’d go but would rather not.</p>
+  </sc-if>
+
+  <sc-if value="{{ done }}" hint-placeholder-val="{{ false }}">
+    <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 18px">
+      <div style="width: 72px; height: 72px; border-radius: 50%; background: #00C3D0; display: flex; align-items: center; justify-content: center">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#00282B" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
+      </div>
+      <h2 style="margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -0.02em">Times are in.</h2>
+      <div style="display: flex; gap: 10px">
+        <span class="pill" style="height: 34px; background: #24484B; color: #CFF6F8">{{ yesCount }} yes</span>
+        <span class="pill" style="height: 34px; background: #4A3F12; color: #FFE58A">{{ maybeCount }} maybe</span>
+        <span class="pill" style="height: 34px; background: #2A3436; color: #E8ECEC">{{ noCount }} no</span>
+      </div>
+      <p style="margin: 0; font-size: 15px; color: #A3AFB1; line-height: 1.5">Next, a few quick questions about what you feel like doing. Not sure? “I don’t care” is always an option.</p>
+      <div style="display: flex; gap: 20px; align-items: center">
+        <button type="button" onClick="{{ reset }}" style="background: transparent; border: 0; color: #00C3D0; font: inherit; font-size: 15px; font-weight: 700; min-height: 44px; cursor: pointer; padding: 0">Redo my swipes</button>
+        <a href="NoTimes.dc.html" style="font-size: 15px; font-weight: 700; min-height: 44px; display: inline-flex; align-items: center; text-decoration: none">Preview: no time works</a>
+      </div>
+    </div>
+    <a class="btn btn-p" href="SwipeActivity.dc.html">Continue</a>
+  </sc-if>
+  <sc-if value="{{ declining }}" hint-placeholder-val="{{ false }}">
+    <div style="position: absolute; inset: 0; background: rgba(0,0,0,.65); z-index: 20"></div>
+    <div role="alertdialog" aria-label="Decline hangout" style="position: absolute; left: 0; right: 0; bottom: 0; z-index: 21; background: #0E1617; border-top: 1px solid #243133; border-radius: 28px 28px 0 0; padding: 12px 24px 36px; display: flex; flex-direction: column; gap: 12px">
+      <div style="width: 40px; height: 5px; border-radius: 3px; background: #3A4A4C; align-self: center"></div>
+      <h2 style="margin: 8px 0 0; font-size: 24px; font-weight: 700">Decline this hangout?</h2>
+      <p style="margin: 0; font-size: 15px; color: #A3AFB1; line-height: 1.5">You’ll be removed from Thursday crew, and Seth will see that you declined. The others can keep planning without you.</p>
+      <div style="display: flex; gap: 10px; margin-top: 8px">
+        <button type="button" onClick="{{ cancelDecline }}" style="flex: 1; height: 52px; border-radius: 14px; background: #1E2B2D; color: #FFFFFF; border: 1px solid #2C3A3C; font: inherit; font-size: 16px; font-weight: 700; cursor: pointer">Keep me in</button>
+        <a href="Home.dc.html" style="flex: 1; height: 52px; border-radius: 14px; background: #E5484D; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; text-decoration: none">Decline</a>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { declining: false, i: 0, dx: 0, dy: 0, drag: false, exit: null, votes: [] };
+    this.sx = 0; this.sy = 0;
+  }
+  vote(v) {
+    if (this.state.exit || this.state.entering) return;
+    this.setState({ drag: false, exit: v });
+    setTimeout(() => {
+      this.setState((st) => ({ i: st.i + 1, exit: null, dx: 0, dy: 0, entering: true, votes: st.votes.concat([v]) }));
+      clearTimeout(this.dropT);
+      this.dropT = setTimeout(() => this.setState({ entering: false }), 40);
+    }, 280);
+  }
+  renderVals() {
+    const s = this.state;
+    const slots = [
+      { tag: 'Best match', weekday: 'THURSDAY', date: 'October 8th', time: '3:00 – 4:00 PM', fits: ['1 hr'], note: 'Starts 15 min after Matt’s class ends at 2:45.' },
+      { tag: 'Weeknight', weekday: 'TUESDAY', date: 'October 6th', time: '6:30 – 8:00 PM', fits: ['1 hr'], note: 'Starts 15 min after Seth’s lab ends at 6:15.' },
+      { tag: 'Friday night', weekday: 'FRIDAY', date: 'October 9th', time: '7:00 – 10:00 PM', fits: ['1 hr', '2 hr'], note: 'Longest window this week.' },
+      { tag: 'Weekend', weekday: 'SATURDAY', date: 'October 10th', time: '10:45 AM – 2:15 PM', fits: ['1 hr', '2 hr'], note: 'Ends 15 min before Mark’s 2:30 plans.' },
+      { tag: 'Weekend', weekday: 'SUNDAY', date: 'October 11th', time: '3:45 – 5:45 PM', fits: ['1 hr', '2 hr'], note: 'Ends 15 min before Seth’s 6:00 dinner.' }
+    ];
+    const n = slots.length;
+    const active = s.i < n;
+    let tx = s.dx, ty = s.dy, rot = s.dx / 18;
+    if (s.exit === 'yes') { tx = 520; ty = 40; rot = 22; }
+    if (s.exit === 'no') { tx = -520; ty = 40; rot = -22; }
+    if (s.exit === 'maybe') { tx = 0; ty = 720; rot = 0; }
+    const clamp = (x) => Math.max(0, Math.min(1, x));
+    const yesOp = s.exit === 'yes' ? 1 : clamp(s.dx / 90);
+    const noOp = s.exit === 'no' ? 1 : clamp(-s.dx / 90);
+    const maybeOp = s.exit === 'maybe' ? 1 : clamp((s.dy - Math.abs(s.dx)) / 90);
+    const count = (v) => s.votes.filter((x) => x === v).length;
+    const out = {
+      declining: this.state.declining,
+      askDecline: () => this.setState({ declining: true }),
+      cancelDecline: () => this.setState({ declining: false }),
+      active, done: !active, hasNext: s.i < n - 1,
+      slot: active ? slots[s.i] : slots[n - 1],
+      counter: Math.min(s.i + 1, n) + ' of ' + n,
+      progress: Math.round((s.i / n) * 100) + '%',
+      tf: 'translate(' + tx + 'px, ' + ty + 'px) rotate(' + rot + 'deg)',
+      tr: (s.drag || s.entering) ? 'none' : 'transform .28s ease, opacity .28s ease',
+      op: (s.exit && s.exit !== 'no') ? '0' : '1',
+      dark: (100 - 100 * (s.exit === 'no' ? 1 : Math.max(0, Math.min(1, -s.dx / 200)))) + '%',
+      darkTr: (s.drag || s.entering) ? 'none' : 'background-position .3s ease',
+      yesOp: String(yesOp), noOp: String(noOp), maybeOp: String(maybeOp),
+      down: (e) => {
+        if (s.exit || s.entering) return;
+        if (e.target && e.target.closest && e.target.closest('a')) return;
+        if (e.currentTarget && e.currentTarget.setPointerCapture) e.currentTarget.setPointerCapture(e.pointerId);
+        this.sx = e.clientX; this.sy = e.clientY;
+        this.setState({ drag: true, dx: 0, dy: 0 });
+      },
+      move: (e) => {
+        if (!this.state.drag) return;
+        this.setState({ dx: e.clientX - this.sx, dy: Math.max(0, e.clientY - this.sy) });
+      },
+      up: () => {
+        const st = this.state;
+        if (!st.drag) return;
+        let v = null;
+        if (st.dx > 90) v = 'yes'; else if (st.dx < -90) v = 'no'; else if (st.dy > 90) v = 'maybe';
+        if (v) this.vote(v); else this.setState({ drag: false, dx: 0, dy: 0 });
+      },
+      voteYes: () => this.vote('yes'),
+      voteNo: () => this.vote('no'),
+      voteMaybe: () => this.vote('maybe'),
+      yesCount: count('yes'), maybeCount: count('maybe'), noCount: count('no'),
+      reset: () => this.setState({ i: 0, votes: [], exit: null, dx: 0, dy: 0 })
+    };
+    out.stack = this.buildStack(out, slots, s);
+    return out;
+  }
+  glowFor(out) {
+    const opts = [['0,195,208', +out.yesOp], ['255,255,255', +out.maybeOp]];
+    opts.sort((x, y) => y[1] - x[1]);
+    const rgb = opts[0][0], a = Math.max(0, Math.min(1, opts[0][1]));
+    if (a < 0.02) return { bd: '#2A3739', glow: 'none' };
+    return {
+      bd: 'rgba(' + rgb + ',' + (0.35 + 0.65 * a).toFixed(2) + ')',
+      glow: '0 0 ' + Math.round(28 * a) + 'px ' + Math.round(4 * a) + 'px rgba(' + rgb + ',' + (0.6 * a).toFixed(2) + '), inset 0 0 0 ' + (2 * a).toFixed(1) + 'px rgba(' + rgb + ',' + a.toFixed(2) + ')'
+    };
+  }
+  buildStack(out, data, s) {
+    const items = [];
+    const noop = () => {};
+    for (let d = 2; d >= 0; d--) {
+      const idx = s.i + d;
+      if (idx >= data.length) continue;
+      if (d === 0) {
+        items.push({ d: data[idx], tf: out.tf, tr: out.tr, op: out.op, yesOp: out.yesOp, noOp: out.noOp, maybeOp: out.maybeOp,
+          down: out.down, move: out.move, up: out.up, z: 3, pe: 'auto', hidden: 'false', dark: out.dark, darkTr: out.darkTr, ...this.glowFor(out) });
+      } else {
+        const depth = s.exit ? d - 1 : d;
+        items.push({ d: data[idx], tf: 'translateY(' + (14 * depth) + 'px) scale(' + (1 - 0.05 * depth) + ')',
+          tr: s.entering ? 'none' : 'transform .28s ease', op: '1', yesOp: '0', noOp: '0', maybeOp: '0',
+          down: noop, move: noop, up: noop, z: 3 - d, pe: 'none', hidden: 'true', bd: '#2A3739', glow: 'none', dark: '100%', darkTr: 'none' });
+      }
+    }
+    return items;
+  }
+}
+</script>
+</body>
+</html>

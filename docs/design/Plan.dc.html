@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Eklendi — What do you need?</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+*{box-sizing:border-box}
+a{color:#00C3D0}a:hover{color:#5BE3EC}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;height:56px;border-radius:16px;font:inherit;font-size:17px;font-weight:700;text-decoration:none;border:0;cursor:pointer;width:100%}
+.btn-p{background:#00C3D0;color:#00282B}.btn-p:hover{background:#2BD3DE;color:#00282B}
+.back{display:inline-flex;align-items:center;gap:6px;color:#FFFFFF;text-decoration:none;font-size:17px;min-height:44px;padding-right:12px}
+.back:hover{color:#00C3D0}
+.sec{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#00C3D0;margin:0}
+.opt{display:flex;align-items:flex-start;gap:14px;width:100%;padding:16px;border-radius:20px;font:inherit;color:#FFFFFF;text-align:left;cursor:pointer}
+.ico{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex:none}
+.radio{width:24px;height:24px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;margin-top:10px}
+.stepchip{display:inline-flex;align-items:center;height:30px;padding:0 12px;border-radius:999px;font-size:13px;font-weight:600}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; background: #000000; color: #FFFFFF; font-family: Figtree, -apple-system, system-ui, sans-serif; display: flex; flex-direction: column; padding: 56px 24px 40px">
+  <a class="back" href="Invite.dc.html">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+    Back
+  </a>
+  <h1 style="margin: 16px 0 0; font-size: 30px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.15">What do you need help with?</h1>
+  <p style="margin: 8px 0 0; font-size: 15px; color: #A3AFB1">Pick what the group should figure out together.</p>
+
+  <div role="radiogroup" aria-label="Hangout type" style="margin-top: 24px; display: flex; flex-direction: column; gap: 12px">
+    <sc-for list="{{ options }}" as="o" hint-placeholder-count="2">
+      <button class="opt" type="button" role="radio" aria-checked="{{ o.checked }}" onClick="{{ o.pick }}" style="background: {{ o.bg }}; border: 1.5px solid {{ o.bd }}">
+        <span class="ico" style="background: {{ o.icoBg }}">
+          <sc-if value="{{ o.isBoth }}" hint-placeholder-val="{{ true }}">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="{{ o.icoFg }}" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="11" height="11" rx="2"></rect><path d="M3 9h11M6.5 3v3M10.5 3v3"></path><path d="M17 13l1.2 2.6 2.8.4-2 2 .5 2.8-2.5-1.3-2.5 1.3.5-2.8-2-2 2.8-.4z"></path></svg>
+          </sc-if>
+          <sc-if value="{{ o.isTime }}" hint-placeholder-val="{{ false }}">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="{{ o.icoFg }}" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2.5"></rect><path d="M4 10h16M9 3v4M15 3v4"></path></svg>
+          </sc-if>
+        </span>
+        <span style="flex: 1; display: flex; flex-direction: column; gap: 4px">
+          <span style="font-size: 17px; font-weight: 700">{{ o.title }}</span>
+          <span style="font-size: 14px; color: #A3AFB1; line-height: 1.45">{{ o.body }}</span>
+        </span>
+        <span class="radio" style="border: 2px solid {{ o.bd }}">
+          <span style="width: 12px; height: 12px; border-radius: 50%; background: {{ o.dot }}"></span>
+        </span>
+      </button>
+    </sc-for>
+  </div>
+
+  <sc-if value="{{ timeOnly }}" hint-placeholder-val="{{ false }}">
+    <label style="margin-top: 16px; display: flex; flex-direction: column; gap: 8px">
+      <span class="sec">What’s the plan?</span>
+      <span style="display: flex; align-items: center; gap: 12px; height: 56px; padding: 0 16px; background: #162022; border: 1px solid #243133; border-radius: 16px">
+        <input type="text" placeholder="e.g. Movie night at Mark’s" style="flex: 1; min-width: 0; background: transparent; border: 0; color: #FFFFFF; font: inherit; font-size: 16px; outline: none">
+      </span>
+      <span style="font-size: 13px; color: #A3AFB1">Goes on the calendar invite.</span>
+    </label>
+  </sc-if>
+
+  <div style="flex: 1"></div>
+  <p class="sec" style="color: #8A9799">What happens next</p>
+  <div style="margin-top: 10px; margin-bottom: 18px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px">
+    <sc-for list="{{ steps }}" as="st" hint-placeholder-count="4">
+      <span class="stepchip" style="background: #162022; border: 1px solid #243133; color: #E8ECEC">{{ st.label }}</span>
+      <sc-if value="{{ st.arrow }}" hint-placeholder-val="{{ true }}">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4A5B5D" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg>
+      </sc-if>
+    </sc-for>
+  </div>
+  <a class="btn btn-p" href="Constraints.dc.html">Next</a>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { mode: 'both' };
+  }
+  renderVals() {
+    const s = this.state;
+    const list = [
+      { id: 'both', title: 'A time and an activity', body: 'We’ll find when everyone’s free and suggest things to do nearby.' },
+      { id: 'time', title: 'Just a time', body: 'You already have something in mind. We’ll only find when everyone’s free.' }
+    ];
+    const steps = s.mode === 'both'
+      ? ['Duration', 'Starting point', 'Swipe on times', 'Activity questions', 'Vote on ideas', 'Confirmed']
+      : ['Duration', 'Swipe on times', 'Confirmed'];
+    return {
+      options: list.map((o) => {
+        const on = s.mode === o.id;
+        return { ...o, isBoth: o.id === 'both', isTime: o.id === 'time', checked: on ? 'true' : 'false',
+          bg: on ? '#13292B' : '#162022', bd: on ? '#00C3D0' : '#2C3A3C', dot: on ? '#00C3D0' : 'transparent',
+          icoBg: on ? '#00C3D0' : '#1E2B2D', icoFg: on ? '#00282B' : '#E8ECEC',
+          pick: () => this.setState({ mode: o.id }) };
+      }),
+      timeOnly: s.mode === 'time',
+      steps: steps.map((label, i) => ({ label, arrow: i < steps.length - 1 }))
+    };
+  }
+}
+</script>
+</body>
+</html>

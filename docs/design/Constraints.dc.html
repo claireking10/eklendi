@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Eklendi — Duration and travel</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+*{box-sizing:border-box}
+a{color:#00C3D0}a:hover{color:#5BE3EC}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;height:56px;border-radius:16px;font:inherit;font-size:17px;font-weight:700;text-decoration:none;border:0;cursor:pointer;width:100%}
+.btn-p{background:#00C3D0;color:#00282B}.btn-p:hover{background:#2BD3DE;color:#00282B}
+.back{display:inline-flex;align-items:center;gap:6px;color:#FFFFFF;text-decoration:none;font-size:17px;min-height:44px;padding-right:12px}
+.back:hover{color:#00C3D0}
+.sec{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#00C3D0;margin:0}
+.chip{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:46px;padding:0 18px;border-radius:999px;font:inherit;font-size:16px;font-weight:600;cursor:pointer}
+.dc{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:46px;border-radius:14px;font:inherit;font-size:15px;font-weight:600;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; background: #000000; color: #FFFFFF; font-family: Figtree, -apple-system, system-ui, sans-serif; display: flex; flex-direction: column; padding: 56px 24px 40px">
+  <a class="back" href="Plan.dc.html">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+    Back
+  </a>
+  <h1 style="margin: 16px 0 0; font-size: 30px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.15">How long should it be?</h1>
+  <p style="margin: 8px 0 0; font-size: 15px; color: #A3AFB1">Pick as many as work. We’ll only suggest times that fit.</p>
+
+  <div style="margin-top: 28px; display: flex; align-items: baseline; justify-content: space-between">
+    <p class="sec">How long?</p>
+    <span style="font-size: 14px; color: #A3AFB1">{{ durSummary }}</span>
+  </div>
+  <div style="margin-top: 12px; display: flex; flex-wrap: wrap; gap: 10px">
+    <sc-for list="{{ durations }}" as="d" hint-placeholder-count="5">
+      <button class="chip" type="button" aria-pressed="{{ d.pressed }}" onClick="{{ d.toggle }}" style="background: {{ d.bg }}; color: {{ d.fg }}; border: 1px solid {{ d.bd }}">{{ d.label }}</button>
+    </sc-for>
+  </div>
+  <sc-if value="{{ customOn }}" hint-placeholder-val="{{ false }}">
+    <div style="margin-top: 10px; display: flex; align-items: center; gap: 12px; padding: 8px 8px 8px 16px; background: #13292B; border: 1px solid #1F4A4D; border-radius: 16px">
+      <span style="flex: 1; font-size: 15px; font-weight: 600; color: #CFF6F8">Custom length</span>
+      <button type="button" aria-label="Fewer hours" onClick="{{ customDec }}" style="width: 44px; height: 44px; border-radius: 12px; border: 1px solid #2C3A3C; background: #1E2B2D; color: #FFFFFF; font: inherit; font-size: 22px; font-weight: 600; cursor: pointer">−</button>
+      <span style="min-width: 64px; text-align: center; font-size: 20px; font-weight: 800">{{ customHrs }} hr</span>
+      <button type="button" aria-label="More hours" onClick="{{ customInc }}" style="width: 44px; height: 44px; border-radius: 12px; border: 1px solid #2C3A3C; background: #1E2B2D; color: #FFFFFF; font: inherit; font-size: 22px; font-weight: 600; cursor: pointer">+</button>
+    </div>
+  </sc-if>
+  <button class="dc" type="button" aria-pressed="{{ durAnyPressed }}" onClick="{{ durAny }}" style="margin-top: 10px; background: {{ durAnyBg }}; color: {{ durAnyFg }}; border: 1px dashed {{ durAnyBd }}">I don’t care how long</button>
+
+  <div style="flex: 1"></div>
+  <a class="btn btn-p" href="Origin.dc.html">
+    Find times
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg>
+  </a>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { dur: { '1 hr': true, '2 hr': true, 'Custom': true }, durAny: false, customHrs: 4 };
+  }
+  renderVals() {
+    const s = this.state;
+    const on = (b) => ({ bg: b ? '#00C3D0' : '#162022', fg: b ? '#00282B' : '#FFFFFF', bd: b ? '#00C3D0' : '#2C3A3C', pressed: b ? 'true' : 'false' });
+    const any = (b) => ({ bg: b ? '#1E2B2D' : 'transparent', fg: b ? '#00C3D0' : '#A3AFB1', bd: b ? '#00C3D0' : '#3A4A4C', pressed: b ? 'true' : 'false' });
+    const durLabels = ['30 min', '1 hr', '2 hr', '3 hr', 'Custom'];
+    const customOn = !s.durAny && !!s.dur['Custom'];
+    const durPicked = durLabels.filter((d) => s.dur[d]).map((d) => d === 'Custom' ? s.customHrs + ' hr' : d);
+    const dA = any(s.durAny);
+    return {
+      durations: durLabels.map((d) => {
+        const b = !s.durAny && !!s.dur[d];
+        return { label: d, ...on(b), toggle: () => this.setState({ durAny: false, dur: { ...s.dur, [d]: !b } }) };
+      }),
+      customOn, customHrs: s.customHrs,
+      customDec: () => this.setState({ customHrs: Math.max(1, s.customHrs - 1) }),
+      customInc: () => this.setState({ customHrs: Math.min(12, s.customHrs + 1) }),
+      durAny: () => this.setState({ durAny: !s.durAny }),
+      durAnyBg: dA.bg, durAnyFg: dA.fg, durAnyBd: dA.bd, durAnyPressed: dA.pressed,
+      durSummary: s.durAny ? 'Any length' : (durPicked.length ? durPicked.join(', ') : 'Pick one')
+    };
+  }
+}
+</script>
+</body>
+</html>

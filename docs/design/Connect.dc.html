@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Eklendi — Calendars and buffer</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+*{box-sizing:border-box}
+a{color:#00C3D0}a:hover{color:#5BE3EC}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;height:56px;border-radius:16px;font:inherit;font-size:17px;font-weight:700;text-decoration:none;border:0;cursor:pointer;width:100%}
+.btn-p{background:#00C3D0;color:#00282B}.btn-p:hover{background:#2BD3DE;color:#00282B}
+.back{display:inline-flex;align-items:center;gap:6px;color:#FFFFFF;text-decoration:none;font-size:17px;min-height:44px;padding-right:12px}
+.back:hover{color:#00C3D0}
+.sec{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#00C3D0;margin:0}
+.cal{display:flex;align-items:center;gap:14px;min-height:60px;padding:0 16px}
+.tog{width:52px;height:32px;border-radius:999px;border:0;padding:3px;cursor:pointer;display:flex;align-items:center;transition:background .2s}
+.knob{width:26px;height:26px;border-radius:50%;background:#FFFFFF;transition:transform .2s}
+.step{width:44px;height:44px;border-radius:12px;border:1px solid #2C3A3C;background:#1E2B2D;color:#FFFFFF;font:inherit;font-size:22px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.step:hover{border-color:#00C3D0}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; background: #000000; color: #FFFFFF; font-family: Figtree, -apple-system, system-ui, sans-serif; display: flex; flex-direction: column; padding: 56px 24px 40px">
+  <a class="back" href="Phone.dc.html">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+    Back
+  </a>
+  <div style="margin-top: 8px; display: flex; flex-direction: column; gap: 10px">
+    <h1 style="margin: 0; font-size: 30px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.15">Let’s see when you’re free</h1>
+    <p style="margin: 0; font-size: 15px; color: #A3AFB1; line-height: 1.45">We only read busy and free times, never event names or details.</p>
+  </div>
+
+  <p class="sec" style="margin-top: 22px">Calendars</p>
+  <div style="margin-top: 10px; background: #162022; border: 1px solid #243133; border-radius: 18px">
+    <sc-for list="{{ cals }}" as="c" hint-placeholder-count="2">
+      <div class="cal" style="border-bottom: {{ c.border }}">
+        <div style="width: 40px; height: 40px; border-radius: 10px; background: #FFFFFF; color: #000000; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1">
+          <span style="font-size: 8px; font-weight: 800; color: #D0302F; letter-spacing: .04em">{{ c.mon }}</span>
+          <span style="font-size: 17px; font-weight: 700">{{ c.day }}</span>
+        </div>
+        <div style="flex: 1; display: flex; flex-direction: column; gap: 2px">
+          <span style="font-size: 16px; font-weight: 700">{{ c.name }}</span>
+          <span style="font-size: 13px; color: #A3AFB1">{{ c.status }}</span>
+        </div>
+        <button class="tog" type="button" role="switch" aria-checked="{{ c.on }}" aria-label="{{ c.label }}" onClick="{{ c.toggle }}" style="background: {{ c.track }}">
+          <span class="knob" style="transform: {{ c.knob }}"></span>
+        </button>
+      </div>
+    </sc-for>
+  </div>
+
+  <p class="sec" style="margin-top: 22px">Buffer around events</p>
+  <div style="margin-top: 10px; background: #162022; border: 1px solid #243133; border-radius: 18px; padding: 12px 16px; display: flex; flex-direction: column; gap: 10px">
+    <div style="display: flex; align-items: center; gap: 12px">
+      <button class="step" type="button" aria-label="Shorter buffer" onClick="{{ dec }}">−</button>
+      <div style="flex: 1; text-align: center">
+        <div style="font-size: 26px; font-weight: 800; letter-spacing: -0.02em">{{ buffer }} min</div>
+      </div>
+      <button class="step" type="button" aria-label="Longer buffer" onClick="{{ inc }}">+</button>
+    </div>
+    <p style="margin: 0; font-size: 13px; color: #A3AFB1; line-height: 1.45; text-align: center">{{ example }}</p>
+  </div>
+
+  <div style="margin-top: 22px; display: flex; align-items: baseline; justify-content: space-between">
+    <p class="sec">Where you live, roughly</p>
+    <span style="font-size: 12px; color: #A3AFB1">Never shown to friends</span>
+  </div>
+  <label style="margin-top: 10px; display: flex; align-items: center; gap: 12px; height: 56px; padding: 0 16px; background: #162022; border: 1px solid #243133; border-radius: 16px; color: #8A9799">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z"></path><circle cx="12" cy="9.5" r="2.5"></circle></svg>
+    <span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Approximate home location</span>
+    <input type="text" placeholder="Neighborhood or nearest cross streets" style="flex: 1; min-width: 0; background: transparent; border: 0; color: #FFFFFF; font: inherit; font-size: 16px; outline: none">
+  </label>
+  <p style="margin: 8px 2px 0; font-size: 13px; color: #A3AFB1; line-height: 1.45">Close enough to find places near you. No exact address needed.</p>
+
+  <div style="flex: 1"></div>
+  <a class="btn btn-p" href="Interests.dc.html">Continue</a>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { apple: true, google: false, buffer: 15 };
+  }
+  fmt(mins) {
+    const h = Math.floor(mins / 60), m = mins % 60;
+    const hh = ((h + 11) % 12) + 1;
+    return hh + ':' + String(m).padStart(2, '0') + (h >= 12 ? ' PM' : ' AM');
+  }
+  renderVals() {
+    const s = this.state;
+    const mk = (key, name, mon, day) => {
+      const on = !!s[key];
+      return {
+        name, mon, day, on: on ? 'true' : 'false',
+        label: name,
+        status: on ? 'Connected · reading busy times' : 'Not connected',
+        track: on ? '#00C3D0' : '#3A4A4C',
+        knob: on ? 'translateX(20px)' : 'translateX(0px)',
+        border: key === 'apple' ? '1px solid #243133' : '0px solid transparent',
+        toggle: () => this.setState({ [key]: !s[key] })
+      };
+    };
+    const end = 15 * 60;
+    return {
+      cals: [mk('apple', 'Apple Calendar', 'OCT', '3'), mk('google', 'Google Calendar', 'OCT', '3')],
+      buffer: s.buffer,
+      example: s.buffer === 0
+        ? 'No buffer: hangouts can start the minute another event ends.'
+        : 'Class ends at 3:00 PM → earliest hangout starts at ' + this.fmt(end + s.buffer) + '.',
+      dec: () => this.setState({ buffer: Math.max(0, s.buffer - 5) }),
+      inc: () => this.setState({ buffer: Math.min(60, s.buffer + 5) })
+    };
+  }
+}
+</script>
+</body>
+</html>

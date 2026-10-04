@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Eklendi — Not everyone agrees</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+*{box-sizing:border-box}
+a{color:#00C3D0}a:hover{color:#5BE3EC}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;height:56px;border-radius:16px;font:inherit;font-size:17px;font-weight:700;text-decoration:none;border:0;cursor:pointer;width:100%}
+.btn-p{background:#00C3D0;color:#00282B}.btn-p:hover{background:#2BD3DE;color:#00282B}
+.back{width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;color:#FFFFFF;text-decoration:none;border-radius:12px;margin-left:-10px}
+.back:hover{color:#00C3D0}
+.sec{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#00C3D0;margin:0}
+.res{display:flex;gap:14px;padding:14px;background:#162022;border:1px solid #243133;border-radius:20px}
+.thumb{width:64px;height:64px;border-radius:14px;flex:none}
+.vav{position:relative;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#0B0B0B}
+.vdot{position:absolute;right:-3px;bottom:-3px;width:14px;height:14px;border-radius:50%;border:2px solid #162022;display:flex;align-items:center;justify-content:center}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; background: #000000; color: #FFFFFF; font-family: Figtree, -apple-system, system-ui, sans-serif; display: flex; flex-direction: column; padding: 52px 24px 36px">
+  <a class="back" href="Home.dc.html" aria-label="Back to home">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+  </a>
+  <p class="sec" style="margin-top: 8px">Thursday crew · Round 1 results</p>
+  <h1 style="margin: 6px 0 0; font-size: 30px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.15">Not everyone agrees yet.</h1>
+  <p style="margin: 8px 0 0; font-size: 15px; color: #A3AFB1; line-height: 1.45">No idea got a yes or maybe from all four of you. Here’s what came closest.</p>
+
+  <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px">
+    <sc-for list="{{ results }}" as="r" hint-placeholder-count="3">
+      <div class="res">
+        <span class="thumb" style="background: {{ r.photo }}"></span>
+        <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px">
+          <span style="display: flex; align-items: baseline; justify-content: space-between; gap: 8px">
+            <span style="font-size: 17px; font-weight: 800">{{ r.activity }}</span>
+            <span style="font-size: 13px; font-weight: 700; color: #00C3D0; white-space: nowrap">{{ r.tally }}</span>
+          </span>
+          <span style="font-size: 13px; color: #A3AFB1">{{ r.where }}</span>
+          <span style="margin-top: 4px; display: flex; gap: 8px">
+            <sc-for list="{{ r.votes }}" as="v" hint-placeholder-count="4">
+              <span class="vav" style="background: {{ v.color }}" aria-label="{{ v.aria }}">{{ v.initials }}
+                <span class="vdot" style="background: {{ v.dot }}">
+                  <sc-if value="{{ v.isYes }}" hint-placeholder-val="{{ true }}">
+                    <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#00282B" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
+                  </sc-if>
+                  <sc-if value="{{ v.isNo }}" hint-placeholder-val="{{ false }}">
+                    <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#0B0B0B" stroke-width="4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+                  </sc-if>
+                  <sc-if value="{{ v.isMaybe }}" hint-placeholder-val="{{ false }}">
+                    <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#1A1500" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v13M6 12l6 6 6-6"></path></svg>
+                  </sc-if>
+                </span>
+              </span>
+            </sc-for>
+          </span>
+        </span>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="flex: 1"></div>
+  <div style="margin-bottom: 14px; display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; background: #13292B; border: 1px solid #1F4A4D; border-radius: 16px">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#00C3D0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; margin-top: 1px"><path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3"></path><path d="M18 3v4h-4M6 21v-4h4"></path></svg>
+    <span style="font-size: 14px; line-height: 1.45; color: #CFF6F8">Next round: 12 new ideas, 3 for each person in the group. Swipe the same way as before.</span>
+  </div>
+  <a class="btn btn-p" href="Cards.dc.html">Swipe on 12 new ideas</a>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const people = [
+      { initials: 'ZW', name: 'You', color: '#E8ECEC' },
+      { initials: 'SF', name: 'Seth', color: '#FFCC00' },
+      { initials: 'MH', name: 'Matt', color: '#CB30E0' },
+      { initials: 'ML', name: 'Mark', color: '#6E8BFF' }
+    ];
+    const rows = [
+      { activity: 'Bowling', where: 'Ridgeline Lanes · Thu 3:00 PM', photo: 'repeating-linear-gradient(135deg, #3A3358 0 8px, #322B4E 8px 16px)', v: ['yes', 'yes', 'yes', 'no'] },
+      { activity: 'Board game café', where: 'Meeple House · Fri 7:00 PM', photo: 'repeating-linear-gradient(135deg, #4A3A22 0 8px, #41331D 8px 16px)', v: ['yes', 'no', 'yes', 'yes'] },
+      { activity: 'Coffee + pastries', where: 'Juniper Café · Thu 3:00 PM', photo: 'repeating-linear-gradient(135deg, #2A4A4E 0 8px, #23403F 8px 16px)', v: ['yes', 'maybe', 'yes', 'no'] }
+    ];
+    const dots = { yes: '#00C3D0', maybe: '#FFCC00', no: '#E8ECEC' };
+    const words = { yes: 'yes', maybe: 'maybe', no: 'no' };
+    return {
+      results: rows.map((r) => {
+        const n = (k) => r.v.filter((x) => x === k).length;
+        const parts = [n('yes') + ' yes'];
+        if (n('maybe')) parts.push(n('maybe') + ' maybe');
+        if (n('no')) parts.push(n('no') + ' no');
+        return { ...r, tally: parts.join(' · '),
+          votes: r.v.map((x, i) => ({ ...people[i], dot: dots[x], isYes: x === 'yes', isNo: x === 'no', isMaybe: x === 'maybe', aria: people[i].name + ' said ' + words[x] })) };
+      })
+    };
+  }
+}
+</script>
+</body>
+</html>

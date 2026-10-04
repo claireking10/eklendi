@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Eklendi — Invite friends</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+*{box-sizing:border-box}
+a{color:#00C3D0}a:hover{color:#5BE3EC}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;height:56px;border-radius:16px;font:inherit;font-size:17px;font-weight:700;text-decoration:none;border:0;cursor:pointer;width:100%}
+.btn-p{background:#00C3D0;color:#00282B}.btn-p:hover{background:#2BD3DE;color:#00282B}
+.back{display:inline-flex;align-items:center;gap:6px;color:#FFFFFF;text-decoration:none;font-size:17px;min-height:44px;padding-right:12px}
+.back:hover{color:#00C3D0}
+.sec{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#00C3D0;margin:0}
+.person{display:flex;align-items:center;gap:14px;width:100%;min-height:60px;padding:0 14px;background:transparent;border:0;color:#FFFFFF;font:inherit;text-align:left;cursor:pointer;border-radius:14px}
+.person:hover{background:#1E2B2D}
+.av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#0B0B0B}
+.box{width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center}
+.wk{flex:1;min-height:64px;border-radius:16px;font:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:2px;padding:0 14px}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; background: #000000; color: #FFFFFF; font-family: Figtree, -apple-system, system-ui, sans-serif; display: flex; flex-direction: column; padding: 56px 24px 40px">
+  <a class="back" href="Home.dc.html" aria-label="Back to home" style="padding-right: 0; width: 44px; justify-content: center; margin-left: -10px">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+  </a>
+  <h1 style="margin: 16px 0 0; font-size: 30px; font-weight: 700; letter-spacing: -0.02em">New hangout</h1>
+
+  <div style="margin-top: 20px; display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: #13292B; border: 1px solid #1F4A4D; border-radius: 16px">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#00C3D0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none"><rect x="4" y="5" width="16" height="15" rx="2.5"></rect><path d="M4 10h16M9 3v4M15 3v4"></path></svg>
+    <span style="font-size: 14px; line-height: 1.45; color: #CFF6F8">We’ll look for times over the next 2 weeks, and up to a month if nothing fits.</span>
+  </div>
+
+  <div style="margin-top: 24px; display: flex; align-items: baseline; justify-content: space-between">
+    <p class="sec">Who’s coming?</p>
+    <span style="font-size: 14px; color: #A3AFB1">{{ countLabel }}</span>
+  </div>
+  <div style="margin-top: 8px; background: #162022; border: 1px solid #243133; border-radius: 18px; padding: 6px">
+    <sc-for list="{{ friends }}" as="f" hint-placeholder-count="6">
+      <button class="person" type="button" aria-pressed="{{ f.pressed }}" onClick="{{ f.toggle }}">
+        <span class="av" style="background: {{ f.color }}">{{ f.initials }}</span>
+        <span style="flex: 1; display: flex; flex-direction: column; gap: 2px">
+          <span style="font-size: 16px; font-weight: 700">{{ f.name }}</span>
+          <span style="font-size: 13px; color: #A3AFB1">{{ f.note }}</span>
+        </span>
+        <span class="box" style="background: {{ f.boxBg }}; border: 2px solid {{ f.boxBd }}">
+          <sc-if value="{{ f.on }}" hint-placeholder-val="{{ true }}">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00282B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
+          </sc-if>
+        </span>
+      </button>
+    </sc-for>
+  </div>
+
+  <div style="flex: 1"></div>
+  <p style="margin: 0 0 12px; font-size: 13px; color: #A3AFB1; text-align: center">Friends get a notification to start swiping.</p>
+  <a class="btn btn-p" href="Plan.dc.html">{{ cta }}</a>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { picked: { seth: true, matt: true, mark: true } };
+  }
+  renderVals() {
+    const s = this.state;
+    const people = [
+      { id: 'seth', name: 'Seth Fogarty', initials: 'SF', color: '#FFCC00', note: 'Apple + Google calendars' },
+      { id: 'matt', name: 'Matt Hibbs', initials: 'MH', color: '#CB30E0', note: 'Apple calendar' },
+      { id: 'mark', name: 'Mark Lewis', initials: 'ML', color: '#6E8BFF', note: 'Google calendar' },
+      { id: 'jackson', name: 'Jackson Ford', initials: 'JF', color: '#E8ECEC', note: 'Apple calendar' },
+      { id: 'sam', name: 'Sam Batesh', initials: 'SB', color: '#E8ECEC', note: 'No calendar connected' }
+    ];
+    const n = people.filter((p) => s.picked[p.id]).length;
+    return {
+      friends: people.map((p) => {
+        const on = !!s.picked[p.id];
+        return { ...p, on, pressed: on ? 'true' : 'false', boxBg: on ? '#00C3D0' : 'transparent', boxBd: on ? '#00C3D0' : '#4A5B5D',
+          toggle: () => this.setState({ picked: { ...s.picked, [p.id]: !on } }) };
+      }),
+      countLabel: n + ' selected',
+      cta: n === 0 ? 'Pick at least one friend' : 'Invite ' + n + (n === 1 ? ' friend' : ' friends')
+    };
+  }
+}
+</script>
+</body>
+</html>

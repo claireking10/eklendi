@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Eklendi — Starting point</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+.decl{min-height:44px;padding:0 4px 0 12px;background:transparent;border:0;color:#FF8A8A;font:inherit;font-size:15px;font-weight:700;cursor:pointer}
+.decl:hover{color:#FFB0B0}
+*{box-sizing:border-box}
+a{color:#00C3D0}a:hover{color:#5BE3EC}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;height:56px;border-radius:16px;font:inherit;font-size:17px;font-weight:700;text-decoration:none;border:0;cursor:pointer;width:100%}
+.btn-p{background:#00C3D0;color:#00282B}.btn-p:hover{background:#2BD3DE;color:#00282B}
+.back{display:inline-flex;align-items:center;gap:6px;color:#FFFFFF;text-decoration:none;font-size:17px;min-height:44px;padding-right:12px}
+.back:hover{color:#00C3D0}
+.sec{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#00C3D0;margin:0}
+.opt{display:flex;align-items:center;gap:14px;width:100%;min-height:72px;padding:14px 16px;border-radius:18px;font:inherit;color:#FFFFFF;text-align:left;cursor:pointer}
+.ico{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex:none}
+.radio{width:24px;height:24px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; background: #000000; color: #FFFFFF; font-family: Figtree, -apple-system, system-ui, sans-serif; display: flex; flex-direction: column; position: relative; padding: 56px 24px 40px">
+  <div style="display: flex; align-items: center; justify-content: space-between">
+    <a class="back" href="Home.dc.html" aria-label="Back to home" style="padding-right: 0; width: 44px; justify-content: center; margin-left: -10px">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+    </a>
+    <button class="decl" type="button" onClick="{{ askDecline }}">Decline hangout</button>
+  </div>
+  <p class="sec" style="margin-top: 10px">Thursday crew · Before you swipe</p>
+  <h1 style="margin: 6px 0 0; font-size: 30px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.15">Where will you be coming from?</h1>
+  <p style="margin: 8px 0 0; font-size: 15px; color: #A3AFB1; line-height: 1.45">We’ll favor hangouts that are close to everyone.</p>
+
+  <div role="radiogroup" aria-label="Starting point" style="margin-top: 24px; display: flex; flex-direction: column; gap: 10px">
+    <sc-for list="{{ options }}" as="o" hint-placeholder-count="3">
+      <button class="opt" type="button" role="radio" aria-checked="{{ o.checked }}" onClick="{{ o.pick }}" style="background: {{ o.bg }}; border: 1.5px solid {{ o.bd }}">
+        <span class="ico" style="background: {{ o.icoBg }}; color: {{ o.icoFg }}">
+          <sc-if value="{{ o.isHome }}" hint-placeholder-val="{{ true }}">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10.5L12 4l8 6.5V20H4z"></path><path d="M10 20v-5h4v5"></path></svg>
+          </sc-if>
+          <sc-if value="{{ o.isHere }}" hint-placeholder-val="{{ false }}">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><circle cx="12" cy="12" r="8"></circle><path d="M12 2v2M12 20v2M2 12h2M20 12h2"></path></svg>
+          </sc-if>
+          <sc-if value="{{ o.isElse }}" hint-placeholder-val="{{ false }}">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z"></path><circle cx="12" cy="9.5" r="2.5"></circle></svg>
+          </sc-if>
+        </span>
+        <span style="flex: 1; display: flex; flex-direction: column; gap: 3px">
+          <span style="font-size: 17px; font-weight: 700">{{ o.title }}</span>
+          <span style="font-size: 14px; color: #A3AFB1">{{ o.body }}</span>
+        </span>
+        <span class="radio" style="border: 2px solid {{ o.bd }}">
+          <span style="width: 12px; height: 12px; border-radius: 50%; background: {{ o.dot }}"></span>
+        </span>
+      </button>
+    </sc-for>
+  </div>
+
+  <sc-if value="{{ isElse }}" hint-placeholder-val="{{ false }}">
+    <label style="margin-top: 12px; display: flex; align-items: center; gap: 12px; height: 56px; padding: 0 16px; background: #162022; border: 1px solid #00C3D0; border-radius: 16px; color: #8A9799">
+      <span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Starting location</span>
+      <input type="text" placeholder="Neighborhood or nearest cross streets" style="flex: 1; min-width: 0; background: transparent; border: 0; color: #FFFFFF; font: inherit; font-size: 16px; outline: none">
+    </label>
+  </sc-if>
+
+  <div style="flex: 1"></div>
+  <p style="margin: 0 0 12px; font-size: 13px; color: #A3AFB1; text-align: center">Only used to pick places. Friends never see it.</p>
+  <a class="btn btn-p" href="SwipeTimes.dc.html">Continue to times</a>
+  <sc-if value="{{ declining }}" hint-placeholder-val="{{ false }}">
+    <div style="position: absolute; inset: 0; background: rgba(0,0,0,.65); z-index: 20"></div>
+    <div role="alertdialog" aria-label="Decline hangout" style="position: absolute; left: 0; right: 0; bottom: 0; z-index: 21; background: #0E1617; border-top: 1px solid #243133; border-radius: 28px 28px 0 0; padding: 12px 24px 36px; display: flex; flex-direction: column; gap: 12px">
+      <div style="width: 40px; height: 5px; border-radius: 3px; background: #3A4A4C; align-self: center"></div>
+      <h2 style="margin: 8px 0 0; font-size: 24px; font-weight: 700">Decline this hangout?</h2>
+      <p style="margin: 0; font-size: 15px; color: #A3AFB1; line-height: 1.5">You’ll be removed from Thursday crew, and Seth will see that you declined. The others can keep planning without you.</p>
+      <div style="display: flex; gap: 10px; margin-top: 8px">
+        <button type="button" onClick="{{ cancelDecline }}" style="flex: 1; height: 52px; border-radius: 14px; background: #1E2B2D; color: #FFFFFF; border: 1px solid #2C3A3C; font: inherit; font-size: 16px; font-weight: 700; cursor: pointer">Keep me in</button>
+        <a href="Home.dc.html" style="flex: 1; height: 52px; border-radius: 14px; background: #E5484D; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; text-decoration: none">Decline</a>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { declining: false, pick: 'home' };
+  }
+  renderVals() {
+    const s = this.state;
+    const list = [
+      { id: 'home', title: 'Home', body: 'Your approximate home location' },
+      { id: 'here', title: 'Where I am now', body: 'Use my current location' },
+      { id: 'else', title: 'Somewhere else', body: 'Work, campus, a friend’s place…' }
+    ];
+    return {
+      declining: this.state.declining,
+      askDecline: () => this.setState({ declining: true }),
+      cancelDecline: () => this.setState({ declining: false }),
+      options: list.map((o) => {
+        const on = s.pick === o.id;
+        return { ...o, isHome: o.id === 'home', isHere: o.id === 'here', isElse: o.id === 'else', checked: on ? 'true' : 'false',
+          bg: on ? '#13292B' : '#162022', bd: on ? '#00C3D0' : '#2C3A3C', dot: on ? '#00C3D0' : 'transparent',
+          icoBg: on ? '#00C3D0' : '#1E2B2D', icoFg: on ? '#00282B' : '#E8ECEC',
+          pick: () => this.setState({ pick: o.id }) };
+      }),
+      isElse: s.pick === 'else'
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Eklendi — Settings</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+*{box-sizing:border-box}
+a{color:#00C3D0}a:hover{color:#5BE3EC}
+.sec{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#00C3D0;margin:0}
+.card{background:#162022;border:1px solid #243133;border-radius:18px}
+.field{display:flex;align-items:center;gap:12px;height:52px;padding:0 16px}
+.field input{flex:1;min-width:0;background:transparent;border:0;color:#FFFFFF;font:inherit;font-size:16px;outline:none}
+.field input::placeholder{color:#8A9799}
+.step{width:44px;height:44px;border-radius:12px;border:1px solid #2C3A3C;background:#1E2B2D;color:#FFFFFF;font:inherit;font-size:22px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
+.step:hover{border-color:#00C3D0}
+.tab{width:56px;height:48px;display:flex;align-items:center;justify-content:center;color:#8A9799;text-decoration:none;border-radius:12px}
+.tab:hover{color:#FFFFFF}
+.danger{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:50px;border-radius:14px;font:inherit;font-size:16px;font-weight:700;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; background: #000000; color: #FFFFFF; font-family: Figtree, -apple-system, system-ui, sans-serif; display: flex; flex-direction: column">
+  <div style="padding: 64px 24px 0; display: flex; flex-direction: column; flex: 1; min-height: 0">
+    <h1 style="margin: 0; font-size: 32px; font-weight: 700; letter-spacing: -0.02em">Settings</h1>
+
+    <div style="margin-top: 20px; display: flex; align-items: center; gap: 16px">
+      <button type="button" aria-label="Change profile picture" style="position: relative; width: 72px; height: 72px; border-radius: 50%; border: 0; padding: 0; background: #E8ECEC; color: #0B0B0B; font: inherit; font-size: 24px; font-weight: 800; cursor: pointer; flex: none">
+        ZW
+        <span style="position: absolute; right: -2px; bottom: -2px; width: 28px; height: 28px; border-radius: 50%; background: #00C3D0; border: 3px solid #000000; display: flex; align-items: center; justify-content: center">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00282B" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"></path><circle cx="12" cy="13" r="3.5"></circle></svg>
+        </span>
+      </button>
+      <label class="card field" style="flex: 1">
+        <span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Your name</span>
+        <input type="text" value="Zach Weiss" autocomplete="name">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8A9799" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"></path></svg>
+      </label>
+    </div>
+
+    <p class="sec" style="margin-top: 22px">Home location</p>
+    <label class="card field" style="margin-top: 10px; color: #8A9799">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10.5L12 4l8 6.5V20H4z"></path><path d="M10 20v-5h4v5"></path></svg>
+      <span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Approximate home location</span>
+      <input type="text" value="Near Main St &amp; 5th Ave" placeholder="Neighborhood or nearest cross streets">
+    </label>
+    <p style="margin: 8px 2px 0; font-size: 13px; color: #A3AFB1">Approximate is fine. Friends never see it.</p>
+
+    <p class="sec" style="margin-top: 22px">Hangouts you’re into</p>
+    <label style="margin-top: 10px; display: block">
+      <span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Hangouts you’re interested in</span>
+      <textarea rows="2" placeholder="e.g. coffee shops, live music, hiking" style="width: 100%; resize: none; padding: 12px 16px; background: #162022; border: 1px solid #243133; border-radius: 18px; color: #FFFFFF; font: inherit; font-size: 15px; line-height: 1.45; outline: none">Trying new coffee shops, board game cafés, hiking on weekends</textarea>
+    </label>
+
+    <p class="sec" style="margin-top: 22px">Buffer around events</p>
+    <div class="card" style="margin-top: 10px; padding: 12px 16px; display: flex; flex-direction: column; gap: 8px">
+      <div style="display: flex; align-items: center; gap: 12px">
+        <button class="step" type="button" aria-label="Shorter buffer" onClick="{{ dec }}">−</button>
+        <span style="flex: 1; text-align: center; font-size: 24px; font-weight: 800">{{ buffer }} min</span>
+        <button class="step" type="button" aria-label="Longer buffer" onClick="{{ inc }}">+</button>
+      </div>
+      <p style="margin: 0; font-size: 13px; color: #A3AFB1; text-align: center">{{ example }}</p>
+    </div>
+
+    <div style="flex: 1"></div>
+    <sc-if value="{{ idle }}" hint-placeholder-val="{{ true }}">
+      <button class="danger" type="button" onClick="{{ askDelete }}" style="background: transparent; color: #FF7A7A; border: 1px solid #5A2A2A">Delete account</button>
+    </sc-if>
+    <sc-if value="{{ confirming }}" hint-placeholder-val="{{ false }}">
+      <div role="alertdialog" aria-label="Confirm delete account" style="background: #2A1414; border: 1px solid #5A2A2A; border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+        <span style="font-size: 16px; font-weight: 700">Delete your account?</span>
+        <span style="font-size: 14px; color: #F2C4C4; line-height: 1.45">Your profile, friends and hangout history will be removed. This can’t be undone.</span>
+        <div style="display: flex; gap: 10px">
+          <button class="danger" type="button" onClick="{{ cancelDelete }}" style="background: #1E2B2D; color: #FFFFFF; border: 1px solid #2C3A3C">Cancel</button>
+          <a class="danger" href="Main.dc.html" style="background: #E5484D; color: #FFFFFF; border: 0; text-decoration: none">Delete</a>
+        </div>
+      </div>
+    </sc-if>
+  </div>
+  <nav aria-label="Main" style="height: 84px; margin-top: 16px; border-top: 1px solid #162022; display: flex; justify-content: center; gap: 40px; padding-top: 8px">
+    <a class="tab" href="Home.dc.html" aria-label="Home">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10.5L12 4l8 6.5V20a1 1 0 0 1-1 1h-4.5v-6h-5v6H5a1 1 0 0 1-1-1z"></path></svg>
+    </a>
+    <a class="tab" href="Friends.dc.html" aria-label="Friends">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"></circle><path d="M2.5 20c.8-3.6 3.3-5.5 6.5-5.5s5.7 1.9 6.5 5.5"></path><circle cx="17" cy="9" r="2.5"></circle><path d="M17 14c2.3 0 4 1.4 4.6 4"></path></svg>
+    </a>
+    <a class="tab" href="Settings.dc.html" aria-label="Settings" aria-current="page" style="color: #FFFFFF">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"></path></svg>
+    </a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { buffer: 15, confirm: false };
+  }
+  fmt(mins) {
+    const h = Math.floor(mins / 60), m = mins % 60;
+    const hh = ((h + 11) % 12) + 1;
+    return hh + ':' + String(m).padStart(2, '0') + (h >= 12 ? ' PM' : ' AM');
+  }
+  renderVals() {
+    const s = this.state;
+    return {
+      buffer: s.buffer,
+      example: s.buffer === 0 ? 'No buffer: hangouts can start right after another event.' : 'Class ends at 3:00 PM → earliest hangout at ' + this.fmt(15 * 60 + s.buffer) + '.',
+      dec: () => this.setState({ buffer: Math.max(0, s.buffer - 5) }),
+      inc: () => this.setState({ buffer: Math.min(60, s.buffer + 5) }),
+      idle: !s.confirm, confirming: s.confirm,
+      askDelete: () => this.setState({ confirm: true }),
+      cancelDelete: () => this.setState({ confirm: false })
+    };
+  }
+}
+</script>
+</body>
+</html>
