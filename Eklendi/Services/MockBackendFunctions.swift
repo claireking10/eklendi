@@ -80,7 +80,10 @@ extension MockStore {
     /// GoogleService-Info.plist and a network connection; otherwise the cards keep their
     /// fallback names and category-colored backgrounds.
     func loadDemoVenues() {
-        guard Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist") != nil else { return }
+        guard Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist") != nil else {
+            print("[Eklendi] Demo venues: GoogleService-Info.plist isn't in the app bundle, so no Places photos. Put it in the repo root and run xcodegen generate.")
+            return
+        }
         if FirebaseApp.app() == nil {
             FirebaseApp.configure()
         }
@@ -88,7 +91,10 @@ extension MockStore {
             do {
                 let result: HTTPSCallableResult = try await Functions.functions().httpsCallable("demoVenues").call()
                 guard let dict = result.data as? [String: Any],
-                      let raw = dict["venues"] as? [String: Any] else { return }
+                      let raw = dict["venues"] as? [String: Any] else {
+                    print("[Eklendi] Demo venues: unexpected response from demoVenues: \(String(describing: result.data))")
+                    return
+                }
                 var venues: [String: MockStore.DemoVenue] = [:]
                 for (id, value) in raw {
                     guard let v = value as? [String: Any],
@@ -101,9 +107,13 @@ extension MockStore {
                                                      photoUrl: v["photoUrl"] as? String,
                                                      placeId: (v["placeId"] as? String) ?? "")
                 }
+                let withPhotos: Int = venues.values.filter { $0.photoUrl != nil }.count
+                print("[Eklendi] Demo venues: \(venues.count) of \(MockStore.cardPool.count) found, \(withPhotos) with photos.")
                 self?.applyDemoVenues(venues)
             } catch {
-                print("[Eklendi] Demo venues unavailable: \(error.localizedDescription)")
+                let ns = error as NSError
+                // NOT FOUND = demoVenues isn't deployed yet; INTERNAL/UNAVAILABLE = Places failed (see the function logs).
+                print("[Eklendi] Demo venues unavailable: \(ns.domain) \(ns.code) \(ns.localizedDescription)")
             }
         }
     }
