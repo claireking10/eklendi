@@ -81,3 +81,9 @@ Running log for agents and teammates. **Read this and `CLAUDE.md` before startin
 ### 2026-10-03 — Design and requirements
 - Built and iterated the prototype canvas from the original Figma (https://www.figma.com/design/uM2EZfZGQwyxU82xmmbAOu/Eklendi) and CLAUDE.md.
 - CLAUDE.md updated throughout with every product decision made during design review.
+
+### 2026-10-04 — Director: build workflow launched (how to continue if this session dies)
+- Workflow "eklendi-hackathon-build" runs Dev A (functions logic/state machine), Dev C (Firebase iOS services, EventKit, Gemini, Places, preferences, geo), Dev B foundations (DesignSystem, SwipeCardStack, mocks, RootView/MainTabView) → then Dev B2 (Auth/Onboarding/Home/Friends/Settings) and Dev B3 (Hangout flow) in parallel → QA audit + fixes.
+- Ownership by path is listed in each agent's section below. Claire's branch (claude/eklendi-core-flow-review-wvmd9r) is NOT used — build from scratch per CLAUDE.md + Linear.
+- To continue in a new session: read CLAUDE.md, docs/ARCHITECTURE.md, docs/UI_COMPONENTS.md, and the agent sections at the end of this file; check `git log --oneline hackathon/build`; dispatch agents for whatever is listed as gaps; run `cd functions && npm test`.
+- Hand-off of commits to GitHub: agents can't push. The cloud clone's commits are moved to Zach's local repo via `git bundle`, then Zach runs `git push -u origin hackathon/build`.
