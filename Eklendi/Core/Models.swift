@@ -145,9 +145,12 @@ struct TimeSlot: Codable, Identifiable, Hashable, Sendable {
     var rank: Int = 0
     var label: String = ""
     var reason: String = ""
+    /// Server-written (additive): true for 08b "No mutual time" offers, which are picked
+    /// with suggestTime instead of swiped. nil/false for normal slots.
+    var offerOnly: Bool? = nil
 
     enum CodingKeys: String, CodingKey {
-        case start, end, source, suggestedBy, missingMemberIds, rank, label, reason
+        case start, end, source, suggestedBy, missingMemberIds, rank, label, reason, offerOnly
     }
 }
 
