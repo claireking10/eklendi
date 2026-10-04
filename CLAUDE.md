@@ -195,6 +195,7 @@ Many users can't or won't decide. Treat this as a first-class case, not an edge 
 ## Engineering workflow
 
 - One git branch **per Linear milestone**, merged by pull request after review.
+- **Pushing:** agents can commit but **cannot push** (GitHub is blocked from the agent environment). Whenever a push is needed, give Zach the exact command to paste into his terminal, e.g. `git push -u origin <branch>`, and note it in PROGRESS.md.
 - Tests: **XCTest unit tests** for core logic (free windows, buffers, winner rules and ties, "I don't care", horizon extension, centroid) **and XCUITest UI tests** for the main flows.
 - Work through the Linear tickets in milestone order (Foundations first).
 - **CI:** a GitHub Actions workflow on a **macOS runner** builds the app and runs all unit and UI tests on every milestone-branch push and PR. Check it passes before handing a branch to the team.

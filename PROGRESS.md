@@ -28,6 +28,7 @@ Running log for agents and teammates. **Read this and `CLAUDE.md` before startin
 
 - **Stack decisions:** Firebase replaces CloudKit. All third-party API keys (Gemini, Google Places, Google OAuth secrets) live only in Cloud Functions. Store times in UTC.
 - **Order of decisions in a hangout:** time first (everyone swipes, winner picked), then activity survey, then hangout cards at the winning time.
+- **Pushing:** agents can't reach GitHub. Commit locally, then give Zach the exact push command to run in his terminal.
 - **Build/test setup:** agents can't run Xcode (Linux). CI on GitHub Actions macOS runners builds and runs tests; a teammate with a Mac does manual testing (Simulator or iPhone via cable). No paid Apple Developer account yet → no TestFlight or device push.
 - **The prototype is a design reference, not code to port.** It's HTML on a design canvas; build native SwiftUI.
 - **Known prototype mismatches** (CLAUDE.md wins):
@@ -37,6 +38,9 @@ Running log for agents and teammates. **Read this and `CLAUDE.md` before startin
 - **Open questions:** none (see CLAUDE.md "Open questions").
 
 ## Log
+
+### 2026-10-04 — Push workflow
+- Agents commit; Zach pushes. Asked Zach to run `git push -u origin docs/planning`.
 
 ### 2026-10-04 — Build and test setup decided
 - Teammate with a Mac will test; agents push milestone branches to GitHub.
