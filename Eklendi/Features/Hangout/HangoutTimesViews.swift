@@ -68,7 +68,7 @@ struct HFSwipeTimesView: View {
                 }
                 .frame(maxHeight: .infinity)
                 Text("Swipe right if it works, left if it doesn’t, or down if you’d go but would rather not.")
-                    .font(.system(size: 13))
+                    .font(EKFont.inter(13))
                     .foregroundStyle(EKColor.muted)
                     .multilineTextAlignment(.center)
                     .frame(maxWidth: .infinity)
@@ -93,14 +93,14 @@ struct HFSwipeTimesView: View {
         return VStack(alignment: .leading, spacing: 0) {
             HStack(alignment: .center) {
                 Text(slot.label.isEmpty ? (slot.source == .suggested ? "Suggested" : "Option") : slot.label)
-                    .font(.system(size: 16, weight: .bold))
+                    .font(EKFont.inter(16, .bold))
                     .foregroundStyle(EKColor.textPrimary)
                 Spacer()
                 Pill(HFFormat.durationLabel(slot.start, slot.end))
             }
             Spacer(minLength: 12)
             Text(HFFormat.monthDayOrdinal(slot.start))
-                .font(.system(size: 20, weight: .bold))
+                .font(EKFont.inter(20, .bold))
                 .foregroundStyle(EKColor.teal)
             Text(HFFormat.weekdayUpper(slot.start))
                 .font(EKFont.display)
@@ -108,11 +108,11 @@ struct HFSwipeTimesView: View {
                 .lineLimit(1)
                 .minimumScaleFactor(0.5)
             Text(HFFormat.timeRange(slot.start, slot.end))
-                .font(.system(size: 20, weight: .bold))
+                .font(EKFont.inter(20, .bold))
                 .foregroundStyle(EKColor.textPrimary)
             if !slot.reason.isEmpty {
                 Text(slot.reason)
-                    .font(.system(size: 13))
+                    .font(EKFont.inter(13))
                     .foregroundStyle(EKColor.muted)
                     .padding(.top, 6)
                     .fixedSize(horizontal: false, vertical: true)
@@ -124,7 +124,7 @@ struct HFSwipeTimesView: View {
                     Image(systemName: "calendar")
                     Text("View availability")
                 }
-                .font(.system(size: 14, weight: .bold))
+                .font(EKFont.inter(14, .bold))
                 .foregroundStyle(EKColor.textPrimary)
                 .padding(.horizontal, 14)
                 .frame(minHeight: 40)
@@ -137,7 +137,7 @@ struct HFSwipeTimesView: View {
             if missingNames.isEmpty {
                 HStack {
                     Text("Everyone’s free")
-                        .font(.system(size: 16, weight: .bold))
+                        .font(EKFont.inter(16, .bold))
                         .foregroundStyle(EKColor.onTeal)
                     Spacer()
                     AvatarStack(names: everyone, size: 28, ringColor: EKColor.teal, maxVisible: 4)
@@ -149,7 +149,7 @@ struct HFSwipeTimesView: View {
                 HStack(spacing: 8) {
                     Image(systemName: "person.fill.xmark")
                     Text("Without \(HFFormat.joinNames(missingNames))")
-                        .font(.system(size: 16, weight: .bold))
+                        .font(EKFont.inter(16, .bold))
                     Spacer()
                 }
                 .foregroundStyle(EKColor.pillYellowFg)
@@ -352,7 +352,7 @@ struct HFDayAvailabilityView: View {
                     .disabled(day >= maxDay)
             }
             Text(subtitleText)
-                .font(.system(size: 14))
+                .font(EKFont.inter(14))
                 .foregroundStyle(EKColor.muted)
                 .fixedSize(horizontal: false, vertical: true)
         }
@@ -388,7 +388,7 @@ struct HFDayAvailabilityView: View {
                         .fill(laneColor(pair.offset))
                         .frame(width: 10, height: 10)
                     Text(pair.element.name)
-                        .font(.system(size: 12, weight: .bold))
+                        .font(EKFont.inter(12, .bold))
                         .lineLimit(1)
                         .minimumScaleFactor(0.7)
                 }
@@ -450,7 +450,7 @@ struct HFDayAvailabilityView: View {
                     .offset(x: labelWidth, y: y(hour * 60))
                 if hour % 2 == 0 && hour < lastHour {
                     Text(HFFormat.hourLabel(hour))
-                        .font(.system(size: 11))
+                        .font(EKFont.inter(11))
                         .foregroundStyle(EKColor.placeholder)
                         .frame(width: labelWidth - 2, alignment: .leading)
                         .offset(x: 0, y: y(hour * 60) - 6)
@@ -481,7 +481,7 @@ struct HFDayAvailabilityView: View {
                     .overlay(alignment: .top) {
                         if b.end - b.start >= 45 {
                             Text("Busy")
-                                .font(.system(size: 10, weight: .bold))
+                                .font(EKFont.inter(10, .bold))
                                 .foregroundStyle(EKColor.avatarText)
                                 .padding(.top, 3)
                         }
@@ -502,7 +502,7 @@ struct HFDayAvailabilityView: View {
                 .overlay(RoundedRectangle(cornerRadius: 8, style: .continuous).stroke(EKColor.teal, lineWidth: 1))
                 .overlay(alignment: .topLeading) {
                     Text("Suggested · \(HFFormat.shortTime(slot.start))–\(HFFormat.shortTime(slot.end))")
-                        .font(.system(size: 11, weight: .heavy))
+                        .font(EKFont.inter(11, .heavy))
                         .foregroundStyle(EKColor.pillTealFg)
                         .padding(4)
                 }
@@ -512,15 +512,21 @@ struct HFDayAvailabilityView: View {
         }
     }
 
+    /// My lane's color (my lane is listed first), so "Your idea" matches my column.
+    private var myColor: Color {
+        laneColor(lanes.firstIndex(where: { $0.uid == uid }) ?? 0)
+    }
+
     private func ideaBlock(width: CGFloat) -> some View {
         let ok: Bool = clashNames.isEmpty && !isPast
-        let accent: Color = ok ? EKColor.yellow : Color(hex: "#FF8A65")
+        let accent: Color = ok ? myColor : Color(hex: "#FF8A65")
         return RoundedRectangle(cornerRadius: 8, style: .continuous)
             .fill(accent.opacity(0.18))
-            .overlay(RoundedRectangle(cornerRadius: 8, style: .continuous).stroke(accent, lineWidth: 2))
+            .overlay(RoundedRectangle(cornerRadius: 8, style: .continuous)
+                .stroke(accent, style: StrokeStyle(lineWidth: 2, dash: [6, 4])))
             .overlay(alignment: .topLeading) {
                 Text("Your idea · \(HFFormat.shortTime(ideaStartDate))–\(HFFormat.shortTime(ideaEndDate))")
-                    .font(.system(size: 12, weight: .heavy))
+                    .font(EKFont.inter(12, .heavy))
                     .foregroundStyle(EKColor.textPrimary)
                     .padding(5)
             }
@@ -585,10 +591,10 @@ struct HFDayAvailabilityView: View {
             VStack(alignment: .leading, spacing: 14) {
                 HStack {
                     Text("Suggest another time")
-                        .font(.system(size: 17, weight: .bold))
+                        .font(EKFont.inter(17, .bold))
                     Spacer()
                     Text(statusText)
-                        .font(.system(size: 13, weight: .bold))
+                        .font(EKFont.inter(13, .bold))
                         .foregroundStyle(statusColor)
                         .accessibilityIdentifier("ideaStatus")
                 }
@@ -596,7 +602,7 @@ struct HFDayAvailabilityView: View {
                     stepButton("minus", label: "Earlier") { move(by: -15) }
                     Spacer()
                     Text(rangeText)
-                        .font(.system(size: 20, weight: .heavy))
+                        .font(EKFont.inter(20, .heavy))
                         .lineLimit(1)
                         .minimumScaleFactor(0.7)
                     Spacer()
@@ -611,7 +617,7 @@ struct HFDayAvailabilityView: View {
                 }
                 if isPast {
                     Text("Pick a time at least an hour from now.")
-                        .font(.system(size: 13))
+                        .font(EKFont.inter(13))
                         .foregroundStyle(EKColor.muted)
                 }
             }
@@ -649,10 +655,10 @@ struct HFDayAvailabilityView: View {
                 Image(systemName: "paperplane.fill")
                     .foregroundStyle(EKColor.teal)
                 Text(otherNames.isEmpty ? "Sent to the group" : "Sent to \(HFFormat.joinNames(otherNames))")
-                    .font(.system(size: 17, weight: .bold))
+                    .font(EKFont.inter(17, .bold))
             }
             Text("\(range) will show up as a new time for everyone to swipe on.")
-                .font(.system(size: 14))
+                .font(EKFont.inter(14))
                 .foregroundStyle(EKColor.pillTealFg)
                 .fixedSize(horizontal: false, vertical: true)
             HStack {
@@ -744,7 +750,7 @@ struct HFNoTimesView: View {
                 VStack(alignment: .leading, spacing: 6) {
                     SectionHeader("Owner options", color: EKColor.placeholder)
                     Text("You can also remove someone from the waiting list later, or call it off.")
-                        .font(.system(size: 13))
+                        .font(EKFont.inter(13))
                         .foregroundStyle(EKColor.muted)
                         .fixedSize(horizontal: false, vertical: true)
                     Button("Cancel hangout", action: onCancelHangout)
@@ -783,14 +789,14 @@ struct HFNoTimesView: View {
             HStack(spacing: 14) {
                 VStack(alignment: .leading, spacing: 3) {
                     Text(HFFormat.dayHeader(slot.start))
-                        .font(.system(size: 16, weight: .bold))
+                        .font(EKFont.inter(16, .bold))
                         .foregroundStyle(EKColor.textPrimary)
                     Text(HFFormat.timeRange(slot.start, slot.end))
-                        .font(.system(size: 14))
+                        .font(EKFont.inter(14))
                         .foregroundStyle(EKColor.muted)
                     if !missing.isEmpty {
                         Text("\(HFFormat.joinNames(missing)) can’t make it")
-                            .font(.system(size: 13, weight: .bold))
+                            .font(EKFont.inter(13, .bold))
                             .foregroundStyle(EKColor.yellow)
                     }
                 }

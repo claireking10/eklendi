@@ -24,7 +24,7 @@ struct HFSurveyView: View {
                 doneView
             } else {
                 Text("\(min(answers.count + 1, questions.count)) of \(questions.count)")
-                    .font(.system(size: 15, weight: .bold))
+                    .font(EKFont.inter(15, .bold))
                     .foregroundStyle(EKColor.teal)
                     .accessibilityIdentifier("surveyCounter")
                 SwipeCardStack(items: questions, onVote: { question, vote in
@@ -39,7 +39,7 @@ struct HFSurveyView: View {
                 }
                 .frame(maxHeight: .infinity)
                 Text("“I don’t care” counts as neutral. It won’t rule anything out.")
-                    .font(.system(size: 13))
+                    .font(EKFont.inter(13))
                     .foregroundStyle(EKColor.muted)
                     .multilineTextAlignment(.center)
                     .frame(maxWidth: .infinity)
@@ -53,24 +53,24 @@ struct HFSurveyView: View {
     private func questionCard(_ q: SurveyQuestion) -> some View {
         VStack(alignment: .leading, spacing: 0) {
             Text(q.category)
-                .font(.system(size: 13, weight: .bold))
+                .font(EKFont.inter(13, .bold))
                 .foregroundStyle(EKColor.pillTealFg)
                 .padding(.horizontal, 12)
                 .frame(height: 28)
                 .background(Capsule().fill(EKColor.pillTealBg))
             Spacer()
             Text(q.question)
-                .font(.system(size: 40, weight: .black))
+                .font(EKFont.inter(40, .black))
                 .foregroundStyle(EKColor.textPrimary)
                 .lineLimit(3)
                 .minimumScaleFactor(0.6)
                 .fixedSize(horizontal: false, vertical: true)
             Text(q.subtitle)
-                .font(.system(size: 16))
+                .font(EKFont.inter(16))
                 .foregroundStyle(EKColor.muted)
                 .padding(.top, 10)
             Text(q.examples)
-                .font(.system(size: 13))
+                .font(EKFont.inter(13))
                 .foregroundStyle(EKColor.placeholder)
                 .padding(.top, 6)
             Spacer()
@@ -155,7 +155,7 @@ struct HFCardsView: View {
                     Spacer()
                     if !cards.isEmpty {
                         Text("\(min(votes.count + 1, cards.count)) of \(cards.count)")
-                            .font(.system(size: 14, weight: .semibold))
+                            .font(EKFont.inter(14, .semibold))
                             .foregroundStyle(EKColor.muted)
                             .accessibilityIdentifier("cardsCounter")
                     }
@@ -202,7 +202,7 @@ struct HFCardsView: View {
                            startPoint: .center, endPoint: .bottom)
             VStack(alignment: .leading, spacing: 6) {
                 Text(HFFormat.shortWhen(card.start, card.end))
-                    .font(.system(size: 14, weight: .bold))
+                    .font(EKFont.inter(14, .bold))
                     .foregroundStyle(EKColor.teal)
                 HStack(spacing: 6) {
                     ForEach(pills, id: \.self) { p in
@@ -210,7 +210,7 @@ struct HFCardsView: View {
                     }
                 }
                 Text(card.activity)
-                    .font(.system(size: 28, weight: .black))
+                    .font(EKFont.inter(28, .black))
                     .foregroundStyle(EKColor.textPrimary)
                     .lineLimit(2)
                     .minimumScaleFactor(0.7)
@@ -219,17 +219,17 @@ struct HFCardsView: View {
                     Text(place)
                         .lineLimit(1)
                 }
-                .font(.system(size: 15, weight: .semibold))
+                .font(EKFont.inter(15, .semibold))
                 .foregroundStyle(EKColor.textSecondary)
                 if !card.address.isEmpty {
                     Text(card.address)
-                        .font(.system(size: 13))
+                        .font(EKFont.inter(13))
                         .foregroundStyle(EKColor.muted)
                         .lineLimit(1)
                 }
                 if !card.description.isEmpty {
                     Text(card.description)
-                        .font(.system(size: 14))
+                        .font(EKFont.inter(14))
                         .foregroundStyle(EKColor.body)
                         .lineLimit(4)
                         .fixedSize(horizontal: false, vertical: true)
@@ -369,13 +369,13 @@ struct HFNoAgreementView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
             VStack(alignment: .leading, spacing: 4) {
                 Text(card.activity)
-                    .font(.system(size: 17, weight: .heavy))
+                    .font(EKFont.inter(17, .heavy))
                     .lineLimit(2)
                 Text(tally.label)
-                    .font(.system(size: 13, weight: .bold))
+                    .font(EKFont.inter(13, .bold))
                     .foregroundStyle(EKColor.teal)
                 Text("\(card.venueName) · \(HFFormat.shortDayTime(card.start))")
-                    .font(.system(size: 13))
+                    .font(EKFont.inter(13))
                     .foregroundStyle(EKColor.muted)
                     .lineLimit(1)
                 HStack(spacing: 8) {
@@ -516,25 +516,25 @@ struct HFMatchView: View {
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
                     Text(HFFormat.longDate(p.start))
-                        .font(.system(size: 17, weight: .bold))
+                        .font(EKFont.inter(17, .bold))
                         .foregroundStyle(EKColor.teal)
                     Spacer()
                     Pill(HFFormat.durationLabel(p.start, p.end))
                 }
                 Text(p.activity.isEmpty ? eventTitle : p.activity)
-                    .font(.system(size: 26, weight: .black))
+                    .font(EKFont.inter(26, .black))
                     .fixedSize(horizontal: false, vertical: true)
                 Text(line)
-                    .font(.system(size: 15))
+                    .font(EKFont.inter(15))
                     .foregroundStyle(EKColor.body)
                 if !p.address.isEmpty {
                     Text(p.address)
-                        .font(.system(size: 13))
+                        .font(EKFont.inter(13))
                         .foregroundStyle(EKColor.muted)
                 }
                 if isTimeOnly {
                     Text("Just a time. The plan is on the calendar invite.")
-                        .font(.system(size: 13))
+                        .font(EKFont.inter(13))
                         .foregroundStyle(EKColor.muted)
                 }
             }
@@ -556,10 +556,10 @@ struct HFMatchView: View {
                     .frame(width: 28)
                 VStack(alignment: .leading, spacing: 2) {
                     Text(calendarTitle)
-                        .font(.system(size: 15, weight: .bold))
+                        .font(EKFont.inter(15, .bold))
                     if let message = calendarFailure {
                         Text(message)
-                            .font(.system(size: 12))
+                            .font(EKFont.inter(12))
                             .foregroundStyle(EKColor.muted)
                             .fixedSize(horizontal: false, vertical: true)
                     }
@@ -618,7 +618,7 @@ struct HFMatchView: View {
                 SectionHeader("Who’s going")
                 Spacer()
                 Text("\(going.filter { !$0.notGoing }.count) of \(going.count) going")
-                    .font(.system(size: 13))
+                    .font(EKFont.inter(13))
                     .foregroundStyle(EKColor.muted)
             }
             Card(padding: 0, cornerRadius: 18) {
@@ -627,10 +627,10 @@ struct HFMatchView: View {
                         HStack(spacing: 12) {
                             Avatar(name: m.name, size: 34)
                             Text(m.id == uid ? "You" : m.name)
-                                .font(.system(size: 15, weight: .bold))
+                                .font(EKFont.inter(15, .bold))
                             Spacer()
                             Text(m.notGoing ? "Not going" : "Going")
-                                .font(.system(size: 13, weight: .bold))
+                                .font(EKFont.inter(13, .bold))
                                 .foregroundStyle(m.notGoing ? EKColor.yellow : EKColor.teal)
                         }
                         .padding(.horizontal, 14)

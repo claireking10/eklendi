@@ -176,7 +176,7 @@ struct OnboardingConnectView: View {
                 HStack {
                     SectionHeader("Where you live, roughly")
                     Text("Never shown to friends")
-                        .font(.system(size: 12, weight: .semibold))
+                        .font(EKFont.inter(12, .semibold))
                         .foregroundStyle(EKColor.muted)
                         .fixedSize()
                 }

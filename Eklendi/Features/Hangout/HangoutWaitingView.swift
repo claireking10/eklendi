@@ -74,7 +74,7 @@ struct HFWaitingView: View {
             }
             if isOwner {
                 Text("The hangout moves on by itself as soon as everyone’s done. Only you, as the owner, can nudge or remove people.")
-                    .font(.system(size: 13))
+                    .font(EKFont.inter(13))
                     .foregroundStyle(EKColor.placeholder)
                     .fixedSize(horizontal: false, vertical: true)
             }
@@ -132,10 +132,10 @@ struct HFWaitingView: View {
             Avatar(name: m.name, size: 40)
             VStack(alignment: .leading, spacing: 2) {
                 Text(m.id == uid ? "You" : m.name)
-                    .font(.system(size: 16, weight: .bold))
+                    .font(EKFont.inter(16, .bold))
                     .lineLimit(1)
                 Text(status.text)
-                    .font(.system(size: 13, weight: .semibold))
+                    .font(EKFont.inter(13, .semibold))
                     .foregroundStyle(status.color)
             }
             Spacer(minLength: 4)
@@ -144,7 +144,7 @@ struct HFWaitingView: View {
                     nudge(m)
                 } label: {
                     Text(m.nudgedAt == nil ? "Nudge" : "Nudged")
-                        .font(.system(size: 13, weight: .bold))
+                        .font(EKFont.inter(13, .bold))
                         .foregroundStyle(m.nudgedAt == nil ? Color(hex: "#1A1500") : EKColor.yellow)
                         .padding(.horizontal, 12)
                         .frame(height: 32)
@@ -158,7 +158,7 @@ struct HFWaitingView: View {
                     removing = m
                 } label: {
                     Text("Remove")
-                        .font(.system(size: 13, weight: .bold))
+                        .font(EKFont.inter(13, .bold))
                         .foregroundStyle(EKColor.textSecondary)
                         .padding(.horizontal, 12)
                         .frame(height: 32)

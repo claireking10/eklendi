@@ -72,7 +72,7 @@ struct CreateHangoutFlowView: View {
                     SectionHeader("Who’s coming?")
                     Spacer()
                     Text("\(picked.count) selected")
-                        .font(.system(size: 14))
+                        .font(EKFont.inter(14))
                         .foregroundStyle(EKColor.muted)
                         .fixedSize()
                 }
@@ -105,7 +105,7 @@ struct CreateHangoutFlowView: View {
                     }
                     if picked.count >= CreateHangoutFlowView.maxInvitees {
                         Text("That’s the max: hangouts have up to 8 people, including you.")
-                            .font(.system(size: 13))
+                            .font(EKFont.inter(13))
                             .foregroundStyle(EKColor.yellow)
                     }
                 }
@@ -113,7 +113,7 @@ struct CreateHangoutFlowView: View {
         } footer: {
             VStack(spacing: 10) {
                 Text("Friends get a notification to start swiping.")
-                    .font(.system(size: 13))
+                    .font(EKFont.inter(13))
                     .foregroundStyle(EKColor.muted)
                 PrimaryButton(inviteCTA) { step = .plan }
                     .disabled(picked.isEmpty)
@@ -136,11 +136,11 @@ struct CreateHangoutFlowView: View {
                 Avatar(name: friend.name, photoURL: friend.photoURL, size: 40)
                 VStack(alignment: .leading, spacing: 2) {
                     Text(friend.name)
-                        .font(.system(size: 16, weight: .bold))
+                        .font(EKFont.inter(16, .bold))
                         .foregroundStyle(EKColor.textPrimary)
                     if let home = friend.homeLocation?.text, !home.isEmpty {
                         Text(home)
-                            .font(.system(size: 13))
+                            .font(EKFont.inter(13))
                             .foregroundStyle(EKColor.muted)
                             .lineLimit(1)
                     }
@@ -195,7 +195,7 @@ struct CreateHangoutFlowView: View {
                     EKTextField("e.g. Dinner at Mom’s place", text: $planDescription,
                                 label: "What’s the plan?", accessibilityId: "planDescriptionField")
                     Text("Goes on the calendar invite.")
-                        .font(.system(size: 13))
+                        .font(EKFont.inter(13))
                         .foregroundStyle(EKColor.muted)
                 }
             }
@@ -205,7 +205,7 @@ struct CreateHangoutFlowView: View {
                     ForEach(Array(nextSteps.enumerated()), id: \.offset) { pair in
                         HStack(spacing: 6) {
                             Text(pair.element)
-                                .font(.system(size: 13, weight: .semibold))
+                                .font(EKFont.inter(13, .semibold))
                                 .foregroundStyle(EKColor.textSecondary)
                                 .padding(.horizontal, 10)
                                 .frame(height: 28)
@@ -242,7 +242,7 @@ struct CreateHangoutFlowView: View {
                     Spacer()
                     Text(HFDurations.summary(presets: presetMinutes, customOn: customOn,
                                              customHours: customHours, any: durationAny))
-                        .font(.system(size: 14))
+                        .font(EKFont.inter(14))
                         .foregroundStyle(EKColor.muted)
                         .lineLimit(1)
                         .accessibilityIdentifier("durationSummary")
@@ -298,7 +298,7 @@ struct CreateHangoutFlowView: View {
     private var customStepper: some View {
         HStack(spacing: 12) {
             Text("Custom length")
-                .font(.system(size: 15, weight: .semibold))
+                .font(EKFont.inter(15, .semibold))
                 .foregroundStyle(EKColor.pillTealFg)
             Spacer()
             stepperButton("minus", enabled: customHours > HFDurations.customRange.lowerBound) {
@@ -306,7 +306,7 @@ struct CreateHangoutFlowView: View {
             }
             .accessibilityLabel("Shorter")
             Text("\(customHours) hr")
-                .font(.system(size: 20, weight: .heavy))
+                .font(EKFont.inter(20, .heavy))
                 .frame(minWidth: 60)
                 .accessibilityIdentifier("customHours")
             stepperButton("plus", enabled: customHours < HFDurations.customRange.upperBound) {

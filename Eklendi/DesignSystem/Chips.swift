@@ -60,7 +60,7 @@ struct Chip: View {
                     Image(systemName: systemImage).font(.system(size: 14, weight: .bold))
                 }
                 Text(title)
-                    .font(.system(size: style == .suggestion ? 14 : 16, weight: .semibold))
+                    .font(EKFont.inter(style == .suggestion ? 14 : 16, .semibold))
                     .lineLimit(1)
             }
             .foregroundStyle(foreground)
@@ -222,7 +222,7 @@ struct Pill: View {
 
     var body: some View {
         Text(text)
-            .font(.system(size: 13, weight: .bold))
+            .font(EKFont.inter(13, .bold))
             .foregroundStyle(foreground)
             .padding(.horizontal, 12)
             .frame(height: 28)

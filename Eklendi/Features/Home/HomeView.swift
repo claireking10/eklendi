@@ -94,7 +94,7 @@ struct HomeView: View {
                     SectionHeader(AccountFormat.longDay(Date()))
                         .padding(.top, 20)
                     Text("Make time for the people that matter most.")
-                        .font(.system(size: 28, weight: .bold))
+                        .font(EKFont.inter(28, .bold))
                         .foregroundStyle(EKColor.textPrimary)
                         .lineSpacing(2)
                         .fixedSize(horizontal: false, vertical: true)
@@ -219,7 +219,7 @@ struct HomeView: View {
             }
             HStack(spacing: 10) {
                 Text(entry.info.status)
-                    .font(.system(size: 15))
+                    .font(EKFont.inter(15))
                     .foregroundStyle(EKColor.muted)
                     .multilineTextAlignment(.leading)
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -261,10 +261,10 @@ struct HomeView: View {
         return HStack(spacing: 14) {
             VStack(spacing: 2) {
                 Text(start.map { AccountFormat.weekdayShort($0) } ?? "—")
-                    .font(.system(size: 11, weight: .heavy))
+                    .font(EKFont.inter(11, .heavy))
                     .tracking(0.6)
                 Text(start.map { AccountFormat.dayNumber($0) } ?? "")
-                    .font(.system(size: 24, weight: .heavy))
+                    .font(EKFont.inter(24, .heavy))
             }
             .foregroundStyle(isPast ? EKColor.textPrimary : EKColor.onTeal)
             .frame(width: 56, height: 60)
@@ -272,13 +272,13 @@ struct HomeView: View {
 
             VStack(alignment: .leading, spacing: 4) {
                 Text(entry.title)
-                    .font(.system(size: 17, weight: .bold))
+                    .font(EKFont.inter(17, .bold))
                     .foregroundStyle(EKColor.textPrimary)
                     .lineLimit(2)
                     .multilineTextAlignment(.leading)
                 if !detail.isEmpty {
                     Text(detail)
-                        .font(.system(size: 14))
+                        .font(EKFont.inter(14))
                         .foregroundStyle(EKColor.muted)
                 }
             }

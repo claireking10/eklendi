@@ -384,7 +384,7 @@ struct VoteCircleButton: View {
                     .frame(width: 64, height: 64)
                     .background(Circle().fill(Color(hex: "#080E0F").opacity(0.85)))
                 Text(title)
-                    .font(.system(size: 13, weight: .bold))
+                    .font(EKFont.inter(13, .bold))
                     .foregroundStyle(EKColor.textPrimary)
             }
         }

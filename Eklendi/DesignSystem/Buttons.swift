@@ -4,7 +4,7 @@ import SwiftUI
 //   PrimaryButton("Continue", systemImage: "plus", isLoading: busy) { ... }
 //   Button("Continue") { ... }.buttonStyle(PrimaryButtonStyle())
 
-/// Full-width teal button, 56pt tall, dark text.
+/// Full-width teal button, 56pt tall, white text.
 struct PrimaryButtonStyle: ButtonStyle {
     @Environment(\.isEnabled) private var isEnabled: Bool
 

@@ -73,7 +73,7 @@ struct EKTextField: View {
         HStack(alignment: kind == .multiline ? .top : .center, spacing: 12) {
             if let label = label {
                 Text(label)
-                    .font(.system(size: 15))
+                    .font(EKFont.inter(15))
                     .foregroundStyle(EKColor.muted)
                     .frame(width: 72, alignment: .leading)
             }

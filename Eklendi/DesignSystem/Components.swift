@@ -113,7 +113,7 @@ struct Avatar: View {
         ZStack {
             Circle().fill(Avatar.color(for: name))
             Text(Avatar.initials(for: name))
-                .font(.system(size: size * 0.36, weight: .heavy))
+                .font(EKFont.inter(size * 0.36, .heavy))
                 .foregroundStyle(EKColor.avatarText)
         }
     }
@@ -164,7 +164,7 @@ struct AvatarStack: View {
                 ZStack {
                     Circle().fill(EKColor.raised)
                     Text("+\(names.count - maxVisible)")
-                        .font(.system(size: size * 0.34, weight: .bold))
+                        .font(EKFont.inter(size * 0.34, .bold))
                         .foregroundStyle(EKColor.textPrimary)
                 }
                 .frame(width: size, height: size)
@@ -346,7 +346,7 @@ struct ScreenScaffold<Content: View, Footer: View, Trailing: View>: View {
             }
             if let subtitle = subtitle {
                 Text(subtitle)
-                    .font(.system(size: 16))
+                    .font(EKFont.inter(16))
                     .foregroundStyle(EKColor.muted)
                     .lineSpacing(3)
                     .fixedSize(horizontal: false, vertical: true)

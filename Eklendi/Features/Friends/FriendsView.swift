@@ -286,7 +286,7 @@ struct FriendsView: View {
                     .font(EKFont.bodyBold)
                     .foregroundStyle(EKColor.textPrimary)
                 Text(PhoneFormat.display(friend.phone))
-                    .font(.system(size: 14))
+                    .font(EKFont.inter(14))
                     .foregroundStyle(EKColor.muted)
             }
             Spacer()
@@ -395,7 +395,7 @@ struct ContactsMatchSheet: View {
                     .font(EKFont.bodyBold)
                     .foregroundStyle(EKColor.textPrimary)
                 Text(PhoneFormat.display(m.phoneE164))
-                    .font(.system(size: 14))
+                    .font(EKFont.inter(14))
                     .foregroundStyle(EKColor.muted)
             }
             Spacer()

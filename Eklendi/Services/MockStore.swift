@@ -123,6 +123,9 @@ final class MockStore {
         m.bufferMinutes = users[uid]?.bufferMinutes ?? 15
         m.startLocation = users[uid]?.homeLocation
         m.timeZone = TimeZone.current.identifier
+        // Demo friends' calendars (shown in the day view). Empty for the signed-in user,
+        // whose busy times come from their own calendar when they share availability.
+        m.busy = DemoPersona.forUser(uid).busyBlocks()
         return m
     }
 
@@ -570,6 +573,26 @@ struct DemoPersona: Sendable {
     let maxPrice: Int
     /// Setting, price and vibe answers for the survey (type answers come from `categories`).
     let otherAnswers: [String: SurveyAnswer]
+    /// Busy times shown in the day view, relative to today. They line up with the slot
+    /// reasons and this friend's "no" votes (e.g. Matt's class ends at 2:45 on day 2).
+    var busy: [DemoBusy] = []
+
+    /// One busy block: `day` days from today, `from`/`to` in hours (13.5 = 1:30 PM).
+    struct DemoBusy: Sendable {
+        let day: Int
+        let from: Double
+        let to: Double
+    }
+
+    /// The busy plan as real dates (local time).
+    func busyBlocks(now: Date = Date()) -> [BusyBlock] {
+        let cal = Calendar.current
+        let today: Date = cal.startOfDay(for: now)
+        return busy.compactMap { b in
+            guard let day = cal.date(byAdding: .day, value: b.day, to: today) else { return nil }
+            return BusyBlock(start: day.addingTimeInterval(b.from * 3600), end: day.addingTimeInterval(b.to * 3600))
+        }
+    }
 
     func timeVote(for slot: TimeSlot) -> Vote {
         // Suggested times are answered yes (they were picked to fit), like the real flow.
@@ -614,35 +637,44 @@ struct DemoPersona: Sendable {
             categories: ["food": .yes, "games": .yes, "arts": .yes, "active": .maybe, "markets": .maybe, "nature": .no],
             maxPrice: 2,
             otherAnswers: ["indoors": .yes, "outdoors": .maybe, "priceLow": .yes, "priceMid": .yes, "priceHigh": .no,
-                           "chill": .maybe, "lively": .yes]),
+                           "chill": .maybe, "lively": .yes],
+            busy: [.init(day: 1, from: 16, to: 18.25), .init(day: 3, from: 9, to: 11), .init(day: 4, from: 10, to: 13.5),
+                   .init(day: 5, from: 18, to: 20), .init(day: 6, from: 9, to: 10.5), .init(day: 8, from: 11.5, to: 13.5)]),
         // Matt: daytime and weekends, outdoorsy, on a budget, skips arts.
         MockStore.Ids.matt: DemoPersona(
             timeVotes: [.yes, .no, .yes, .yes, .maybe, .no, .yes, .yes],
             categories: ["food": .maybe, "active": .yes, "nature": .yes, "markets": .yes, "games": .maybe, "arts": .no],
             maxPrice: 1,
             otherAnswers: ["indoors": .maybe, "outdoors": .yes, "priceLow": .yes, "priceMid": .maybe, "priceHigh": .no,
-                           "chill": .dontCare, "lively": .dontCare]),
+                           "chill": .dontCare, "lively": .dontCare],
+            busy: [.init(day: 1, from: 17, to: 21), .init(day: 2, from: 13.5, to: 14.75), .init(day: 3, from: 9, to: 12),
+                   .init(day: 5, from: 9, to: 11), .init(day: 6, from: 16.5, to: 19.5)]),
         // Claire: free most afternoons, likes arts, food and markets, not games.
         MockStore.Ids.claire: DemoPersona(
             timeVotes: [.yes, .yes, .maybe, .yes, .yes, .yes, .no, .no],
             categories: ["arts": .yes, "food": .yes, "markets": .yes, "nature": .maybe, "active": .maybe, "games": .no],
             maxPrice: 2,
             otherAnswers: ["indoors": .dontCare, "outdoors": .dontCare, "priceLow": .yes, "priceMid": .yes, "priceHigh": .maybe,
-                           "chill": .yes, "lively": .maybe]),
+                           "chill": .yes, "lively": .maybe],
+            busy: [.init(day: 2, from: 9, to: 12), .init(day: 4, from: 14.5, to: 16.5), .init(day: 6, from: 10, to: 12),
+                   .init(day: 8, from: 11, to: 14), .init(day: 9, from: 18.5, to: 22)]),
         // Ava: easygoing about most things, but busy weekend afternoons.
         MockStore.Ids.ava: DemoPersona(
             timeVotes: [.maybe, .yes, .yes, .yes, .no, .yes, .yes, .maybe],
             categories: ["food": .yes, "nature": .yes, "games": .yes, "active": .maybe, "arts": .maybe, "markets": .maybe],
             maxPrice: 2,
             otherAnswers: ["indoors": .dontCare, "outdoors": .yes, "priceLow": .yes, "priceMid": .yes, "priceHigh": .dontCare,
-                           "chill": .yes, "lively": .dontCare]),
+                           "chill": .yes, "lively": .dontCare],
+            busy: [.init(day: 1, from: 9, to: 12), .init(day: 3, from: 12, to: 16), .init(day: 5, from: 14, to: 17.5),
+                   .init(day: 8, from: 9, to: 11)]),
         // Noah (on Eklendi, not a friend until added): active, skips markets.
         MockStore.Ids.noah: DemoPersona(
             timeVotes: [.yes, .maybe, .yes, .no, .yes, .yes, .maybe, .yes],
             categories: ["food": .yes, "active": .yes, "games": .maybe, "arts": .yes, "nature": .maybe, "markets": .no],
             maxPrice: 2,
             otherAnswers: ["indoors": .yes, "outdoors": .maybe, "priceLow": .yes, "priceMid": .yes, "priceHigh": .maybe,
-                           "chill": .dontCare, "lively": .yes]),
+                           "chill": .dontCare, "lively": .yes],
+            busy: [.init(day: 2, from: 9, to: 11), .init(day: 4, from: 10, to: 13), .init(day: 7, from: 18, to: 20)]),
     ]
 
     /// Group score for a card from everyone's survey answers (yes +2, maybe +1, no −2,

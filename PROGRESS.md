@@ -85,6 +85,11 @@ Running log for agents and teammates. **Read this and `CLAUDE.md` before startin
 
 ## Log
 
+### 2026-10-04 — Fonts, white button text, day-view colors (Claude, for Claire)
+- **Fonts:** Inter (OFL) bundled in `Eklendi/Resources/Fonts/` (Regular→Black, registered at runtime by `EKFontRegistry` in `DesignSystem/Theme.swift`, no Info.plist entry). Every `.system(size:)` text font now goes through `EKFont.inter(size, weight)`; SF Symbol icons keep the system font. RootView sets Inter as the default font. Logo uses `EKFont.logo(size)` = SeoulNamsan CBL **once its font file is added to `Eklendi/Resources/Fonts/`** (any .ttf/.otf with "Namsan" in its PostScript name; until then: system rounded heavy). Couldn't download it from the agent environment.
+- **Teal buttons:** `EKColor.onTeal` is now white (buttons, selected chips, badges on teal).
+- **Day view:** "Your idea" uses my lane color (dashed, per design), orange when it clashes. Demo friends now have preset busy times (`DemoPersona.busy`, matching the slot reasons and their "no" votes), set on every demo member in `MockStore.makeMember`.
+
 ### 2026-10-04 — Layout fixes + real demo venues/photos (Claude, for Claire)
 - **Bottom buttons cut off:** ScreenScaffold footers now float over the scrolling content (`FloatingFooter` via `.safeAreaInset`); Home's "Plan a hangout" and the day view's "Send to the group" float the same way. The custom tab bar now sits below the tab content instead of over it (`MainTabView`). Swipe cards (times, survey, hangout cards) shrink to fit short screens (`ShrinkToFit` in `SwipeCardStack`), so Yes/Maybe/No stay visible. Decline and hand-off sheets scroll instead of a fixed 300 pt height. Files: `DesignSystem/Components.swift`, `DesignSystem/SwipeCardStack.swift`, `App/MainTabView.swift`, `Features/Home/HomeView.swift`, `Features/Hangout/{HangoutComponents,HangoutTimesViews}.swift`.
 - **Demo photos:** the made-up demo venues and Unsplash stock photos are gone. `MockStore.cardPool` now lists real San Antonio places; new callable `demoVenues` (`functions/src/demo.ts`, allowlist only, no sign-in) returns their Places name, address, location and photo, and `MockStore.loadDemoVenues()` swaps them into the cards at launch. Offline / UI tests / before deploy: fallback names + category colors.

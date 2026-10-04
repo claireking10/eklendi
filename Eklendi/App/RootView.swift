@@ -32,6 +32,8 @@ struct RootView: View {
         }
         .animation(.easeInOut(duration: 0.25), value: env.auth.state)
         .tint(EKColor.teal)
+        // Inter for any text that doesn't set its own font.
+        .font(EKFont.body)
     }
 }
 

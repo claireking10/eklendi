@@ -1,4 +1,5 @@
 import SwiftUI
+import CoreText
 
 // Design tokens for Eklendi (from docs/design/*.dc.html). The app is dark-only.
 // Usage: `.foregroundStyle(EKColor.teal)`, `.font(EKFont.title)`, `.padding(EKSpacing.screen)`.
@@ -45,8 +46,8 @@ enum EKColor {
     // Brand
     static let teal = Color(hex: "#00C3D0")
     static let tealPressed = Color(hex: "#2BD3DE")
-    /// Text/icons on top of teal.
-    static let onTeal = Color(hex: "#00282B")
+    /// Text/icons on top of teal (buttons, selected chips, badges): white.
+    static let onTeal = Color(hex: "#FFFFFF")
     static let yellow = Color(hex: "#FFCC00")
     static let purple = Color(hex: "#CB30E0")
     static let blue = Color(hex: "#6E8BFF")
@@ -84,24 +85,80 @@ enum EKColor {
     static let avatarText = Color(hex: "#0B0B0B")
 }
 
+/// Bundled fonts (Eklendi/Resources/Fonts): Inter for all text, SeoulNamsan CBL for the
+/// "eklendi" logo. Registered at runtime, so no Info.plist entry is needed. Missing files
+/// fall back to the system font.
+enum EKFontRegistry {
+    /// PostScript names of every bundled font that registered.
+    static let names: Set<String> = registerBundledFonts()
+
+    /// The logo font: a bundled SeoulNamsan font, preferring the CBL weight.
+    static var logoFontName: String? {
+        let namsan: [String] = names.filter { $0.lowercased().contains("namsan") }.sorted()
+        return namsan.first(where: { $0.uppercased().contains("CBL") }) ?? namsan.first
+    }
+
+    private static func registerBundledFonts() -> Set<String> {
+        var urls: [URL] = []
+        for ext in ["ttf", "otf"] {
+            urls += Bundle.main.urls(forResourcesWithExtension: ext, subdirectory: nil) ?? []
+            urls += Bundle.main.urls(forResourcesWithExtension: ext, subdirectory: "Fonts") ?? []
+        }
+        var out: Set<String> = []
+        for url in urls {
+            guard let provider = CGDataProvider(url: url as CFURL),
+                  let cgFont = CGFont(provider),
+                  let cfName = cgFont.postScriptName else { continue }
+            let name: String = cfName as String
+            // Already registered (e.g. a second call) is fine; we only need the name.
+            CTFontManagerRegisterFontsForURL(url as CFURL, .process, nil)
+            out.insert(name)
+        }
+        return out
+    }
+}
+
 enum EKFont {
+    /// Inter at a size and weight (falls back to the system font if Inter isn't bundled).
+    static func inter(_ size: CGFloat, _ weight: Font.Weight = .regular) -> Font {
+        let name: String
+        switch weight {
+        case .black: name = "Inter-Black"
+        case .heavy: name = "Inter-ExtraBold"
+        case .bold: name = "Inter-Bold"
+        case .semibold: name = "Inter-SemiBold"
+        case .medium: name = "Inter-Medium"
+        default: name = "Inter-Regular"
+        }
+        guard EKFontRegistry.names.contains(name) else { return .system(size: size, weight: weight) }
+        return .custom(name, size: size)
+    }
+
+    /// "eklendi" logo in SeoulNamsan CBL (system rounded heavy until the font file is added).
+    static func logo(_ size: CGFloat) -> Font {
+        if let name = EKFontRegistry.logoFontName {
+            return .custom(name, size: size)
+        }
+        return .system(size: size, weight: .heavy, design: .rounded)
+    }
+
     /// "eklendi" wordmark.
-    static let wordmark: Font = .system(size: 30, weight: .heavy, design: .rounded)
-    static let largeTitle: Font = .system(size: 34, weight: .bold)
+    static var wordmark: Font { logo(30) }
+    static var largeTitle: Font { inter(34, .bold) }
     /// Screen titles (28 bold in the design).
-    static let title: Font = .system(size: 28, weight: .bold)
-    static let title2: Font = .system(size: 24, weight: .bold)
-    static let headline: Font = .system(size: 18, weight: .bold)
-    static let button: Font = .system(size: 17, weight: .bold)
-    static let body: Font = .system(size: 17, weight: .regular)
-    static let bodyBold: Font = .system(size: 17, weight: .semibold)
-    static let callout: Font = .system(size: 15, weight: .regular)
-    static let calloutBold: Font = .system(size: 15, weight: .bold)
-    static let caption: Font = .system(size: 13, weight: .semibold)
+    static var title: Font { inter(28, .bold) }
+    static var title2: Font { inter(24, .bold) }
+    static var headline: Font { inter(18, .bold) }
+    static var button: Font { inter(17, .bold) }
+    static var body: Font { inter(17) }
+    static var bodyBold: Font { inter(17, .semibold) }
+    static var callout: Font { inter(15) }
+    static var calloutBold: Font { inter(15, .bold) }
+    static var caption: Font { inter(13, .semibold) }
     /// Uppercase teal section labels ("COMING UP").
-    static let section: Font = .system(size: 13, weight: .bold)
+    static var section: Font { inter(13, .bold) }
     /// Huge weekday on time-slot cards.
-    static let display: Font = .system(size: 46, weight: .black)
+    static var display: Font { inter(46, .black) }
 }
 
 enum EKSpacing {

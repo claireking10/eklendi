@@ -105,7 +105,7 @@ struct SettingsView: View {
                 EKTextField("Your name", text: $name, accessibilityId: "settingsNameField")
                 if let phone = original?.phone, !phone.isEmpty {
                     Text(PhoneFormat.display(phone))
-                        .font(.system(size: 14))
+                        .font(EKFont.inter(14))
                         .foregroundStyle(EKColor.muted)
                         .padding(.leading, 4)
                         .accessibilityIdentifier("settingsPhone")

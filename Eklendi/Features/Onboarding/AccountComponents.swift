@@ -124,7 +124,7 @@ struct AccountBufferStepper: View {
                     .disabled(minutes <= BufferSetting.range.lowerBound)
                     Spacer()
                     Text("\(minutes) min")
-                        .font(.system(size: 24, weight: .bold))
+                        .font(EKFont.inter(24, .bold))
                         .foregroundStyle(EKColor.textPrimary)
                         .monospacedDigit()
                         .accessibilityIdentifier("bufferValue")
@@ -177,10 +177,10 @@ struct AccountCalendarRow: View {
         HStack(spacing: 14) {
             VStack(spacing: 0) {
                 Text(AccountFormat.weekdayShortMonth(Date()))
-                    .font(.system(size: 10, weight: .heavy))
+                    .font(EKFont.inter(10, .heavy))
                     .foregroundStyle(EKColor.danger)
                 Text(AccountFormat.dayNumber(Date()))
-                    .font(.system(size: 20, weight: .bold))
+                    .font(EKFont.inter(20, .bold))
                     .foregroundStyle(Color(hex: "#0B0B0B"))
             }
             .frame(width: 44, height: 44)
@@ -192,7 +192,7 @@ struct AccountCalendarRow: View {
                     .font(EKFont.bodyBold)
                     .foregroundStyle(EKColor.textPrimary)
                 Text(status)
-                    .font(.system(size: 14))
+                    .font(EKFont.inter(14))
                     .foregroundStyle(isConnected ? EKColor.teal : EKColor.muted)
             }
             Spacer(minLength: 8)

@@ -201,7 +201,7 @@ struct HFAvailabilityView: View {
         } footer: {
             VStack(spacing: 10) {
                 Text("Only used to pick places. Friends never see it.")
-                    .font(.system(size: 13))
+                    .font(EKFont.inter(13))
                     .foregroundStyle(EKColor.muted)
                 PrimaryButton(working ? progressText : "Continue to times", isLoading: working) {
                     Task { @MainActor in await submit() }

@@ -57,7 +57,7 @@ struct WelcomeView: View {
         ScreenScaffold(title: "") {
             VStack(alignment: .leading, spacing: 0) {
                 Text("eklendi")
-                    .font(.system(size: 34, weight: .heavy, design: .rounded))
+                    .font(EKFont.logo(34))
                     .tracking(-1.4)
                     .foregroundStyle(EKColor.textPrimary)
                     .frame(maxWidth: .infinity)
@@ -66,11 +66,11 @@ struct WelcomeView: View {
 
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Glad to see you again.")
-                        .font(.system(size: 32, weight: .bold))
+                        .font(EKFont.inter(32, .bold))
                         .foregroundStyle(EKColor.textPrimary)
                         .fixedSize(horizontal: false, vertical: true)
                     Text("Log in to your account.")
-                        .font(.system(size: 16))
+                        .font(EKFont.inter(16))
                         .foregroundStyle(EKColor.muted)
                 }
                 .padding(.top, 56)
@@ -101,7 +101,7 @@ struct WelcomeView: View {
         } footer: {
             HStack(spacing: 4) {
                 Text("Don’t have an account?")
-                    .font(.system(size: 15))
+                    .font(EKFont.inter(15))
                     .foregroundStyle(EKColor.muted)
                 Button("Sign up") {
                     errorMessage = nil
@@ -221,7 +221,7 @@ struct SignUpCodeView: View {
                     }
                 HStack(spacing: 4) {
                     Text("Didn’t get it?")
-                        .font(.system(size: 15))
+                        .font(EKFont.inter(15))
                         .foregroundStyle(EKColor.muted)
                     Button(isResending ? "Sending…" : "Resend code") {
                         resend()
