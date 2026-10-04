@@ -9,6 +9,7 @@ import { logger } from "firebase-functions";
 
 import { advanceHangout, onHangoutChanged } from "./advance";
 import { suggestTimeImpl, startNewRoundImpl, geocodeLocationImpl } from "./callables";
+import { demoVenuesImpl } from "./demo";
 
 initializeApp();
 setGlobalOptions({ region: "us-central1", maxInstances: 10 });
@@ -74,3 +75,9 @@ export const startNewRound = onCall({ ...heavy }, async (request) => {
 export const geocodeLocation = onCall({ secrets, timeoutSeconds: 30 }, async (request) => {
   return geocodeLocationImpl(request.auth?.uid, request.data);
 });
+
+// Demo mode (no signed-in user): real venues + photos for a fixed allowlist only.
+export const demoVenues = onCall(
+  { secrets: [GOOGLE_PLACES_API_KEY], timeoutSeconds: 60, maxInstances: 2 },
+  async () => demoVenuesImpl(),
+);

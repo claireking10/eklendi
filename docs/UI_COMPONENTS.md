@@ -85,9 +85,17 @@ ScreenScaffold(title: String, subtitle: String? = nil, eyebrow: String? = nil, s
                onBack: (() -> Void)? = nil, scrolls: Bool = true,
                content: { … }, footer: { … }, trailing: { … })   // footer and trailing optional
 //   eyebrow = teal section label above the title (e.g. "Thursday crew · Step 1 of 3")
-//   footer is pinned to the bottom (usually PrimaryButton); trailing sits top-right (e.g. "Decline hangout")
+//   footer floats over the bottom of the scrolling content (FloatingFooter: fade + buttons) and
+//   content scrolls up behind it, so buttons are never cut off; trailing sits top-right (e.g. "Decline hangout")
 //   title "" hides the title. Hides the system nav bar.
+
+FloatingFooter { PrimaryButton(…) }   // for custom screens: ScrollView{…}.safeAreaInset(edge: .bottom, spacing: 0) { FloatingFooter { … } }
+ShrinkToFit { content }               // full size when it fits the height, scaled down when it doesn't
 ```
+
+**Layout rule:** never put bottom buttons under content in a plain VStack. Either use ScreenScaffold's footer or a
+`FloatingFooter` in `.safeAreaInset(edge: .bottom)`. Swipe cards shrink to fit automatically (SwipeCardStack wraps
+each card in `ShrinkToFit`). The custom tab bar sits below the tab content, not over it.
 
 ## SwipeCardStack (KAL-12)
 

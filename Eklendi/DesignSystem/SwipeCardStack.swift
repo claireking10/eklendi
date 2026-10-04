@@ -133,7 +133,8 @@ struct SwipeCardStack<Item: Identifiable, Content: View>: View {
         let shape = RoundedRectangle(cornerRadius: EKRadius.swipeCard, style: .continuous)
         let glow: (color: Color, amount: Double) = isTop ? glowState : (color: EKColor.yesGlow, amount: 0)
         let shadow: Double = isTop ? noShadowProgress : 0
-        return content(item)
+        // Shrinks the card's content on short screens so the buttons below stay visible.
+        return ShrinkToFit { content(item) }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(EKColor.card)
             .overlay(NoShadowOverlay(progress: shadow).allowsHitTesting(false))

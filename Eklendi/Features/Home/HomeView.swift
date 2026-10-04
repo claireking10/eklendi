@@ -127,18 +127,19 @@ struct HomeView: View {
                 .padding(.horizontal, EKSpacing.screen)
                 .padding(.bottom, EKSpacing.lg)
             }
-
-            NavigationLink(value: CreateHangoutRoute()) {
-                HStack(spacing: 8) {
-                    Image(systemName: "plus").font(.system(size: 17, weight: .bold))
-                    Text("Plan a hangout")
+            // Hangouts scroll behind the button; it stays put on every screen size.
+            .safeAreaInset(edge: .bottom, spacing: 0) {
+                FloatingFooter {
+                    NavigationLink(value: CreateHangoutRoute()) {
+                        HStack(spacing: 8) {
+                            Image(systemName: "plus").font(.system(size: 17, weight: .bold))
+                            Text("Plan a hangout")
+                        }
+                    }
+                    .buttonStyle(PrimaryButtonStyle())
+                    .accessibilityIdentifier("createHangoutButton")
                 }
             }
-            .buttonStyle(PrimaryButtonStyle())
-            .accessibilityIdentifier("createHangoutButton")
-            .padding(.horizontal, EKSpacing.screen)
-            .padding(.top, 8)
-            .padding(.bottom, EKSpacing.md)
         }
         .ekScreenBackground()
         .toolbar(.hidden, for: .navigationBar)

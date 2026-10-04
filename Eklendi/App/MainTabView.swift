@@ -83,36 +83,39 @@ struct MainTabView: View {
 
     var body: some View {
         @Bindable var router = router
-        TabView(selection: $router.selected) {
-            NavigationStack(path: $router.homePath) {
-                HomeView(uid: uid)
-                    .navigationDestination(for: HangoutRoute.self) { route in
-                        HangoutFlowView(hangoutId: route.hangoutId, uid: uid)
-                    }
-                    .navigationDestination(for: CreateHangoutRoute.self) { _ in
-                        CreateHangoutFlowView(uid: uid)
-                    }
-            }
-            .toolbar(.hidden, for: .tabBar)
-            .tag(AppTab.home)
+        // The tab bar sits below the tab content (not over it), so every screen's bottom
+        // buttons stay visible above it.
+        VStack(spacing: 0) {
+            TabView(selection: $router.selected) {
+                NavigationStack(path: $router.homePath) {
+                    HomeView(uid: uid)
+                        .navigationDestination(for: HangoutRoute.self) { route in
+                            HangoutFlowView(hangoutId: route.hangoutId, uid: uid)
+                        }
+                        .navigationDestination(for: CreateHangoutRoute.self) { _ in
+                            CreateHangoutFlowView(uid: uid)
+                        }
+                }
+                .toolbar(.hidden, for: .tabBar)
+                .tag(AppTab.home)
 
-            NavigationStack(path: $router.friendsPath) {
-                FriendsView(uid: uid)
-            }
-            .toolbar(.hidden, for: .tabBar)
-            .tag(AppTab.friends)
+                NavigationStack(path: $router.friendsPath) {
+                    FriendsView(uid: uid)
+                }
+                .toolbar(.hidden, for: .tabBar)
+                .tag(AppTab.friends)
 
-            NavigationStack(path: $router.settingsPath) {
-                SettingsView(uid: uid)
+                NavigationStack(path: $router.settingsPath) {
+                    SettingsView(uid: uid)
+                }
+                .toolbar(.hidden, for: .tabBar)
+                .tag(AppTab.settings)
             }
-            .toolbar(.hidden, for: .tabBar)
-            .tag(AppTab.settings)
-        }
-        .safeAreaInset(edge: .bottom, spacing: 0) {
             if router.showsTabBar {
                 EKTabBar(selected: $router.selected)
             }
         }
+        .background(EKColor.background.ignoresSafeArea())
         .environment(router)
     }
 }

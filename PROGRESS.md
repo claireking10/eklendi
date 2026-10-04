@@ -85,6 +85,12 @@ Running log for agents and teammates. **Read this and `CLAUDE.md` before startin
 
 ## Log
 
+### 2026-10-04 — Layout fixes + real demo venues/photos (Claude, for Claire)
+- **Bottom buttons cut off:** ScreenScaffold footers now float over the scrolling content (`FloatingFooter` via `.safeAreaInset`); Home's "Plan a hangout" and the day view's "Send to the group" float the same way. The custom tab bar now sits below the tab content instead of over it (`MainTabView`). Swipe cards (times, survey, hangout cards) shrink to fit short screens (`ShrinkToFit` in `SwipeCardStack`), so Yes/Maybe/No stay visible. Decline and hand-off sheets scroll instead of a fixed 300 pt height. Files: `DesignSystem/Components.swift`, `DesignSystem/SwipeCardStack.swift`, `App/MainTabView.swift`, `Features/Home/HomeView.swift`, `Features/Hangout/{HangoutComponents,HangoutTimesViews}.swift`.
+- **Demo photos:** the made-up demo venues and Unsplash stock photos are gone. `MockStore.cardPool` now lists real San Antonio places; new callable `demoVenues` (`functions/src/demo.ts`, allowlist only, no sign-in) returns their Places name, address, location and photo, and `MockStore.loadDemoVenues()` swaps them into the cards at launch. Offline / UI tests / before deploy: fallback names + category colors.
+- **Needs a deploy (Zach):** `firebase deploy --only functions:demoVenues --project eklendi-633e3 --force` (Windows: set `$env:FUNCTIONS_DISCOVERY_TIMEOUT=60` first).
+- Swift unverified until CI/Mac. Logic tests 41/41; `demo.ts` type-checked against stubs.
+
 ### 2026-10-04 — Demo mode + relaxed login (Claude, for Claire)
 - **Demo mode is now the default launch** (`AppEnvironment.demoMode`): mock services, starts on the login screen. `-liveBackend` launch arg switches back to Firebase. UI-test args unchanged.
 - **Login:** the only requirement is a 10-digit username; the password can be anything (including empty). Button enables at exactly 10 digits. In demo, a number belonging to an account logs into it, any other number logs in as the demo user (Zach). Files: `Features/Auth/WelcomeView.swift`, `Features/Auth/AccountLogic.swift` (`isValidUsername`, `demoUsernameDigits`), `Services/MockAuthService.swift`.

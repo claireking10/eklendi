@@ -1,4 +1,6 @@
 import Foundation
+import FirebaseCore
+import FirebaseFunctions
 
 /// In-memory stand-ins for the callables (suggestTime, startNewRound, geocodeLocation).
 @MainActor
@@ -69,5 +71,40 @@ final class MockBackendFunctions: BackendFunctions {
         let lat: Double = 29.42 + Double(sum % 100) / 1000.0
         let lng: Double = -98.49 - Double((sum / 100) % 100) / 1000.0
         return Location(text: trimmed, lat: lat, lng: lng)
+    }
+}
+
+extension MockStore {
+    /// Demo mode: fetches the real venues, addresses and photos for the demo cards from
+    /// Google Places via the `demoVenues` Cloud Function (functions/src/demo.ts). Needs
+    /// GoogleService-Info.plist and a network connection; otherwise the cards keep their
+    /// fallback names and category-colored backgrounds.
+    func loadDemoVenues() {
+        guard Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist") != nil else { return }
+        if FirebaseApp.app() == nil {
+            FirebaseApp.configure()
+        }
+        Task { @MainActor [weak self] in
+            do {
+                let result: HTTPSCallableResult = try await Functions.functions().httpsCallable("demoVenues").call()
+                guard let dict = result.data as? [String: Any],
+                      let raw = dict["venues"] as? [String: Any] else { return }
+                var venues: [String: MockStore.DemoVenue] = [:]
+                for (id, value) in raw {
+                    guard let v = value as? [String: Any],
+                          let name = v["venueName"] as? String,
+                          let lat = (v["lat"] as? NSNumber)?.doubleValue,
+                          let lng = (v["lng"] as? NSNumber)?.doubleValue else { continue }
+                    venues[id] = MockStore.DemoVenue(name: name,
+                                                     address: (v["address"] as? String) ?? "",
+                                                     lat: lat, lng: lng,
+                                                     photoUrl: v["photoUrl"] as? String,
+                                                     placeId: (v["placeId"] as? String) ?? "")
+                }
+                self?.applyDemoVenues(venues)
+            } catch {
+                print("[Eklendi] Demo venues unavailable: \(error.localizedDescription)")
+            }
+        }
     }
 }

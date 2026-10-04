@@ -326,6 +326,11 @@ struct HFDayAvailabilityView: View {
                 .padding(.horizontal, EKSpacing.screen)
                 .padding(.bottom, 24)
             }
+            .safeAreaInset(edge: .bottom, spacing: 0) {
+                if sentRange == nil {
+                    FloatingFooter { sendButton }
+                }
+            }
         }
         .ekScreenBackground()
         .foregroundStyle(EKColor.textPrimary)
@@ -609,17 +614,21 @@ struct HFDayAvailabilityView: View {
                         .font(.system(size: 13))
                         .foregroundStyle(EKColor.muted)
                 }
-                Group {
-                    if ok {
-                        PrimaryButton("Send to the group", isLoading: sending) { send() }
-                    } else {
-                        SecondaryButton("Send anyway", isLoading: sending) { send() }
-                    }
-                }
-                .disabled(isPast || sending)
-                .accessibilityIdentifier("suggestTimeButton")
             }
         }
+    }
+
+    /// Floats at the bottom of the day view while picking a time.
+    private var sendButton: some View {
+        Group {
+            if clashNames.isEmpty {
+                PrimaryButton("Send to the group", isLoading: sending) { send() }
+            } else {
+                SecondaryButton("Send anyway", isLoading: sending) { send() }
+            }
+        }
+        .disabled(isPast || sending)
+        .accessibilityIdentifier("suggestTimeButton")
     }
 
     private func stepButton(_ systemImage: String, label: String, action: @escaping () -> Void) -> some View {

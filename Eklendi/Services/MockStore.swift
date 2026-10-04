@@ -174,35 +174,53 @@ final class MockStore {
 
     // MARK: Simulation: cards
 
-    private struct CardSeed {
+    /// One demo card idea. `id` matches functions/src/demo.ts, which resolves the real venue,
+    /// address and photo through Google Places (`loadDemoVenues`). Until that answers (or when
+    /// offline / in UI tests), cards show the fallback name and a category-colored background.
+    struct CardSeed {
+        let id: String
         let activity: String
         let venue: String
         let address: String
         let description: String
         let category: String
         let price: Int?
-        let photo: String?
         let miles: Double
         let tags: [String]
     }
 
-    private let cardPool: [CardSeed] = [
-        CardSeed(activity: "Coffee + pastries", venue: "Juniper Café", address: "412 Alamo St", description: "A bright neighborhood café with big tables. Easy for a group, and you're done before dinner.", category: "food", price: 1, photo: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=900", miles: 0.6, tags: ["$", "Indoors", "Chill"]),
-        CardSeed(activity: "Bowling", venue: "Ridgeline Lanes", address: "2300 Ridgeline Blvd", description: "One quick game and a basket of fries. Weekday afternoons are rarely busy.", category: "active", price: 2, photo: nil, miles: 3.1, tags: ["$$", "Indoors", "Lively"]),
-        CardSeed(activity: "Picnic in the park", venue: "Alder Park", address: "100 Alder Park Dr", description: "Grab sandwiches on the way and claim a shady spot by the pond.", category: "nature", price: 0, photo: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=900", miles: 1.2, tags: ["Free", "Outdoors", "Chill"]),
-        CardSeed(activity: "Board game café", venue: "Meeple House", address: "88 Market St", description: "Hundreds of games on the shelves and staff who'll teach you one in five minutes.", category: "games", price: 1, photo: nil, miles: 2.4, tags: ["$", "Indoors"]),
-        CardSeed(activity: "Tacos + horchata", venue: "La Brasa Taquería", address: "1510 S Flores St", description: "Counter-service tacos with a patio. Quick, cheap and easy to share.", category: "food", price: 1, photo: nil, miles: 1.8, tags: ["$", "Patio"]),
-        CardSeed(activity: "Mini golf", venue: "Cedar Hollow Mini Golf", address: "7400 Cedar Hollow Rd", description: "Eighteen holes with a little friendly trash talk. Shaded course for warm days.", category: "active", price: 2, photo: nil, miles: 4.0, tags: ["$$", "Outdoors"]),
-        CardSeed(activity: "Trivia night", venue: "The Copper Kettle", address: "230 E Houston St", description: "Weekly pub trivia with teams of up to six. Four is the sweet spot.", category: "games", price: 1, photo: nil, miles: 2.9, tags: ["$", "Lively"]),
-        CardSeed(activity: "Arcade", venue: "Pixel Pier", address: "17 Riverwalk Pl", description: "Retro cabinets, air hockey and a prize counter. Load a card and split it.", category: "games", price: 2, photo: nil, miles: 5.2, tags: ["$$", "Lively"]),
-        CardSeed(activity: "Farmers market", venue: "Riverside Market", address: "312 Pearl Pkwy", description: "Wander the stalls, sample a few things and grab lunch from a food truck.", category: "markets", price: 0, photo: "https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=900", miles: 1.5, tags: ["Free", "Outdoors"]),
-        CardSeed(activity: "Bubble tea run", venue: "Lotus Tea Bar", address: "905 N St Mary's St", description: "A quick afternoon treat with plenty of seating if you want to linger.", category: "food", price: 1, photo: nil, miles: 0.9, tags: ["$", "Chill"]),
-        CardSeed(activity: "Climbing gym", venue: "Granite Works", address: "6100 Broadway", description: "Beginner-friendly bouldering. Shoe rental included with a day pass.", category: "active", price: 2, photo: nil, miles: 3.6, tags: ["$$", "Indoors", "Active"]),
-        CardSeed(activity: "Outdoor movie", venue: "Alder Park Lawn", address: "100 Alder Park Dr", description: "Bring a blanket. Food trucks park nearby before the screening starts.", category: "arts", price: 0, photo: nil, miles: 1.2, tags: ["Free", "Outdoors"]),
-        CardSeed(activity: "Museum wander", venue: "Blue Star Arts Museum", address: "116 Blue Star", description: "Small rotating exhibits you can see in an hour, plus a good gift shop.", category: "arts", price: 1, photo: nil, miles: 2.2, tags: ["$", "Indoors"]),
-        CardSeed(activity: "Live music", venue: "The Lonesome Rose", address: "2114 N St Mary's St", description: "Local bands most nights and a big back patio.", category: "arts", price: 2, photo: nil, miles: 2.7, tags: ["$$", "Lively"]),
-        CardSeed(activity: "Brunch", venue: "Sunny Side Kitchen", address: "540 Broadway", description: "Big plates, bottomless coffee and tables that fit a crowd.", category: "food", price: 2, photo: nil, miles: 1.9, tags: ["$$", "Chill"]),
+    static let cardPool: [CardSeed] = [
+        CardSeed(id: "coffee", activity: "Coffee + pastries", venue: "Halcyon Southtown", address: "1414 S Alamo St, San Antonio, TX", description: "A roomy coffee bar with big tables. Easy for a group, and you're done before dinner.", category: "food", price: 1, miles: 0.6, tags: ["$", "Indoors", "Chill"]),
+        CardSeed(id: "bowling", activity: "Bowling", venue: "Bowling alley", address: "San Antonio, TX", description: "One quick game and a basket of fries. Weekday afternoons are rarely busy.", category: "active", price: 2, miles: 3.1, tags: ["$$", "Indoors", "Lively"]),
+        CardSeed(id: "picnic", activity: "Picnic in the park", venue: "Brackenridge Park", address: "3700 N St Mary's St, San Antonio, TX", description: "Grab sandwiches on the way and claim a shady spot by the river.", category: "nature", price: 0, miles: 1.2, tags: ["Free", "Outdoors", "Chill"]),
+        CardSeed(id: "boardgames", activity: "Board game café", venue: "Board game café", address: "San Antonio, TX", description: "Shelves of games and staff who'll teach you one in five minutes.", category: "games", price: 1, miles: 2.4, tags: ["$", "Indoors"]),
+        CardSeed(id: "tacos", activity: "Tacos + aguas frescas", venue: "La Gloria", address: "100 E Grayson St, San Antonio, TX", description: "Mexican street food with a big patio at the Pearl. Quick, cheap and easy to share.", category: "food", price: 1, miles: 1.8, tags: ["$", "Patio"]),
+        CardSeed(id: "minigolf", activity: "Mini golf", venue: "Cool Crest Miniature Golf", address: "1402 Fredericksburg Rd, San Antonio, TX", description: "A classic shady course with a little friendly trash talk.", category: "active", price: 2, miles: 4.0, tags: ["$$", "Outdoors"]),
+        CardSeed(id: "trivia", activity: "Trivia night", venue: "Trivia bar", address: "San Antonio, TX", description: "Pub trivia with small teams. Four is the sweet spot.", category: "games", price: 1, miles: 2.9, tags: ["$", "Lively"]),
+        CardSeed(id: "arcade", activity: "Arcade", venue: "Arcade bar", address: "San Antonio, TX", description: "Retro cabinets, air hockey and snacks. Load a card and split it.", category: "games", price: 2, miles: 5.2, tags: ["$$", "Lively"]),
+        CardSeed(id: "market", activity: "Farmers market", venue: "Pearl Farmers Market", address: "Pearl Pkwy, San Antonio, TX", description: "Wander the stalls, sample a few things and grab lunch nearby.", category: "markets", price: 0, miles: 1.5, tags: ["Free", "Outdoors"]),
+        CardSeed(id: "icecream", activity: "Ice cream run", venue: "Lick Honest Ice Creams", address: "Pearl, San Antonio, TX", description: "A quick afternoon treat with odd, great flavors and room to linger.", category: "food", price: 1, miles: 0.9, tags: ["$", "Chill"]),
+        CardSeed(id: "climbing", activity: "Climbing gym", venue: "Climbing gym", address: "San Antonio, TX", description: "Beginner-friendly bouldering. Shoe rental comes with a day pass.", category: "active", price: 2, miles: 3.6, tags: ["$$", "Indoors", "Active"]),
+        CardSeed(id: "rubycity", activity: "Contemporary art", venue: "Ruby City", address: "150 Camp St, San Antonio, TX", description: "A free, compact art center you can see in an hour.", category: "arts", price: 0, miles: 1.2, tags: ["Free", "Indoors"]),
+        CardSeed(id: "mcnay", activity: "Museum wander", venue: "McNay Art Museum", address: "6000 N New Braunfels Ave, San Antonio, TX", description: "Galleries in an old Spanish-style mansion, plus sculpture gardens.", category: "arts", price: 1, miles: 2.2, tags: ["$", "Indoors"]),
+        CardSeed(id: "movie", activity: "Dinner + a movie", venue: "Alamo Drafthouse", address: "San Antonio, TX", description: "Order food from your seat while the movie plays.", category: "arts", price: 2, miles: 2.7, tags: ["$$", "Indoors"]),
+        CardSeed(id: "brunch", activity: "Brunch", venue: "The Guenther House", address: "205 E Guenther St, San Antonio, TX", description: "Big plates in a historic house by the river. Tables fit a crowd.", category: "food", price: 2, miles: 1.9, tags: ["$$", "Chill"]),
     ]
+
+    /// Real venue from Google Places for a demo card (functions/src/demo.ts).
+    struct DemoVenue {
+        let name: String
+        let address: String
+        let lat: Double
+        let lng: Double
+        let photoUrl: String?
+        let placeId: String
+    }
+
+    /// Demo card id → resolved venue. Filled by `applyDemoVenues`.
+    var demoVenues: [String: DemoVenue] = [:]
+
+    static let demoPlacePrefix: String = "demo_"
 
     /// 3 × active members cards at the winning slot time. The pool is ordered by the group's
     /// survey answers (the user's real answers + the demo friends' presets).
@@ -212,7 +230,7 @@ final class MockStore {
         let start: Date = h.winningSlot?.start ?? MockStore.date(dayOffset: 2, hour: 15)
         let end: Date = h.winningSlot?.end ?? start.addingTimeInterval(3600)
         let answers: [[String: SurveyAnswer]] = Array((surveyAnswers[hangoutId] ?? [:]).values)
-        let ranked: [CardSeed] = cardPool.enumerated().sorted { a, b in
+        let ranked: [CardSeed] = MockStore.cardPool.enumerated().sorted { a, b in
             let sa: Int = DemoPersona.groupScore(category: a.element.category, priceLevel: a.element.price, answers: answers)
             let sb: Int = DemoPersona.groupScore(category: b.element.category, priceLevel: b.element.price, answers: answers)
             if sa != sb { return sa > sb }
@@ -224,12 +242,69 @@ final class MockStore {
             var card = HangoutCard(round: round, activity: seed.activity, description: seed.description,
                                    category: seed.category, venueName: seed.venue, address: seed.address,
                                    lat: 29.42 + Double(i) * 0.003, lng: -98.49 - Double(i) * 0.002,
-                                   distanceMiles: seed.miles, priceLevel: seed.price, photoUrl: seed.photo,
-                                   placeId: "mock_place_\(i)", start: start, end: end, tags: seed.tags)
+                                   distanceMiles: seed.miles, priceLevel: seed.price, photoUrl: nil,
+                                   placeId: MockStore.demoPlacePrefix + seed.id, start: start, end: end, tags: seed.tags)
             card.id = "\(hangoutId)_r\(round)_c\(i + 1)"
+            if let venue = demoVenues[seed.id] {
+                apply(venue, to: &card, hangoutId: hangoutId)
+            }
             out.append(card)
         }
         return out
+    }
+
+    private func apply(_ venue: DemoVenue, to card: inout HangoutCard, hangoutId: String) {
+        card.venueName = venue.name
+        card.address = venue.address
+        card.lat = venue.lat
+        card.lng = venue.lng
+        card.photoUrl = venue.photoUrl
+        if let miles = milesFromGroup(hangoutId: hangoutId, lat: venue.lat, lng: venue.lng) {
+            card.distanceMiles = miles
+        }
+    }
+
+    /// Distance from the centroid of the members' starting locations.
+    private func milesFromGroup(hangoutId: String, lat: Double, lng: Double) -> Double? {
+        let points: [Location] = activeMembers(hangoutId).compactMap { $0.startLocation }
+            .filter { $0.lat != 0 || $0.lng != 0 }
+        guard !points.isEmpty else { return nil }
+        let cLat: Double = points.map { $0.lat }.reduce(0, +) / Double(points.count)
+        let cLng: Double = points.map { $0.lng }.reduce(0, +) / Double(points.count)
+        let rad: Double = .pi / 180
+        let dLat: Double = (lat - cLat) * rad
+        let dLng: Double = (lng - cLng) * rad
+        let x: Double = sin(dLat / 2) * sin(dLat / 2)
+            + cos(cLat * rad) * cos(lat * rad) * sin(dLng / 2) * sin(dLng / 2)
+        let miles: Double = 3958.8 * 2 * atan2(sqrt(x), sqrt(1 - x))
+        return (miles * 10).rounded() / 10
+    }
+
+    /// Swaps resolved Places venues into the demo pool and every existing demo card and plan.
+    func applyDemoVenues(_ venues: [String: DemoVenue]) {
+        guard !venues.isEmpty else { return }
+        for (id, venue) in venues { demoVenues[id] = venue }
+        for hid in Array(cards.keys) {
+            guard var list = cards[hid] else { continue }
+            for index in list.indices where list[index].placeId.hasPrefix(MockStore.demoPlacePrefix) {
+                let seedId: String = String(list[index].placeId.dropFirst(MockStore.demoPlacePrefix.count))
+                if let venue = demoVenues[seedId] {
+                    apply(venue, to: &list[index], hangoutId: hid)
+                }
+            }
+            cards[hid] = list
+        }
+        for (hid, h) in hangouts {
+            guard let plan = h.confirmed,
+                  let seed = MockStore.cardPool.first(where: { $0.venue == plan.venueName }),
+                  let venue = demoVenues[seed.id] else { continue }
+            updateHangout(hid) { hh in
+                hh.confirmed?.venueName = venue.name
+                hh.confirmed?.address = venue.address
+                if !hh.title.isEmpty { hh.title = "\(seed.activity) at \(venue.name)" }
+            }
+        }
+        notify()
     }
 
     // MARK: Simulation: state machine
@@ -369,7 +444,7 @@ final class MockStore {
         for friend in [Ids.claire, Ids.seth] { fillPresetSurvey(hangoutId: Ids.votingCards, uid: friend) }
         cards[Ids.votingCards] = generateCards(hangoutId: Ids.votingCards, round: 1)
 
-        // 4. confirmed — Coffee at Juniper Café, 4 going.
+        // 4. confirmed — Coffee at Halcyon Southtown, 4 going.
         seedHangout(id: Ids.confirmed, owner: Ids.zach, others: [Ids.seth, Ids.matt, Ids.claire],
                     status: .confirmed, created: now.addingTimeInterval(-86_400 * 2)) { m in
             m.availabilitySubmitted = true
@@ -380,10 +455,10 @@ final class MockStore {
         let cStart: Date = MockStore.date(dayOffset: 4, hour: 15)
         let cEnd: Date = cStart.addingTimeInterval(3600)
         updateHangout(Ids.confirmed) { h in
-            h.title = "Coffee at Juniper Café"
+            h.title = "Coffee + pastries at Halcyon Southtown"
             h.winningSlot = SlotRef(id: "\(Ids.confirmed)_slot1", start: cStart, end: cEnd)
             h.confirmed = ConfirmedPlan(start: cStart, end: cEnd, activity: "Coffee + pastries",
-                                        venueName: "Juniper Café", address: "412 Alamo St", cardId: "\(Ids.confirmed)_r1_c1")
+                                        venueName: "Halcyon Southtown", address: "1414 S Alamo St, San Antonio, TX", cardId: "\(Ids.confirmed)_r1_c1")
         }
 
         // 5. noAgreement — round 1 finished with no winner (top 3 shown with everyone's votes).

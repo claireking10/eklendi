@@ -159,35 +159,38 @@ struct HFDeclineSheet: View {
     let onDecline: () -> Void
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            Text("Decline this hangout?")
-                .font(EKFont.title2)
-                .foregroundStyle(EKColor.textPrimary)
-            Text("You’ll be removed from \(hangoutName), and \(ownerFirstName) will see that you declined. The others can keep planning without you.")
-                .font(EKFont.callout)
-                .foregroundStyle(EKColor.muted)
-                .lineSpacing(3)
-                .fixedSize(horizontal: false, vertical: true)
-            HStack(spacing: 12) {
-                Button("Keep me in", action: onKeep)
-                    .buttonStyle(SecondaryButtonStyle())
-                    .accessibilityIdentifier("keepMeInButton")
-                Button(action: onDecline) {
-                    HStack(spacing: 8) {
-                        if isWorking { ProgressView().tint(Color.white) }
-                        Text("Decline")
+        ScrollView {
+            VStack(alignment: .leading, spacing: 14) {
+                Text("Decline this hangout?")
+                    .font(EKFont.title2)
+                    .foregroundStyle(EKColor.textPrimary)
+                Text("You’ll be removed from \(hangoutName), and \(ownerFirstName) will see that you declined. The others can keep planning without you.")
+                    .font(EKFont.callout)
+                    .foregroundStyle(EKColor.muted)
+                    .lineSpacing(3)
+                    .fixedSize(horizontal: false, vertical: true)
+                HStack(spacing: 12) {
+                    Button("Keep me in", action: onKeep)
+                        .buttonStyle(SecondaryButtonStyle())
+                        .accessibilityIdentifier("keepMeInButton")
+                    Button(action: onDecline) {
+                        HStack(spacing: 8) {
+                            if isWorking { ProgressView().tint(Color.white) }
+                            Text("Decline")
+                        }
                     }
+                    .buttonStyle(DestructiveButtonStyle())
+                    .disabled(isWorking)
+                    .accessibilityIdentifier("confirmDeclineButton")
                 }
-                .buttonStyle(DestructiveButtonStyle())
-                .disabled(isWorking)
-                .accessibilityIdentifier("confirmDeclineButton")
+                .padding(.top, 6)
             }
-            .padding(.top, 6)
+            .padding(EKSpacing.screen)
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .padding(EKSpacing.screen)
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .scrollBounceBehavior(.basedOnSize)
         .background(EKColor.sheet.ignoresSafeArea())
-        .presentationDetents([.height(300)])
+        .presentationDetents([.medium, .large])
         .presentationDragIndicator(.visible)
         .presentationBackground(EKColor.sheet)
     }
@@ -201,53 +204,61 @@ struct HFHandOffSheet: View {
     let onCancel: () -> Void
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            Text("Hand off ownership")
-                .font(EKFont.title2)
-                .foregroundStyle(EKColor.textPrimary)
-            Text("The new owner can nudge, remove, cancel and reopen. You stay in the hangout.")
-                .font(EKFont.callout)
-                .foregroundStyle(EKColor.muted)
-                .fixedSize(horizontal: false, vertical: true)
-            if candidates.isEmpty {
-                Text("There’s nobody else in the hangout yet.")
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                Text("Hand off ownership")
+                    .font(EKFont.title2)
+                    .foregroundStyle(EKColor.textPrimary)
+                Text("The new owner can nudge, remove, cancel and reopen. You stay in the hangout.")
                     .font(EKFont.callout)
-                    .foregroundStyle(EKColor.placeholder)
-            } else {
-                Card(padding: 0) {
-                    VStack(spacing: 0) {
-                        ForEach(candidates) { m in
-                            Button {
-                                onPick(m)
-                            } label: {
-                                HStack(spacing: 14) {
-                                    Avatar(name: m.name, size: 40)
-                                    Text(m.name)
-                                        .font(EKFont.bodyBold)
-                                        .foregroundStyle(EKColor.textPrimary)
-                                    Spacer()
-                                    Image(systemName: "chevron.right")
-                                        .foregroundStyle(EKColor.placeholder)
+                    .foregroundStyle(EKColor.muted)
+                    .fixedSize(horizontal: false, vertical: true)
+                if candidates.isEmpty {
+                    Text("There’s nobody else in the hangout yet.")
+                        .font(EKFont.callout)
+                        .foregroundStyle(EKColor.placeholder)
+                } else {
+                    Card(padding: 0) {
+                        VStack(spacing: 0) {
+                            ForEach(candidates) { m in
+                                Button {
+                                    onPick(m)
+                                } label: {
+                                    HStack(spacing: 14) {
+                                        Avatar(name: m.name, size: 40)
+                                        Text(m.name)
+                                            .font(EKFont.bodyBold)
+                                            .foregroundStyle(EKColor.textPrimary)
+                                        Spacer()
+                                        Image(systemName: "chevron.right")
+                                            .foregroundStyle(EKColor.placeholder)
+                                    }
+                                    .padding(.horizontal, 16)
+                                    .frame(minHeight: 60)
+                                    .contentShape(Rectangle())
                                 }
-                                .padding(.horizontal, 16)
-                                .frame(minHeight: 60)
-                                .contentShape(Rectangle())
-                            }
-                            .buttonStyle(.plain)
-                            .accessibilityIdentifier("handOff_\(m.id)")
-                            if m.id != candidates.last?.id {
-                                Rectangle().fill(EKColor.cardBorder).frame(height: 1)
+                                .buttonStyle(.plain)
+                                .accessibilityIdentifier("handOff_\(m.id)")
+                                if m.id != candidates.last?.id {
+                                    Rectangle().fill(EKColor.cardBorder).frame(height: 1)
+                                }
                             }
                         }
                     }
                 }
             }
+            .padding(EKSpacing.screen)
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .scrollBounceBehavior(.basedOnSize)
+        .safeAreaInset(edge: .bottom, spacing: 0) {
             Button("Not now", action: onCancel)
                 .buttonStyle(SecondaryButtonStyle())
-            Spacer(minLength: 0)
+                .padding(.horizontal, EKSpacing.screen)
+                .padding(.top, 10)
+                .padding(.bottom, EKSpacing.md)
+                .background(EKColor.sheet.ignoresSafeArea(edges: .bottom))
         }
-        .padding(EKSpacing.screen)
-        .frame(maxWidth: .infinity, alignment: .leading)
         .background(EKColor.sheet.ignoresSafeArea())
         .presentationDetents([.medium, .large])
         .presentationDragIndicator(.visible)

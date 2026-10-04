@@ -382,18 +382,101 @@ struct ScreenScaffold<Content: View, Footer: View, Trailing: View>: View {
                     body1.padding(.top, 4)
                 }
                 .scrollDismissesKeyboard(.interactively)
+                .safeAreaInset(edge: .bottom, spacing: 0) { floatingFooter }
             } else {
-                body1.padding(.top, 4)
-                Spacer(minLength: 0)
+                VStack(spacing: 0) {
+                    body1.padding(.top, 4)
+                    Spacer(minLength: 0)
+                }
+                .safeAreaInset(edge: .bottom, spacing: 0) { floatingFooter }
             }
-
-            footer
-                .padding(.horizontal, EKSpacing.screen)
-                .padding(.bottom, EKSpacing.md)
         }
         .ekScreenBackground()
         .toolbar(.hidden, for: .navigationBar)
         .foregroundStyle(EKColor.textPrimary)
+    }
+
+    /// The footer floats over the scrolling content (which scrolls up behind it), so the
+    /// buttons stay on screen on every phone size.
+    @ViewBuilder
+    private var floatingFooter: some View {
+        if Footer.self != EmptyView.self {
+            FloatingFooter { footer }
+        }
+    }
+}
+
+/// Bottom action area layered over scrolling content: a short fade so content scrolling
+/// underneath stays readable, then the buttons. Use with `.safeAreaInset(edge: .bottom)`
+/// so the scroll view's last item can still scroll above it.
+struct FloatingFooter<Content: View>: View {
+    let content: Content
+
+    init(@ViewBuilder content: () -> Content) {
+        self.content = content()
+    }
+
+    var body: some View {
+        VStack(spacing: 0) {
+            content
+                .padding(.horizontal, EKSpacing.screen)
+                .padding(.top, 10)
+                .padding(.bottom, EKSpacing.md)
+        }
+        .frame(maxWidth: .infinity)
+        .background(EKColor.background.ignoresSafeArea(edges: .bottom))
+        .overlay(alignment: .top) {
+            LinearGradient(colors: [EKColor.background.opacity(0), EKColor.background],
+                           startPoint: .top, endPoint: .bottom)
+                .frame(height: 24)
+                .offset(y: -24)
+                .allowsHitTesting(false)
+        }
+    }
+}
+
+/// Shows `content` at full size when it fits the available height; otherwise scales it
+/// down to fit (short phones, large text) so nothing below it is pushed off screen.
+struct ShrinkToFit<Content: View>: View {
+    let content: Content
+
+    init(@ViewBuilder content: () -> Content) {
+        self.content = content()
+    }
+
+    var body: some View {
+        ViewThatFits(in: .vertical) {
+            content
+            ScaledToFitHeight(content: content)
+        }
+    }
+}
+
+private struct FitContentHeightKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = max(value, nextValue())
+    }
+}
+
+private struct ScaledToFitHeight<Content: View>: View {
+    let content: Content
+    @State private var contentHeight: CGFloat = 0
+
+    var body: some View {
+        GeometryReader { geo in
+            let scale: CGFloat = (contentHeight > geo.size.height && contentHeight > 0)
+                ? geo.size.height / contentHeight : 1
+            content
+                .frame(width: geo.size.width)
+                .fixedSize(horizontal: false, vertical: true)
+                .background(GeometryReader { inner in
+                    Color.clear.preference(key: FitContentHeightKey.self, value: inner.size.height)
+                })
+                .scaleEffect(scale, anchor: .top)
+                .frame(width: geo.size.width, height: geo.size.height, alignment: .top)
+        }
+        .onPreferenceChange(FitContentHeightKey.self) { contentHeight = $0 }
     }
 }
 

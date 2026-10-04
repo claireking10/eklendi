@@ -13,7 +13,7 @@ EventKit: reads busy blocks,                 Cloud Functions (Node 20, TypeScrip
   writes the confirmed event                   • advanceHangout (Firestore triggers):
 Calls callables  ───────────────────────▶        availability → slots → time winner →
                                                  survey → cards → card winner → confirmed
-                                               • callables: suggestTime, geocodeLocation
+                                               • callables: suggestTime, geocodeLocation, demoVenues
                                                • Gemini + Google Places (keys = function secrets)
 ```
 
@@ -135,6 +135,7 @@ any ──owner cancel──▶ cancelled ;  confirmed ──owner reopen──�
 | `suggestTime` | callable `{hangoutId, start, end}` | adds suggested slot, resets `timesDone` |
 | `startNewRound` | callable `{hangoutId}` | from `noAgreement`: round+1 → generate |
 | `geocodeLocation` | callable `{text}` → `{text, lat, lng}` | Places text search; used for home/start location |
+| `demoVenues` | callable `{}` → `{venues: {id: {venueName, address, lat, lng, priceLevel, photoUrl, placeId}}}` | Demo mode only (no sign-in needed): resolves a fixed allowlist of real San Antonio venues (`functions/src/demo.ts`, ids match `MockStore.cardPool`); cached 6 h per instance |
 
 Pure logic modules (no Firebase imports, fully unit-tested): `scheduling.ts`, `winner.ts`, `preferences.ts`, `geo.ts`. Firebase/HTTP glue: `advance.ts`, `gemini.ts`, `places.ts`, `index.ts`.
 
